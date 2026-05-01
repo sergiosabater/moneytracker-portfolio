@@ -52,7 +52,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
           ),
         );
 
-    // Listeners para el foco
     _amountFocusNode.addListener(() {
       if (_amountFocusNode.hasFocus) {
         _scrollToMakeButtonVisible();
@@ -67,22 +66,19 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
     _animationController.forward();
   }
 
-  /// Función corregida para que funcione desde el primer foco
   void _scrollToMakeButtonVisible() async {
-    // Pequeña pausa inicial para que el foco se procese
     await Future.delayed(const Duration(milliseconds: 50));
 
-    // Esperamos a que el teclado esté visible (viewInsets.bottom > 0)
     int attempts = 0;
-    while (MediaQuery.of(context).viewInsets.bottom == 0 && attempts < 20) {
+    while (attempts < 20) {
+      if (!mounted) return;
+      if (MediaQuery.of(context).viewInsets.bottom > 0) break;
       await Future.delayed(const Duration(milliseconds: 50));
       attempts++;
     }
 
-    // Aseguramos que el widget siga montado
     if (!mounted) return;
 
-    // Esperamos un frame más para que el RenderBox del botón esté disponible
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
@@ -97,10 +93,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
       final availableHeight = screenHeight - keyboardHeight;
 
-      // Si el botón queda tapado por el teclado, hacemos scroll justo lo necesario
       if (buttonBottom > availableHeight) {
-        final offsetNeeded =
-            buttonBottom - availableHeight + 20; // margen extra
+        final offsetNeeded = buttonBottom - availableHeight + 20;
 
         _scrollController.animateTo(
           _scrollController.offset + offsetNeeded,
@@ -173,11 +167,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
       listen: false,
     ).addTransaction(transaction);
 
+    final messenger = ScaffoldMessenger.of(context);
+    final localizations = AppLocalizations.of(context)!;
+
     Navigator.pop(context);
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.transactionAdded),
+        content: Text(localizations.transactionAdded),
         duration: const Duration(seconds: 2),
         backgroundColor: Colors.green,
       ),
@@ -245,7 +242,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Type selector
                         _TypeSelector(
                           selectedType: type,
                           onTypeChanged: (newType) {
@@ -253,7 +249,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
                           },
                         ),
                         const SizedBox(height: 32),
-                        // Amount field
                         _AmountField(
                           controller: _amountController,
                           focusNode: _amountFocusNode,
@@ -266,14 +261,11 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
                             final valueWithoutCommas = valueWithoutDollarSign
                                 .replaceAll(',', '');
                             setState(() {
-                              amount = valueWithoutCommas.isNotEmpty
-                                  ? double.parse(valueWithoutCommas)
-                                  : 0.0;
+                              amount = double.tryParse(valueWithoutCommas) ?? 0.0;
                             });
                           },
                         ),
                         const SizedBox(height: 24),
-                        // Description field
                         _DescriptionField(
                           controller: _descriptionController,
                           focusNode: _descriptionFocusNode,
@@ -282,13 +274,11 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
                           },
                         ),
                         const SizedBox(height: 32),
-                        // Save button con GlobalKey
                         _SaveButton(
                           key: _buttonKey,
                           isEnabled: _isValid,
                           onPressed: _handleSave,
                         ),
-                        // Espacio adicional cuando el teclado está abierto
                         SizedBox(height: keyboardHeight > 0 ? 40 : 0),
                       ],
                     ),
@@ -302,9 +292,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
     );
   }
 }
-
-// Los componentes secundarios permanecen exactamente iguales
-// (TypeSelector, TypeOption, AmountField, DescriptionField, SaveButton)
 
 class _TypeSelector extends StatelessWidget {
   final TransactionType selectedType;
@@ -513,13 +500,12 @@ class _DescriptionField extends StatelessWidget {
 class _SaveButton extends StatelessWidget {
   final bool isEnabled;
   final VoidCallback onPressed;
-  final Key? key;
 
   const _SaveButton({
-    this.key,
+    super.key,
     required this.isEnabled,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
