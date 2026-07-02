@@ -350,34 +350,37 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 6),
 
-                          // Monto, debajo del título y alineado a la izquierda
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  color.withOpacity(0.1),
-                                  color.withOpacity(0.05),
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
+                          // Monto, debajo del título y alineado a la derecha
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: color.withOpacity(0.2),
-                                width: 1,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    color.withOpacity(0.1),
+                                    color.withOpacity(0.05),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: color.withOpacity(0.2),
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: color,
-                                letterSpacing: -0.5,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: color,
+                                  letterSpacing: -0.5,
+                                ),
                               ),
                             ),
                           ),
