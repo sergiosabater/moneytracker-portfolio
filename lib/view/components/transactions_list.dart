@@ -280,8 +280,8 @@ class _TransactionCardState extends State<_TransactionCard>
         : AppLocalizations.of(context)!.expense;
 
     final value = widget.transaction.type == TransactionType.expense
-        ? '-\$${widget.transaction.amount.abs().toStringAsFixed(2)}'
-        : '+\$${widget.transaction.amount.toStringAsFixed(2)}';
+        ? '-\$ ${widget.transaction.amount.abs().toStringAsFixed(2)}'
+        : '\$ ${widget.transaction.amount.toStringAsFixed(2)}';
 
     return FadeTransition(
       opacity: _fadeAnimation,
