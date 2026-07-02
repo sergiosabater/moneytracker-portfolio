@@ -33,19 +33,28 @@ From tracking daily expenses to analyzing spending patterns, discover the power 
 - 🔐 **Bank-Level Security** – Protect your data with PIN or biometric authentication
 - 📱 **Cross-Platform** – Native experience on both iOS and Android
 
+
 ---
 
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="placeholder-dashboard.png" width="250" alt="Dashboard"> &nbsp;&nbsp;
-  <img src="placeholder-analytics.png" width="250" alt="Analytics"> &nbsp;&nbsp;
-  <img src="placeholder-budget.png" width="250" alt="Budget Tracking"> &nbsp;&nbsp;
+
+| <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 1"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 2"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 3"> |
+|:---:|:---:|:---:|
+| **Image 1** | **Image 2** | **Image 3** |
+| <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 4"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 5"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 6"> |
+| **Image 4** | **Image 5** | **Image 6** |
+
 </div>
 
-*Screenshots coming soon to showcase the beautiful UI!*
-
 ---
+
+
+
+
+
+
 
 ## 🛠️ Tech Stack
 
