@@ -350,7 +350,32 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 6),
 
-                          // Monto, debajo del título y alineado a la derecha
+                          // Tipo de transacción
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: color.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: color.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              typeLabel,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          // Monto, debajo del tipo y alineado a la derecha
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(
@@ -381,31 +406,6 @@ class _TransactionCardState extends State<_TransactionCard>
                                   color: color,
                                   letterSpacing: -0.5,
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          // Tipo de transacción
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: color.withOpacity(0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              typeLabel,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: color,
                               ),
                             ),
                           ),
