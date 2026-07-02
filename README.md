@@ -201,8 +201,7 @@ Contributions are what make the open-source community such an amazing place to l
 For questions, suggestions, or collaboration opportunities:
 
 **Email:** sergiosabater@gmail.com  
-**GitHub:** [@yourusername](https://github.com/yourusername)  
-**LinkedIn:** [Your Profile](https://linkedin.com/in/yourprofile)
+**LinkedIn:** [Sergio Sabater Muñoz](https://www.linkedin.com/in/sergio-sm/)
 
 ---
 
