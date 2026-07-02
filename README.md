@@ -78,73 +78,35 @@ From tracking daily expenses to analyzing spending patterns, discover the power 
 
 ## 🗺️ Project Structure
 
-Money Tracker follows a **feature-based modular architecture** for maximum maintainability:
+Money Tracker follows an MVC-based layered architecture, organizing code by responsibility:
 
 ```plaintext
 📦 lib/
- ┣ 📂 core/
- ┃ ┣ 📂 constants/
- ┃ ┃ ┗ 📜 app_constants.dart
- ┃ ┣ 📂 theme/
- ┃ ┃ ┣ 🎨 app_colors.dart
- ┃ ┃ ┣ 🌓 app_theme.dart
- ┃ ┃ ┗ ✍️ text_styles.dart
- ┃ ┣ 📂 utils/
- ┃ ┃ ┣ 📅 date_formatter.dart
- ┃ ┃ ┣ 💱 currency_formatter.dart
- ┃ ┃ ┗ 🧮 calculations.dart
+ ┣ 📂 controller/
+ ┃ ┗ 📦 transactions_provider.dart
+ ┣ 📂 database/
+ ┃ ┗ 💾 database_helper.dart
+ ┣ 📂 l10n/
+ ┃ ┣ 🌐 app_en.arb
+ ┃ ┣ 🌐 app_es.arb
+ ┃ ┣ 🌍 app_localizations_en.dart
+ ┃ ┣ 🌍 app_localizations_es.dart
+ ┃ ┗ 🌍 app_localizations.dart
+ ┣ 📂 model/
+ ┃ ┗ 💰 transaction.dart
+ ┣ 📂 view/
+ ┃ ┣ 📂 components/
+ ┃ ┃ ┣ ➕ add_transaction_dialog.dart
+ ┃ ┃ ┣ 🗨️ custom_dialog.dart
+ ┃ ┃ ┣ 🏠 home_header.dart
+ ┃ ┃ ┣ ❓ no_description_dialog.dart
+ ┃ ┃ ┣ 🗑️ transaction_delete_dialog.dart
+ ┃ ┃ ┣ ⚙️ transaction_options_dialog.dart
+ ┃ ┃ ┗ 📋 transactions_list.dart
  ┃ ┗ 📂 widgets/
- ┃   ┣ 🔘 custom_button.dart
- ┃   ┣ 📝 custom_text_field.dart
- ┃   ┗ 💳 transaction_card.dart
- ┣ 📂 features/
- ┃ ┣ 📂 transactions/
- ┃ ┃ ┣ 📂 data/
- ┃ ┃ ┃ ┣ 📂 models/
- ┃ ┃ ┃ ┃ ┗ 💰 transaction_model.dart
- ┃ ┃ ┃ ┣ 📂 repositories/
- ┃ ┃ ┃ ┃ ┗ 📜 transaction_repository.dart
- ┃ ┃ ┃ ┗ 📂 datasources/
- ┃ ┃ ┃   ┗ 💾 local_datasource.dart
- ┃ ┃ ┣ 📂 domain/
- ┃ ┃ ┃ ┗ 📂 usecases/
- ┃ ┃ ┃   ┣ 📜 add_transaction.dart
- ┃ ┃ ┃   ┣ 📜 get_transactions.dart
- ┃ ┃ ┃   ┗ 🗑️ delete_transaction.dart
- ┃ ┃ ┗ 📂 presentation/
- ┃ ┃   ┣ 📂 screens/
- ┃ ┃   ┃ ┣ 🖼 transaction_list_screen.dart
- ┃ ┃   ┃ ┗ 📝 add_transaction_screen.dart
- ┃ ┃   ┗ 📂 providers/
- ┃ ┃     ┗ 📦 transaction_provider.dart
- ┃ ┣ 📂 analytics/
- ┃ ┃ ┣ 📂 presentation/
- ┃ ┃ ┃ ┣ 📂 screens/
- ┃ ┃ ┃ ┃ ┗ 📊 analytics_screen.dart
- ┃ ┃ ┃ ┗ 📂 widgets/
- ┃ ┃ ┃   ┣ 🥧 pie_chart_widget.dart
- ┃ ┃ ┃   ┣ 📈 line_chart_widget.dart
- ┃ ┃ ┃   ┗ 📊 bar_chart_widget.dart
- ┃ ┣ 📂 budget/
- ┃ ┃ ┣ 📂 data/
- ┃ ┃ ┃ ┗ 📂 models/
- ┃ ┃ ┃   ┗ 🎯 budget_model.dart
- ┃ ┃ ┗ 📂 presentation/
- ┃ ┃   ┗ 📂 screens/
- ┃ ┃     ┗ 🎯 budget_screen.dart
- ┃ ┣ 📂 categories/
- ┃ ┃ ┣ 📂 data/
- ┃ ┃ ┃ ┗ 📂 models/
- ┃ ┃ ┃   ┗ 🏷️ category_model.dart
- ┃ ┃ ┗ 📂 presentation/
- ┃ ┃   ┗ 📂 screens/
- ┃ ┃     ┗ 🏷️ categories_screen.dart
- ┃ ┗ 📂 settings/
- ┃   ┗ 📂 presentation/
- ┃     ┗ 📂 screens/
- ┃       ┗ ⚙️ settings_screen.dart
- ┣ 🏠 main.dart
- ┗ 🌍 app.dart
+ ┃   ┗ 💳 header_card.dart
+ ┣ 🏠 home_screen.dart
+ ┗ 🚀 main.dart
 ```
 
 ---
