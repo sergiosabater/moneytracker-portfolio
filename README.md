@@ -33,28 +33,24 @@ From tracking daily expenses to analyzing spending patterns, discover the power 
 - 🔐 **Bank-Level Security** – Protect your data with PIN or biometric authentication
 - 📱 **Cross-Platform** – Native experience on both iOS and Android
 
-
 ---
-
 ## 📸 Screenshots
 
 <div align="center">
 
-| <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 1"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 2"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 3"> |
+| <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Main Dashboard"> | <img src="https://github.com/user-attachments/assets/f568e549-521f-4ac3-9792-6f7e2d2b278f" width="250" alt="New Income"> | <img src="https://github.com/user-attachments/assets/8aecec89-f4c8-4d6c-b971-38db4fba84f5" width="250" alt="New Expense"> |
 |:---:|:---:|:---:|
-| **Image 1** | **Image 2** | **Image 3** |
-| <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 4"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 5"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Image 6"> |
-| **Image 4** | **Image 5** | **Image 6** |
+| **Main Dashboard** | **New Income** | **New Expense** |
+
+<br>
+
+| <img src="https://github.com/user-attachments/assets/16b2bbbd-e45f-4b68-8a16-c34e6af7c993" width="250" alt="Missing Description Alert"> | <img src="https://github.com/user-attachments/assets/62d1a894-7ecf-4009-b3d7-4484dd0cc3de" width="250" alt="Delete Transaction Alert"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Main Dashboard"> |
+|:---:|:---:|:---:|
+| **Missing Description Alert** | **Delete Transaction Alert** | **Main Dashboard** |
 
 </div>
 
 ---
-
-
-
-
-
-
 
 ## 🛠️ Tech Stack
 
@@ -207,8 +203,8 @@ For questions, suggestions, or collaboration opportunities:
 
 <div align="center">
 
-### 💪 Start mastering your finances today! 💪
-*Built with ❤️, Flutter, and a passion for financial freedom.*
+###  Start mastering your finances today!
+*Built with Flutter and passion*
 
 <img src="https://media.giphy.com/media/3oKIPa2TdahY8LAAxy/giphy.gif" width="200" alt="Money Animation">
 
