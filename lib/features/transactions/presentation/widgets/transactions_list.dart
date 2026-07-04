@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/controller/transactions_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/model/transaction.dart';
-import 'package:moneytracker/view/components/transaction_delete_dialog.dart';
-import 'package:moneytracker/view/components/transaction_options_dialog.dart';
-import 'package:provider/provider.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/transaction_delete_dialog.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/transaction_options_dialog.dart';
 
-class TransactionsList extends StatefulWidget {
+class TransactionsList extends ConsumerStatefulWidget {
   const TransactionsList({super.key});
 
   @override
-  State<TransactionsList> createState() => _TransactionsListState();
+  ConsumerState<TransactionsList> createState() => _TransactionsListState();
 }
 
-class _TransactionsListState extends State<TransactionsList> {
+class _TransactionsListState extends ConsumerState<TransactionsList> {
   bool _hasAnimatedInitially = false;
 
   String _formatDate(DateTime date) {
@@ -67,10 +67,9 @@ class _TransactionsListState extends State<TransactionsList> {
       pageBuilder: (context, animation, secondaryAnimation) {
         return TransactionDeleteDialog(
           onConfirm: () {
-            Provider.of<TransactionsProvider>(
-              context,
-              listen: false,
-            ).deleteTransaction(transaction.id!);
+            ref
+                .read(transactionsNotifierProvider.notifier)
+                .deleteTransaction(transaction.id!);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(AppLocalizations.of(context)!.transactionDeleted),
@@ -92,20 +91,7 @@ class _TransactionsListState extends State<TransactionsList> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TransactionsProvider>(context);
-    final transactions = provider.transactions;
-    final isLoading = provider.isLoading;
-
-    // Marcar como animado después de la primera carga
-    if (!isLoading && !_hasAnimatedInitially && transactions.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _hasAnimatedInitially = true;
-          });
-        }
-      });
-    }
+    final transactionsAsync = ref.watch(transactionsNotifierProvider);
 
     return Expanded(
       child: Container(
@@ -113,17 +99,38 @@ class _TransactionsListState extends State<TransactionsList> {
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator(color: Colors.teal))
-            : transactions.isEmpty
-            ? _EmptyState()
-            : _TransactionsList(
-                transactions: transactions,
-                formatDate: _formatDate,
-                formatTime: _formatTime,
-                onTransactionLongPress: _showTransactionOptions,
-                hasAnimatedInitially: _hasAnimatedInitially,
-              ),
+        child: transactionsAsync.when(
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: Colors.teal),
+          ),
+          error: (error, stackTrace) => Center(
+            child: Text(
+              '${AppLocalizations.of(context)!.noTransactionsYet}\n$error',
+            ),
+          ),
+          data: (transactions) {
+            // Marcar como animado después de la primera carga
+            if (!_hasAnimatedInitially && transactions.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    _hasAnimatedInitially = true;
+                  });
+                }
+              });
+            }
+
+            return transactions.isEmpty
+                ? _EmptyState()
+                : _TransactionsList(
+                    transactions: transactions,
+                    formatDate: _formatDate,
+                    formatTime: _formatTime,
+                    onTransactionLongPress: _showTransactionOptions,
+                    hasAnimatedInitially: _hasAnimatedInitially,
+                  );
+          },
+        ),
       ),
     );
   }
@@ -317,15 +324,15 @@ class _TransactionCardState extends State<_TransactionCard>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            color.withOpacity(0.15),
-                            color.withOpacity(0.05),
+                            color.withValues(alpha: 0.15),
+                            color.withValues(alpha: 0.05),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: color.withOpacity(0.2),
+                          color: color.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -357,10 +364,10 @@ class _TransactionCardState extends State<_TransactionCard>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: color.withOpacity(0.2),
+                                color: color.withValues(alpha: 0.2),
                                 width: 1,
                               ),
                             ),
@@ -386,15 +393,15 @@ class _TransactionCardState extends State<_TransactionCard>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    color.withOpacity(0.1),
-                                    color.withOpacity(0.05),
+                                    color.withValues(alpha: 0.1),
+                                    color.withValues(alpha: 0.05),
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: color.withOpacity(0.2),
+                                  color: color.withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),

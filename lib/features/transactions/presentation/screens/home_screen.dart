@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/view/components/add_transaction_dialog.dart';
-import 'package:moneytracker/view/components/home_header.dart';
-import 'package:moneytracker/view/components/transactions_list.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/add_transaction_dialog.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/home_header.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/transactions_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

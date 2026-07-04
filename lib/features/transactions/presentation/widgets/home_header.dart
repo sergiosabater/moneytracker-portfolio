@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/controller/transactions_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 
-class HomeHeader extends StatefulWidget {
+class HomeHeader extends ConsumerStatefulWidget {
   const HomeHeader({super.key});
 
   @override
-  State<HomeHeader> createState() => _HomeHeaderState();
+  ConsumerState<HomeHeader> createState() => _HomeHeaderState();
 }
 
-class _HomeHeaderState extends State<HomeHeader>
+class _HomeHeaderState extends ConsumerState<HomeHeader>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -62,10 +62,9 @@ class _HomeHeaderState extends State<HomeHeader>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final provider = Provider.of<TransactionsProvider>(context);
-    final balance = provider.getBalance();
-    final incomes = provider.getTotalIncomes();
-    final expenses = provider.getTotalExpenses();
+    final balance = ref.watch(balanceProvider);
+    final incomes = ref.watch(totalIncomesProvider);
+    final expenses = ref.watch(totalExpensesProvider);
 
     return SlideTransition(
       position: _slideAnimation,
@@ -91,7 +90,7 @@ class _HomeHeaderState extends State<HomeHeader>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.teal.shade800.withOpacity(0.4),
+                  color: Colors.teal.shade800.withValues(alpha: 0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -131,7 +130,7 @@ class _HomeHeaderState extends State<HomeHeader>
                     AppLocalizations.of(context)!.balance.toUpperCase(),
                     style: textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       letterSpacing: 2.0,
                     ),
                   ),
@@ -242,7 +241,7 @@ class _AnimatedBalanceTextState extends State<AnimatedBalanceText>
               letterSpacing: 1.2,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -324,23 +323,23 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
               opacity: _cardFadeAnimation.value,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: widget.color.withOpacity(0.3),
+                      color: widget.color.withValues(alpha: 0.3),
                       blurRadius: 15,
                       offset: const Offset(0, 5),
                       spreadRadius: -2,
                     ),
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       blurRadius: 10,
                       offset: const Offset(-3, -3),
                     ),
                   ],
                   border: Border.all(
-                    color: widget.color.withOpacity(0.1),
+                    color: widget.color.withValues(alpha: 0.1),
                     width: 1.5,
                   ),
                 ),
@@ -356,18 +355,18 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              widget.color.withOpacity(0.2),
-                              widget.color.withOpacity(0.05),
+                              widget.color.withValues(alpha: 0.2),
+                              widget.color.withValues(alpha: 0.05),
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: widget.color.withOpacity(0.2),
+                              color: widget.color.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(2, 2),
                             ),
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                               blurRadius: 10,
                               offset: const Offset(-2, -2),
                             ),
@@ -422,8 +421,8 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                           borderRadius: BorderRadius.circular(2),
                           gradient: LinearGradient(
                             colors: [
-                              widget.color.withOpacity(0.8),
-                              widget.color.withOpacity(0.3),
+                              widget.color.withValues(alpha: 0.8),
+                              widget.color.withValues(alpha: 0.3),
                             ],
                           ),
                         ),

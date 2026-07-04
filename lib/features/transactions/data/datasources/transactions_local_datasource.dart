@@ -1,22 +1,23 @@
 import 'package:sqflite/sqflite.dart' hide Transaction;
 import 'package:path/path.dart';
-import 'package:moneytracker/model/transaction.dart';
+import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 
-class DatabaseHelper {
+/// Handles direct communication with the local SQLite database.
+/// Responsible for mapping raw database rows to/from domain entities.
+class TransactionsLocalDatasource {
   // Singleton pattern
-  static final DatabaseHelper instance = DatabaseHelper._init();
+  static final TransactionsLocalDatasource instance =
+      TransactionsLocalDatasource._init();
   static Database? _database;
 
-  DatabaseHelper._init();
+  TransactionsLocalDatasource._init();
 
-  // Getter to obtain the database instance
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB('transactions.db');
     return _database!;
   }
 
-  // Initialize the database
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
@@ -24,7 +25,6 @@ class DatabaseHelper {
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  // Create the transactions table
   Future _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE transactions (
@@ -37,59 +37,55 @@ class DatabaseHelper {
     ''');
   }
 
-  // Insert a new transaction
   Future<int> insertTransaction(Transaction transaction) async {
     final db = await instance.database;
 
-    return await db.insert('transactions', {
-      'type': transaction.type.toString(),
-      'amount': transaction.amount,
-      'description': transaction.description,
-      'dateTime': transaction.dateTime.toIso8601String(),
-    });
+    return await db.insert('transactions', _toMap(transaction));
   }
 
-  // Get all transactions
   Future<List<Transaction>> getAllTransactions() async {
     final db = await instance.database;
 
     final result = await db.query(
       'transactions',
-      orderBy: 'dateTime DESC', // Order by most recent first
+      orderBy: 'dateTime DESC',
     );
 
-    return result
-        .map(
-          (json) => Transaction(
-            id: json['id'] as int,
-            type: json['type'] == 'TransactionType.income'
-                ? TransactionType.income
-                : TransactionType.expense,
-            amount: json['amount'] as double,
-            description: json['description'] as String,
-            dateTime: DateTime.parse(json['dateTime'] as String),
-          ),
-        )
-        .toList();
+    return result.map(_fromMap).toList();
   }
 
-  // Delete a transaction by id
   Future<int> deleteTransaction(int id) async {
     final db = await instance.database;
 
     return await db.delete('transactions', where: 'id = ?', whereArgs: [id]);
   }
 
-  // Delete all transactions
   Future<int> deleteAllTransactions() async {
     final db = await instance.database;
 
     return await db.delete('transactions');
   }
 
-  // Close the database
-  Future close() async {
-    final db = await instance.database;
-    db.close();
+  // --- Mapping helpers: database row <-> domain entity ---
+
+  Map<String, dynamic> _toMap(Transaction transaction) {
+    return {
+      'type': transaction.type.toString(),
+      'amount': transaction.amount,
+      'description': transaction.description,
+      'dateTime': transaction.dateTime.toIso8601String(),
+    };
+  }
+
+  Transaction _fromMap(Map<String, dynamic> map) {
+    return Transaction(
+      id: map['id'] as int,
+      type: map['type'] == 'TransactionType.income'
+          ? TransactionType.income
+          : TransactionType.expense,
+      amount: map['amount'] as double,
+      description: map['description'] as String,
+      dateTime: DateTime.parse(map['dateTime'] as String),
+    );
   }
 }
