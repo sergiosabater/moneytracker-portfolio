@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/controller/transactions_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 
-class HomeHeader extends StatefulWidget {
+class HomeHeader extends ConsumerStatefulWidget {
   const HomeHeader({super.key});
 
   @override
-  State<HomeHeader> createState() => _HomeHeaderState();
+  ConsumerState<HomeHeader> createState() => _HomeHeaderState();
 }
 
-class _HomeHeaderState extends State<HomeHeader>
+class _HomeHeaderState extends ConsumerState<HomeHeader>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -62,10 +62,9 @@ class _HomeHeaderState extends State<HomeHeader>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final provider = Provider.of<TransactionsProvider>(context);
-    final balance = provider.getBalance();
-    final incomes = provider.getTotalIncomes();
-    final expenses = provider.getTotalExpenses();
+    final balance = ref.watch(balanceProvider);
+    final incomes = ref.watch(totalIncomesProvider);
+    final expenses = ref.watch(totalExpensesProvider);
 
     return SlideTransition(
       position: _slideAnimation,

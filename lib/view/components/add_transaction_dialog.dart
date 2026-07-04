@@ -1,19 +1,20 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:moneytracker/controller/transactions_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/model/transaction.dart';
-import 'package:provider/provider.dart';
 import 'package:moneytracker/view/components/no_description_dialog.dart';
 
-class AddTransactionDialog extends StatefulWidget {
+class AddTransactionDialog extends ConsumerStatefulWidget {
   const AddTransactionDialog({super.key});
 
   @override
-  State<AddTransactionDialog> createState() => _AddTransactionDialogState();
+  ConsumerState<AddTransactionDialog> createState() =>
+      _AddTransactionDialogState();
 }
 
-class _AddTransactionDialogState extends State<AddTransactionDialog>
+class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
     with SingleTickerProviderStateMixin {
   TransactionType type = TransactionType.income;
   double amount = 0.0;
@@ -162,10 +163,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
       dateTime: DateTime.now(),
     );
 
-    Provider.of<TransactionsProvider>(
-      context,
-      listen: false,
-    ).addTransaction(transaction);
+    ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
 
     final messenger = ScaffoldMessenger.of(context);
     final localizations = AppLocalizations.of(context)!;
@@ -261,7 +259,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog>
                             final valueWithoutCommas = valueWithoutDollarSign
                                 .replaceAll(',', '');
                             setState(() {
-                              amount = double.tryParse(valueWithoutCommas) ?? 0.0;
+                              amount =
+                                  double.tryParse(valueWithoutCommas) ?? 0.0;
                             });
                           },
                         ),
