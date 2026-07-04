@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/view/components/no_description_dialog.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/no_description_dialog.dart';
 
 class AddTransactionDialog extends ConsumerStatefulWidget {
   const AddTransactionDialog({super.key});

@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/view/components/transaction_delete_dialog.dart';
-import 'package:moneytracker/view/components/transaction_options_dialog.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/transaction_delete_dialog.dart';
+import 'package:moneytracker/features/transactions/presentation/widgets/transaction_options_dialog.dart';
 
 class TransactionsList extends ConsumerStatefulWidget {
   const TransactionsList({super.key});
@@ -104,7 +104,9 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
             child: CircularProgressIndicator(color: Colors.teal),
           ),
           error: (error, stackTrace) => Center(
-            child: Text('${AppLocalizations.of(context)!.noTransactionsYet}\n$error'),
+            child: Text(
+              '${AppLocalizations.of(context)!.noTransactionsYet}\n$error',
+            ),
           ),
           data: (transactions) {
             // Marcar como animado después de la primera carga
