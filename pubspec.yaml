@@ -16,7 +16,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  provider: ^6.1.5+1
   sqflite: ^2.3.0
   path: ^1.8.3
 
