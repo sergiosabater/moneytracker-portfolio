@@ -324,15 +324,15 @@ class _TransactionCardState extends State<_TransactionCard>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            color.withOpacity(0.15),
-                            color.withOpacity(0.05),
+                            color.withValues(alpha: 0.15),
+                            color.withValues(alpha: 0.05),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: color.withOpacity(0.2),
+                          color: color.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -364,10 +364,10 @@ class _TransactionCardState extends State<_TransactionCard>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: color.withOpacity(0.2),
+                                color: color.withValues(alpha: 0.2),
                                 width: 1,
                               ),
                             ),
@@ -393,15 +393,15 @@ class _TransactionCardState extends State<_TransactionCard>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    color.withOpacity(0.1),
-                                    color.withOpacity(0.05),
+                                    color.withValues(alpha: 0.1),
+                                    color.withValues(alpha: 0.05),
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: color.withOpacity(0.2),
+                                  color: color.withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),
