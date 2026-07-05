@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 
-/// A titled card grouping related settings options together
-/// (e.g. "Appearance", "Language", "Security").
 class SettingsSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -24,23 +23,23 @@ class SettingsSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: Colors.grey.shade600,
+              color: AppColors.lightTextSecondary,
               letterSpacing: 1.2,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.lightSurface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.shade200,
+                color: AppColors.lightBorder,
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
-            border: Border.all(color: Colors.grey.shade100, width: 1),
+            border: Border.all(color: AppColors.lightBorder, width: 1),
           ),
           child: Column(
             children: List.generate(children.length, (index) {
@@ -53,7 +52,7 @@ class SettingsSection extends StatelessWidget {
                       height: 1,
                       indent: 16,
                       endIndent: 16,
-                      color: Colors.grey.shade100,
+                      color: AppColors.lightBorder,
                     ),
                 ],
               );

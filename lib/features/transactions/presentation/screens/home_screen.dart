@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/add_transaction_dialog.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/home_header.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/transactions_list.dart';
@@ -9,13 +10,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
-      body: SafeArea(
-        bottom: false,
-        child: Column(children: [HomeHeader(), TransactionsList()]),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primary,
+              AppColors.primaryMedium,
+              AppColors.primaryLight,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(children: [HomeHeader(), TransactionsList()]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.accent,
         onPressed: () {
           // Action to add a new transaction
           showModalBottomSheet(
@@ -26,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             },
           );
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

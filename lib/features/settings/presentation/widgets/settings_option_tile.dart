@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 
-/// A single tappable row inside a [SettingsSection].
-/// Shows a leading icon, a title, an optional trailing value
-/// (e.g. the currently selected language), and a chevron.
 class SettingsOptionTile extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -43,17 +41,17 @@ class SettingsOptionTile extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: AppColors.lightTextPrimary,
                 ),
               ),
             ),
             if (value != null) ...[
               Text(
                 value!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade500,
+                  color: AppColors.lightTextSecondary,
                 ),
               ),
               const SizedBox(width: 4),
@@ -61,7 +59,7 @@ class SettingsOptionTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               size: 20,
-              color: Colors.grey.shade400,
+              color: AppColors.lightTextSecondary,
             ),
           ],
         ),

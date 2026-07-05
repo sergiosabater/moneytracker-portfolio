@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
@@ -74,7 +75,7 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
               SnackBar(
                 content: Text(AppLocalizations.of(context)!.transactionDeleted),
                 duration: const Duration(seconds: 2),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           },
@@ -95,18 +96,16 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
 
     return Expanded(
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: transactionsAsync.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: Colors.teal),
+          loading: () => Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
           ),
           error: (error, stackTrace) => Center(
-            child: Text(
-              '${AppLocalizations.of(context)!.noTransactionsYet}\n$error',
-            ),
+            child: Text('${AppLocalizations.of(context)!.noTransactionsYet}\n$error'),
           ),
           data: (transactions) {
             // Marcar como animado después de la primera carga
@@ -121,7 +120,7 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
             }
 
             return transactions.isEmpty
-                ? _EmptyState()
+                ? const _EmptyState()
                 : _TransactionsList(
                     transactions: transactions,
                     formatDate: _formatDate,
@@ -137,8 +136,13 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
 }
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
+    final secondaryColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +150,7 @@ class _EmptyState extends StatelessWidget {
           Icon(
             Icons.account_balance_wallet_outlined,
             size: 80,
-            color: Colors.grey.shade300,
+            color: secondaryColor.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(
@@ -154,13 +158,16 @@ class _EmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade600,
+              color: secondaryColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Tap + to add your first transaction',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+            style: TextStyle(
+              fontSize: 14,
+              color: secondaryColor.withValues(alpha: 0.7),
+            ),
           ),
         ],
       ),
@@ -280,7 +287,7 @@ class _TransactionCardState extends State<_TransactionCard>
   @override
   Widget build(BuildContext context) {
     final isIncome = widget.transaction.type == TransactionType.income;
-    final color = isIncome ? Colors.teal : Colors.red;
+    final color = isIncome ? AppColors.accent : AppColors.expense;
     final icon = isIncome ? Icons.trending_up : Icons.trending_down;
     final typeLabel = isIncome
         ? AppLocalizations.of(context)!.income
@@ -289,6 +296,13 @@ class _TransactionCardState extends State<_TransactionCard>
     final value = widget.transaction.type == TransactionType.expense
         ? '-\$ ${widget.transaction.amount.abs().toStringAsFixed(2)}'
         : '\$ ${widget.transaction.amount.toStringAsFixed(2)}';
+
+    final surfaceColor = Theme.of(context).colorScheme.surface;
+    final borderColor = Theme.of(context).dividerColor;
+    final titleColor =
+        Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black87;
+    final secondaryTextColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey.shade700;
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -301,16 +315,16 @@ class _TransactionCardState extends State<_TransactionCard>
             borderRadius: BorderRadius.circular(16),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: surfaceColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.shade200,
+                    color: borderColor,
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
-                border: Border.all(color: Colors.grey.shade100, width: 1),
+                border: Border.all(color: borderColor, width: 1),
               ),
 
               child: Padding(
@@ -347,10 +361,10 @@ class _TransactionCardState extends State<_TransactionCard>
                           // Título
                           Text(
                             widget.transaction.description,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: titleColor,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -423,7 +437,7 @@ class _TransactionCardState extends State<_TransactionCard>
                               Icon(
                                 Icons.calendar_month,
                                 size: 14,
-                                color: Colors.grey.shade600,
+                                color: secondaryTextColor,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -431,14 +445,14 @@ class _TransactionCardState extends State<_TransactionCard>
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade700,
+                                  color: secondaryTextColor,
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Icon(
                                 Icons.access_time,
                                 size: 14,
-                                color: Colors.grey.shade600,
+                                color: secondaryTextColor,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -446,7 +460,7 @@ class _TransactionCardState extends State<_TransactionCard>
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade700,
+                                  color: secondaryTextColor,
                                 ),
                               ),
                             ],

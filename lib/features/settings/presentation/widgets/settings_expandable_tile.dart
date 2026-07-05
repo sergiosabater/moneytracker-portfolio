@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 
-/// Represents a single selectable option inside a [SettingsExpandableTile].
-///
-/// Provide either [icon] (a Material icon) or [leadingWidget] (e.g. a flag
-/// image) as the visual indicator — [leadingWidget] takes priority if both
-/// are provided.
 class SettingsSelectableOption {
   final String value;
   final String label;
@@ -79,16 +75,16 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
                 Text(
                   _selectedOption.label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade500,
+                    color: AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -98,7 +94,7 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                   child: Icon(
                     Icons.keyboard_arrow_down,
                     size: 22,
-                    color: Colors.grey.shade400,
+                    color: AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -117,7 +113,7 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
   Widget _buildOptionsList() {
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(color: Colors.grey.shade50),
+      decoration: const BoxDecoration(color: AppColors.lightBackground),
       child: Column(
         children: widget.options.map((option) {
           final isSelected = option.value == widget.selectedValue;
@@ -147,8 +143,8 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                             ? FontWeight.w700
                             : FontWeight.w500,
                         color: isSelected
-                            ? Colors.black87
-                            : Colors.grey.shade600,
+                            ? AppColors.lightTextPrimary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
