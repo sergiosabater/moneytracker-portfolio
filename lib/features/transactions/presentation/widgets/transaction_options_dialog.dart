@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/custom_dialog.dart';
 
@@ -16,12 +17,12 @@ class TransactionOptionsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomDialog(
       icon: Icons.settings,
-      iconColor: Colors.teal,
+      iconColor: AppColors.accent,
       title: AppLocalizations.of(context)!.transactionOptions,
       actions: [
         DialogAction(
           label: AppLocalizations.of(context)!.edit,
-          color: Colors.blue,
+          color: AppColors.info,
           icon: Icons.edit,
           onTap: () {
             Navigator.pop(context);
@@ -30,7 +31,7 @@ class TransactionOptionsDialog extends StatelessWidget {
         ),
         DialogAction(
           label: AppLocalizations.of(context)!.delete,
-          color: Colors.red,
+          color: AppColors.error,
           icon: Icons.delete,
           onTap: () {
             Navigator.pop(context);
