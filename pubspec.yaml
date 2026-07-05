@@ -18,6 +18,7 @@ dependencies:
   intl: any
   sqflite: ^2.3.0
   path: ^1.8.3
+  country_flags: ^3.1.0
 
   # --- Nueva arquitectura ---
   flutter_riverpod: ^2.6.1

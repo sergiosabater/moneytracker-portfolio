@@ -1,0 +1,243 @@
+import 'package:country_flags/country_flags.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/features/settings/presentation/widgets/settings_expandable_tile.dart';
+import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
+import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
+
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  // Local UI state only — not wired to real functionality yet.
+  String _selectedTheme = 'system';
+  String _selectedLanguage = 'system';
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      body: SafeArea(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: Column(
+              children: [
+                _buildHeader(context),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SettingsSection(
+                          title: 'Appearance',
+                          children: [
+                            SettingsExpandableTile(
+                              icon: Icons.palette_outlined,
+                              iconColor: Colors.orange,
+                              title: 'Theme',
+                              selectedValue: _selectedTheme,
+                              onSelected: (value) {
+                                setState(() => _selectedTheme = value);
+                              },
+                              options: const [
+                                SettingsSelectableOption(
+                                  value: 'light',
+                                  label: 'Light',
+                                  icon: Icons.light_mode,
+                                  iconColor: Colors.orange,
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'dark',
+                                  label: 'Dark',
+                                  icon: Icons.dark_mode,
+                                  iconColor: Colors.indigo,
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'system',
+                                  label: 'System',
+                                  icon: Icons.brightness_auto,
+                                  iconColor: Colors.grey,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        SettingsSection(
+                          title: 'Language',
+                          children: [
+                            SettingsExpandableTile(
+                              icon: Icons.language,
+                              iconColor: Colors.blue,
+                              title: 'App language',
+                              selectedValue: _selectedLanguage,
+                              onSelected: (value) {
+                                setState(() => _selectedLanguage = value);
+                              },
+                              options: [
+                                const SettingsSelectableOption(
+                                  value: 'system',
+                                  label: 'System default',
+                                  icon: Icons.smartphone,
+                                  iconColor: Colors.grey,
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'es',
+                                  label: 'Español',
+                                  leadingWidget: CountryFlag.fromCountryCode(
+                                    'ES',
+                                    height: 18,
+                                    width: 24,
+                                    shape: const RoundedRectangle(3),
+                                  ),
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'en',
+                                  label: 'English',
+                                  leadingWidget: CountryFlag.fromCountryCode(
+                                    'GB',
+                                    height: 18,
+                                    width: 24,
+                                    shape: const RoundedRectangle(3),
+                                  ),
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'fr',
+                                  label: 'Français',
+                                  leadingWidget: CountryFlag.fromCountryCode(
+                                    'FR',
+                                    height: 18,
+                                    width: 24,
+                                    shape: const RoundedRectangle(3),
+                                  ),
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'de',
+                                  label: 'Deutsch',
+                                  leadingWidget: CountryFlag.fromCountryCode(
+                                    'DE',
+                                    height: 18,
+                                    width: 24,
+                                    shape: const RoundedRectangle(3),
+                                  ),
+                                ),
+                                SettingsSelectableOption(
+                                  value: 'pl',
+                                  label: 'Polski',
+                                  leadingWidget: CountryFlag.fromCountryCode(
+                                    'PL',
+                                    height: 18,
+                                    width: 24,
+                                    shape: const RoundedRectangle(3),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        // TODO (Paso 5.3.5): Currency section
+                        SettingsSection(
+                          title: 'Security',
+                          children: [
+                            SettingsOptionTile(
+                              icon: Icons.pin_outlined,
+                              iconColor: Colors.deepPurple,
+                              title: 'PIN code',
+                              onTap: () {},
+                            ),
+                            SettingsOptionTile(
+                              icon: Icons.fingerprint,
+                              iconColor: Colors.deepPurple,
+                              title: 'Biometric authentication',
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        SettingsSection(
+                          title: 'Information',
+                          children: [
+                            SettingsOptionTile(
+                              icon: Icons.info_outline,
+                              iconColor: Colors.teal,
+                              title: 'About',
+                              onTap: () {
+                                // TODO (Paso 5.4): navigate to AboutScreen
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          const Text(
+            'Settings',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
