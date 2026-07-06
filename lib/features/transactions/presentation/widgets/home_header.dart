@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
@@ -82,7 +83,18 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
             ),
             child: Column(
               children: [
-                // App Title con efecto de brillo
+                // Fila superior: botones de acción (ajustes, y futuros: perfil, búsqueda...)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _SettingsButton(
+                      onTap: () => context.push('/settings'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // App Title
                 ShaderMask(
                   shaderCallback: (bounds) {
                     return const LinearGradient(
@@ -144,6 +156,40 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Glassmorphism-style settings button that sits directly on the header
+// gradient — a translucent circle so it never competes visually with
+// the balance or the app title.
+class _SettingsButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _SettingsButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      customBorder: const CircleBorder(),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.15),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: const Icon(
+          Icons.settings_rounded,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_expandable_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -313,9 +314,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.info_outline,
                   iconColor: AppColors.accent,
                   title: 'About',
-                  onTap: () {
-                    // TODO (Paso 5.4): navigate to AboutScreen
-                  },
+                  onTap: () => context.push('/settings/about'),
                 ),
               ],
             ),
