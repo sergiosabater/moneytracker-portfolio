@@ -4,13 +4,14 @@
   <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20Android-blue?style=for-the-badge&logo=flutter" alt="Platform">
   <img src="https://img.shields.io/badge/Language-Dart-0175C2?style=for-the-badge&logo=dart" alt="Language">
   <img src="https://img.shields.io/badge/Framework-Flutter-02569B?style=for-the-badge&logo=flutter" alt="Framework">
-  <img src="https://img.shields.io/badge/State-Provider%2FRiverpod-purple?style=for-the-badge" alt="State Management">
+  <img src="https://img.shields.io/badge/State-Riverpod-purple?style=for-the-badge" alt="State Management">
+  <img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-brightgreen?style=for-the-badge" alt="Architecture">
   <img src="https://img.shields.io/badge/Mode-Dark%20%26%20Light-yellow?style=for-the-badge&logo=flutter" alt="Theme Mode">
 </div>
 
 <div align="center">
 
-### 💸 Take Control of Your Financial Future! 💸
+### Take Control of Your Financial Future!
 *The smart way to track every penny, visualize your spending, and achieve your financial goals.*
 
 </div>
@@ -20,18 +21,18 @@
 ## 📱 About the Project
 
 **Money Tracker** is your personal financial companion, designed to help you master your money management.  
-From tracking daily expenses to analyzing spending patterns, discover the power of financial awareness and make smarter decisions with every transaction.
+From tracking daily income and expenses to keeping an eye on your overall balance, discover the power of financial awareness and make smarter decisions with every transaction.
+
+The project is being built as a deliberate, professional-grade learning exercise: a small, functional app evolving step by step on top of a **Feature-First + Clean Architecture** foundation, so new capabilities can be added without compromising maintainability or testability.
 
 ### ✨ What Makes Money Tracker Special?
 
-- 💳 **Complete Transaction Management** – Add, edit, and track all your income and expenses effortlessly
-- 📊 **Visual Analytics** – Beautiful charts and graphs to understand your financial habits at a glance
-- 🎯 **Smart Budget Control** – Set monthly budgets and stay on track with real-time monitoring
-- 🔄 **Recurring Payments** – Never forget regular bills or income streams
-- 🌓 **Adaptive Theming** – Seamlessly switch between dark and light modes
-- 🌍 **Multi-Currency Ready** – Track finances in any currency worldwide
-- 🔐 **Bank-Level Security** – Protect your data with PIN or biometric authentication
-- 📱 **Cross-Platform** – Native experience on both iOS and Android
+- 💳 **Complete Transaction Management** – Add and delete income and expense entries, with real-time balance updates
+- 📊 **At-a-Glance Overview** – Animated balance, income and expense summary cards on the home screen
+- 🌓 **Adaptive Theming Foundation** – Centralized light/dark color system, automatically following the OS-level appearance setting
+- 🌍 **Multi-Language & Multi-Currency Selectors** – Settings screen ready for Spanish, English, French, German and Polish, and for USD, EUR, GBP and PLN
+- 🔐 **Security Section (UI ready)** – PIN code and biometric authentication entries prepared in Settings, pending real implementation
+- 📱 **Cross-Platform** – A single Dart codebase producing a native experience on both iOS and Android
 
 ---
 ## 📸 Screenshots
@@ -57,60 +58,87 @@ From tracking daily expenses to analyzing spending patterns, discover the power 
 ### 🏗️ **Framework & Architecture**
 - **Flutter** – Cross-platform framework for native iOS & Android apps
 - **Dart** – Fast, modern programming language optimized for UI
-- **Clean Architecture** – Maintainable, scalable, and testable codebase
+- **Feature-First + Clean Architecture (lightweight)** – Code organized by feature, with clear `domain` / `data` / `presentation` layers, keeping business logic decoupled from UI and persistence
 
 ### 💉 **State Management**
-- **Provider / Riverpod** – Reactive and efficient state management solution
+- **Riverpod** (`flutter_riverpod`, `riverpod_annotation`, `riverpod_generator`) – Reactive, code-generated state management, using `AsyncNotifier` to handle loading/data/error states automatically
+
+### 🧬 **Domain Modeling**
+- **Freezed** – Immutable domain entities (e.g. `Transaction`) with generated `copyWith`, value equality and more
+- **build_runner** – Code generation engine powering Riverpod and Freezed
 
 ### 💾 **Data Persistence**
-- **SQLite / Hive** – Local database for fast and reliable data storage
-- **Backup & Restore** – Export/import functionality for data safety
+- **SQLite** (via `sqflite`) – Local relational database
+- **Repository Pattern** – `TransactionsRepository` abstracts persistence behind an interface, so the data source (currently SQLite) can be swapped in the future without touching business logic or UI
 
-### 📊 **Visualization**
-- **fl_chart** – Stunning graphs, pie charts, and analytics visualization
-- **Custom Widgets** – Beautiful UI components for an engaging experience
+### 🧭 **Navigation**
+- **GoRouter** – Declarative, nested routing (`/`, `/settings`, `/settings/about`), replacing manual `Navigator` calls for full-screen navigation
 
-### 🔐 **Security**
-- **Local Authentication** – PIN code and biometric protection
-- **Encrypted Storage** – Your financial data stays private and secure
+### 🎨 **User Interface & Theming**
+- **Material Design 3** – Clean, modern design language
+- **Centralized Design System** (`AppColors` / `AppTheme`) – A single source of truth for brand and semantic colors, generating both light and dark `ThemeData`, with the app automatically following the device's system appearance
+- **country_flags** – Vector flag icons for the language and currency selectors
+- **Custom animations** – Entrance transitions, cascading list animations and micro-interactions throughout the UI
 
-### 🎨 **User Interface**
-- **Material Design** – Clean, intuitive, and modern design language
-- **Dark & Light Themes** – Comfortable viewing in any lighting condition
-- **Responsive Layout** – Perfect experience on phones and tablets
+### 🌍 **Internationalization**
+- **Flutter Intl (`.arb` files)** – Spanish and English currently supported at the app-content level; the Settings screen already offers French, German and Polish as selectable options ahead of full translation support
 
 ---
 
 ## 🗺️ Project Structure
 
-Money Tracker follows an MVC-based layered architecture, organizing code by responsibility:
+Money Tracker follows a **Feature-First + Clean Architecture (lightweight)** approach: code is organized by feature first, and each feature is internally split into `domain` (entities, repository contracts), `data` (repository implementations, data sources) and `presentation` (screens, widgets, Riverpod providers) layers.
 
 ```plaintext
 📦 lib/
- ┣ 📂 controller/
- ┃ ┗ 📦 transactions_provider.dart
- ┣ 📂 database/
- ┃ ┗ 💾 database_helper.dart
+ ┣ 📂 core/
+ ┃ ┣ 📂 constants/
+ ┃ ┣ 📂 database/
+ ┃ ┣ 📂 router/
+ ┃ ┃ ┗ 🧭 app_router.dart
+ ┃ ┗ 📂 theme/
+ ┃   ┣ 🎨 app_colors.dart
+ ┃   ┗ 🎨 app_theme.dart
+ ┣ 📂 features/
+ ┃ ┣ 📂 transactions/
+ ┃ ┃ ┣ 📂 data/
+ ┃ ┃ ┃ ┣ 📂 datasources/
+ ┃ ┃ ┃ ┃ ┗ 💾 transactions_local_datasource.dart
+ ┃ ┃ ┃ ┗ 📂 repositories/
+ ┃ ┃ ┃   ┗ 📦 transactions_repository_impl.dart
+ ┃ ┃ ┣ 📂 domain/
+ ┃ ┃ ┃ ┣ 📂 entities/
+ ┃ ┃ ┃ ┃ ┗ 💰 transaction.dart
+ ┃ ┃ ┃ ┗ 📂 repositories/
+ ┃ ┃ ┃   ┗ 📄 transactions_repository.dart
+ ┃ ┃ ┗ 📂 presentation/
+ ┃ ┃   ┣ 📂 providers/
+ ┃ ┃   ┃ ┗ ⚡ transactions_notifier.dart
+ ┃ ┃   ┣ 📂 screens/
+ ┃ ┃   ┃ ┗ 🏠 home_screen.dart
+ ┃ ┃   ┗ 📂 widgets/
+ ┃ ┃     ┣ ➕ add_transaction_dialog.dart
+ ┃ ┃     ┣ 🗨️ custom_dialog.dart
+ ┃ ┃     ┣ 🏠 home_header.dart
+ ┃ ┃     ┣ ❓ no_description_dialog.dart
+ ┃ ┃     ┣ 🗑️ transaction_delete_dialog.dart
+ ┃ ┃     ┣ ⚙️ transaction_options_dialog.dart
+ ┃ ┃     ┗ 📋 transactions_list.dart
+ ┃ ┗ 📂 settings/
+ ┃   ┗ 📂 presentation/
+ ┃     ┣ 📂 screens/
+ ┃     ┃ ┣ ⚙️ settings_screen.dart
+ ┃     ┃ ┗ 👤 about_screen.dart
+ ┃     ┗ 📂 widgets/
+ ┃       ┣ 🗂️ settings_section.dart
+ ┃       ┣ 📄 settings_option_tile.dart
+ ┃       ┗ 🔽 settings_expandable_tile.dart
  ┣ 📂 l10n/
  ┃ ┣ 🌐 app_en.arb
  ┃ ┣ 🌐 app_es.arb
  ┃ ┣ 🌍 app_localizations_en.dart
  ┃ ┣ 🌍 app_localizations_es.dart
  ┃ ┗ 🌍 app_localizations.dart
- ┣ 📂 model/
- ┃ ┗ 💰 transaction.dart
- ┣ 📂 view/
- ┃ ┣ 📂 components/
- ┃ ┃ ┣ ➕ add_transaction_dialog.dart
- ┃ ┃ ┣ 🗨️ custom_dialog.dart
- ┃ ┃ ┣ 🏠 home_header.dart
- ┃ ┃ ┣ ❓ no_description_dialog.dart
- ┃ ┃ ┣ 🗑️ transaction_delete_dialog.dart
- ┃ ┃ ┣ ⚙️ transaction_options_dialog.dart
- ┃ ┃ ┗ 📋 transactions_list.dart
- ┃ ┗ 📂 widgets/
- ┃   ┗ 💳 header_card.dart
- ┣ 🏠 home_screen.dart
  ┗ 🚀 main.dart
 ```
 
@@ -120,8 +148,8 @@ Money Tracker follows an MVC-based layered architecture, organizing code by resp
 
 ### Prerequisites
 
-- Flutter SDK (3.0 or higher)
-- Dart SDK (3.0 or higher)
+- Flutter SDK (3.9 or higher)
+- Dart SDK (3.9 or higher)
 - Android Studio / VS Code
 - iOS Simulator / Android Emulator
 
@@ -137,6 +165,9 @@ cd money-tracker
 # Install dependencies
 flutter pub get
 
+# Generate code (Riverpod providers & Freezed entities)
+dart run build_runner build --delete-conflicting-outputs
+
 # Run the app
 flutter run
 ```
@@ -146,22 +177,19 @@ flutter run
 ## 💡 Usage Guide
 
 1. **🎯 Create Your First Transaction**  
-   Tap the **"+"** button to add income or expenses instantly
+   Tap the **"+"** button on the home screen to add an income or expense entry
 
-2. **🏷️ Organize with Categories**  
-   Customize categories like Food, Transport, Entertainment, and more
+2. **📊 Check Your Overview**  
+   The animated header shows your current balance, total income and total expenses at a glance
 
-3. **📊 Discover Insights**  
-   Visit the **Analytics** tab to see beautiful charts showing your spending patterns
+3. **🗑️ Manage Transactions**  
+   Long-press any transaction to edit (coming soon) or delete it
 
-4. **💰 Set Your Budget**  
-   Define monthly budgets and monitor progress with real-time tracking
+4. **⚙️ Explore Settings**  
+   Tap the settings icon on the home screen to open the Settings screen, where you can preview the theme (Light/Dark/System), language, currency and security options
 
-5. **🔍 Search & Filter**  
-   Quickly find any transaction by date, category, or amount
-
-6. **🔐 Stay Secure**  
-   Enable PIN or biometric authentication to protect your financial data
+5. **👤 Learn More**  
+   From Settings, tap **About** to see a short profile of the developer behind the app
 
 ---
 
@@ -169,13 +197,15 @@ flutter run
 
 ### 🎯 Upcoming Features
 
-- 🤖 **AI-Powered Insights** – Smart recommendations based on your spending habits
-- 📱 **Bank Integration** – Connect directly to your bank accounts
-- 👥 **Shared Budgets** – Collaborate on finances with family or roommates
+- 🎨 **Real theme switching** – Wire up the existing Light/Dark/System selector to actually change the app's appearance
+- 🌍 **Full internationalization** – Connect the language selector to real app-wide translations (French, German, Polish already selectable in the UI)
+- 💱 **Real currency formatting** – Apply the selected currency symbol across balances and transactions
+- 🔐 **PIN & biometric authentication** – Implement the security options already designed in Settings
+- 📊 **Visual Analytics** – Charts and graphs to understand spending patterns over time
+- 🎯 **Budget Control** – Monthly budgets with real-time tracking
 - 📸 **Receipt Scanner** – Capture and store receipts with OCR technology
 - 🌐 **Cloud Sync** – Access your data across multiple devices
 - 📅 **Financial Goals** – Set and track long-term savings objectives
-- 📈 **Investment Tracking** – Monitor stocks, crypto, and other assets
 - 🔔 **Smart Notifications** – Bill reminders and budget alerts
 
 ---
