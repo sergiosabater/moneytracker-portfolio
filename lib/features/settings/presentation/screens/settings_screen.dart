@@ -22,6 +22,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   // Local UI state only — not wired to real functionality yet.
   String _selectedTheme = 'system';
   String _selectedLanguage = 'system';
+  String _selectedCurrency = 'usd';
 
   @override
   void initState() {
@@ -124,7 +125,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               children: [
                 SettingsExpandableTile(
                   icon: Icons.palette_outlined,
-                  iconColor: Colors.orange,
+                  iconColor: AppColors.warning,
                   title: 'Theme',
                   selectedValue: _selectedTheme,
                   onSelected: (value) {
@@ -135,13 +136,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       value: 'light',
                       label: 'Light',
                       icon: Icons.light_mode,
-                      iconColor: Colors.orange,
+                      iconColor: AppColors.warning,
                     ),
                     SettingsSelectableOption(
                       value: 'dark',
                       label: 'Dark',
                       icon: Icons.dark_mode,
-                      iconColor: Colors.indigo,
+                      iconColor: AppColors.security,
                     ),
                     SettingsSelectableOption(
                       value: 'system',
@@ -159,7 +160,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               children: [
                 SettingsExpandableTile(
                   icon: Icons.language,
-                  iconColor: Colors.blue,
+                  iconColor: AppColors.info,
                   title: 'App language',
                   selectedValue: _selectedLanguage,
                   onSelected: (value) {
@@ -227,19 +228,78 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               ],
             ),
             const SizedBox(height: 24),
-            // TODO (Paso 5.3.10): Currency section
+            SettingsSection(
+              title: 'Currency',
+              children: [
+                SettingsExpandableTile(
+                  icon: Icons.attach_money,
+                  iconColor: AppColors.income,
+                  title: 'Base currency',
+                  selectedValue: _selectedCurrency,
+                  onSelected: (value) {
+                    setState(() => _selectedCurrency = value);
+                  },
+                  options: [
+                    SettingsSelectableOption(
+                      value: 'usd',
+                      label: 'US Dollar (\$)',
+                      leadingWidget: CountryFlag.fromCountryCode(
+                        'US',
+                        height: 18,
+                        width: 24,
+                        shape: const RoundedRectangle(3),
+                      ),
+                    ),
+                    SettingsSelectableOption(
+                      value: 'eur',
+                      label: 'Euro (€)',
+                      leadingWidget: ClipRRect(
+                        borderRadius: BorderRadius.circular(3),
+                        child: Image.asset(
+                          'assets/flags/eu.webp',
+                          height: 18,
+                          width: 24,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SettingsSelectableOption(
+                      value: 'gbp',
+                      label: 'British Pound (£)',
+                      leadingWidget: CountryFlag.fromCountryCode(
+                        'GB',
+                        height: 18,
+                        width: 24,
+                        shape: const RoundedRectangle(3),
+                      ),
+                    ),
+                    SettingsSelectableOption(
+                      value: 'pln',
+                      label: 'Polish Złoty (zł)',
+                      leadingWidget: CountryFlag.fromCountryCode(
+                        'PL',
+                        height: 18,
+                        width: 24,
+                        shape: const RoundedRectangle(3),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
             SettingsSection(
               title: 'Security',
               children: [
                 SettingsOptionTile(
                   icon: Icons.pin_outlined,
-                  iconColor: Colors.deepPurple,
+                  iconColor: AppColors.security,
                   title: 'PIN code',
                   onTap: () {},
                 ),
                 SettingsOptionTile(
                   icon: Icons.fingerprint,
-                  iconColor: Colors.deepPurple,
+                  iconColor: AppColors.security,
                   title: 'Biometric authentication',
                   onTap: () {},
                 ),
@@ -251,7 +311,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               children: [
                 SettingsOptionTile(
                   icon: Icons.info_outline,
-                  iconColor: AppColors.primary,
+                  iconColor: AppColors.accent,
                   title: 'About',
                   onTap: () {
                     // TODO (Paso 5.4): navigate to AboutScreen
