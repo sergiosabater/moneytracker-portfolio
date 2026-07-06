@@ -18,8 +18,7 @@ dependencies:
   intl: any
   sqflite: ^2.3.0
   path: ^1.8.3
-
-  # --- Nueva arquitectura ---
+  country_flags: ^3.1.0
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
   go_router: ^14.6.2
@@ -30,8 +29,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-
-  # --- Nueva arquitectura (generadores) ---
   build_runner: ^2.4.13
   riverpod_generator: ^2.6.3
   freezed: ^2.5.7
@@ -40,3 +37,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/flags/eu.webp
+    - assets/images/profile.png

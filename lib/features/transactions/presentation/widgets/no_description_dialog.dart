@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/custom_dialog.dart';
 
@@ -11,20 +12,20 @@ class NoDescriptionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomDialog(
       icon: Icons.warning_rounded,
-      iconColor: Colors.orange,
+      iconColor: AppColors.warning,
       title: AppLocalizations.of(context)!.noDescriptionTitle,
       message: AppLocalizations.of(context)!.noDescriptionMessage,
       actions: [
         DialogAction(
           label: AppLocalizations.of(context)!.cancel,
-          color: Colors.red,
+          color: AppColors.error,
           onTap: () {
             Navigator.pop(context);
           },
         ),
         DialogAction(
           label: AppLocalizations.of(context)!.add,
-          color: Colors.blue,
+          color: AppColors.info,
           onTap: () {
             Navigator.pop(context);
             onConfirm();

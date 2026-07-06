@@ -1,6 +1,7 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
@@ -174,7 +175,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
       SnackBar(
         content: Text(localizations.transactionAdded),
         duration: const Duration(seconds: 2),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.income,
       ),
     );
   }
@@ -183,6 +184,10 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final surfaceColor = Theme.of(context).colorScheme.surface;
+    final dividerColor = Theme.of(context).dividerColor;
+    final secondaryColor =
+        textTheme.bodyMedium?.color ?? Colors.grey.shade600;
 
     return AnimatedPadding(
       padding: EdgeInsets.only(bottom: keyboardHeight),
@@ -190,9 +195,9 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
       curve: Curves.easeOut,
       child: Container(
         height: MediaQuery.of(context).size.height * 0.75,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: surfaceColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
           children: [
@@ -202,7 +207,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
               width: 40,
               margin: const EdgeInsets.only(top: 12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: dividerColor,
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
@@ -213,7 +218,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.grey),
+                    icon: Icon(Icons.close, color: secondaryColor),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Text(
@@ -259,8 +264,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
                             final valueWithoutCommas = valueWithoutDollarSign
                                 .replaceAll(',', '');
                             setState(() {
-                              amount =
-                                  double.tryParse(valueWithoutCommas) ?? 0.0;
+                              amount = double.tryParse(valueWithoutCommas) ?? 0.0;
                             });
                           },
                         ),
@@ -309,7 +313,7 @@ class _TypeSelector extends StatelessWidget {
           child: _TypeOption(
             icon: Icons.arrow_downward,
             label: AppLocalizations.of(context)!.income,
-            color: Colors.teal,
+            color: AppColors.accent,
             isSelected: selectedType == TransactionType.income,
             onTap: () => onTypeChanged(TransactionType.income),
           ),
@@ -319,7 +323,7 @@ class _TypeSelector extends StatelessWidget {
           child: _TypeOption(
             icon: Icons.arrow_upward,
             label: AppLocalizations.of(context)!.expense,
-            color: Colors.red,
+            color: AppColors.expense,
             isSelected: selectedType == TransactionType.expense,
             onTap: () => onTypeChanged(TransactionType.expense),
           ),
@@ -346,6 +350,12 @@ class _TypeOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final unselectedBackground = theme.colorScheme.surface;
+    final unselectedBorder = theme.dividerColor;
+    final unselectedText =
+        theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -354,10 +364,10 @@ class _TypeOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? color.withValues(alpha: 0.1)
-              : Colors.grey.shade50,
+              : unselectedBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? color : Colors.grey.shade200,
+            color: isSelected ? color : unselectedBorder,
             width: 2,
           ),
         ),
@@ -365,7 +375,7 @@ class _TypeOption extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? color : Colors.grey.shade400,
+              color: isSelected ? color : unselectedText.withValues(alpha: 0.6),
               size: 32,
             ),
             const SizedBox(height: 8),
@@ -374,7 +384,7 @@ class _TypeOption extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? color : Colors.grey.shade600,
+                color: isSelected ? color : unselectedText,
               ),
             ),
           ],
@@ -399,7 +409,8 @@ class _AmountField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = type == TransactionType.income ? Colors.teal : Colors.red;
+    final color =
+        type == TransactionType.income ? AppColors.accent : AppColors.expense;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -458,12 +469,19 @@ class _DescriptionField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final backgroundColor = theme.colorScheme.surface;
+    final borderColor = theme.dividerColor;
+    final labelColor = theme.textTheme.bodyLarge?.color ?? Colors.grey.shade700;
+    final hintColor =
+        theme.textTheme.bodyMedium?.color ?? Colors.grey.shade400;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,7 +491,7 @@ class _DescriptionField extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade700,
+              color: labelColor,
               letterSpacing: 1.2,
             ),
           ),
@@ -484,7 +502,7 @@ class _DescriptionField extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             decoration: InputDecoration.collapsed(
               hintText: AppLocalizations.of(context)!.enterDescription,
-              hintStyle: TextStyle(color: Colors.grey.shade400),
+              hintStyle: TextStyle(color: hintColor),
             ),
             keyboardType: TextInputType.text,
             onChanged: onChanged,
@@ -508,7 +526,10 @@ class _SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isEnabled ? Colors.blue : Colors.grey;
+    final disabledColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+    final color = isEnabled ? AppColors.info : disabledColor;
+
     return InkWell(
       onTap: isEnabled ? onPressed : null,
       borderRadius: BorderRadius.circular(12),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 
@@ -72,102 +74,122 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
         opacity: _fadeAnimation,
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.teal.shade800,
-                  Colors.teal.shade600,
-                  Colors.teal.shade400,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0.0, 0.5, 1.0],
-              ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.teal.shade800.withValues(alpha: 0.4),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+              bottom: 30,
+              left: 20,
+              right: 20,
+            ),
+            child: Column(
+              children: [
+                // Fila superior: botones de acción (ajustes, y futuros: perfil, búsqueda...)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _SettingsButton(
+                      onTap: () => context.push('/settings'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // App Title
+                ShaderMask(
+                  shaderCallback: (bounds) {
+                    return const LinearGradient(
+                      colors: [Colors.white, Colors.white70, Colors.white],
+                      stops: [0.0, 0.5, 1.0],
+                    ).createShader(bounds);
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.appTitle,
+                    style: textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 28,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Balance
+                Text(
+                  AppLocalizations.of(context)!.balance.toUpperCase(),
+                  style: textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    letterSpacing: 2.0,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                AnimatedBalanceText(balance: balance),
+                const SizedBox(height: 30),
+
+                // Cards de ingresos y gastos
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ModernStatsCard(
+                        title: AppLocalizations.of(context)!.incomes,
+                        amount: incomes,
+                        icon: Icons.trending_up,
+                        color: AppColors.income,
+                        delay: const Duration(milliseconds: 200),
+                        animationController: _animationController,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _ModernStatsCard(
+                        title: AppLocalizations.of(context)!.expenses,
+                        amount: expenses,
+                        icon: Icons.trending_down,
+                        color: AppColors.expense,
+                        delay: const Duration(milliseconds: 400),
+                        animationController: _animationController,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 20,
-                bottom: 30,
-                left: 20,
-                right: 20,
-              ),
-              child: Column(
-                children: [
-                  // App Title con efecto de brillo
-                  ShaderMask(
-                    shaderCallback: (bounds) {
-                      return const LinearGradient(
-                        colors: [Colors.white, Colors.white70, Colors.white],
-                        stops: [0.0, 0.5, 1.0],
-                      ).createShader(bounds);
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)!.appTitle,
-                      style: textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 28,
-                        color: Colors.white,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Balance
-                  Text(
-                    AppLocalizations.of(context)!.balance.toUpperCase(),
-                    style: textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  AnimatedBalanceText(balance: balance),
-                  const SizedBox(height: 30),
-
-                  // Cards de ingresos y gastos
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _ModernStatsCard(
-                          title: AppLocalizations.of(context)!.incomes,
-                          amount: incomes,
-                          icon: Icons.trending_up,
-                          color: Colors.green.shade400,
-                          delay: const Duration(milliseconds: 200),
-                          animationController: _animationController,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _ModernStatsCard(
-                          title: AppLocalizations.of(context)!.expenses,
-                          amount: expenses,
-                          icon: Icons.trending_down,
-                          color: Colors.red.shade400,
-                          delay: const Duration(milliseconds: 400),
-                          animationController: _animationController,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Glassmorphism-style settings button that sits directly on the header
+// gradient — a translucent circle so it never competes visually with
+// the balance or the app title.
+class _SettingsButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _SettingsButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      customBorder: const CircleBorder(),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.15),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: const Icon(
+          Icons.settings_rounded,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     );
@@ -312,6 +334,10 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
         ? '-\$ ${widget.amount.abs().toStringAsFixed(2)}'
         : '\$ ${widget.amount.toStringAsFixed(2)}';
 
+    final surfaceColor = Theme.of(context).colorScheme.surface;
+    final titleColor = Theme.of(context).textTheme.bodyMedium?.color ??
+        Colors.grey.shade600;
+
     return AnimatedBuilder(
       animation: widget.animationController,
       builder: (context, child) {
@@ -323,7 +349,7 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
               opacity: _cardFadeAnimation.value,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.95),
+                  color: surfaceColor.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -382,7 +408,7 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade600,
+                          color: titleColor,
                           letterSpacing: 1.5,
                         ),
                       ),
