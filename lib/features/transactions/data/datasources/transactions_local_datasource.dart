@@ -1,50 +1,17 @@
-import 'package:sqflite/sqflite.dart' hide Transaction;
-import 'package:path/path.dart';
+import 'package:moneytracker/core/database/app_database.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 
 /// Handles direct communication with the local SQLite database.
 /// Responsible for mapping raw database rows to/from domain entities.
 class TransactionsLocalDatasource {
-  // Singleton pattern
-  static final TransactionsLocalDatasource instance =
-      TransactionsLocalDatasource._init();
-  static Database? _database;
-
-  TransactionsLocalDatasource._init();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDB('transactions.db');
-    return _database!;
-  }
-
-  Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _createDB);
-  }
-
-  Future _createDB(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE transactions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT NOT NULL,
-        amount REAL NOT NULL,
-        description TEXT NOT NULL,
-        dateTime TEXT NOT NULL
-      )
-    ''');
-  }
-
   Future<int> insertTransaction(Transaction transaction) async {
-    final db = await instance.database;
+    final db = await AppDatabase.instance;
 
-    return await db.insert('transactions', _toMap(transaction));
+    return db.insert('transactions', _toMap(transaction));
   }
 
   Future<List<Transaction>> getAllTransactions() async {
-    final db = await instance.database;
+    final db = await AppDatabase.instance;
 
     final result = await db.query(
       'transactions',
@@ -55,15 +22,15 @@ class TransactionsLocalDatasource {
   }
 
   Future<int> deleteTransaction(int id) async {
-    final db = await instance.database;
+    final db = await AppDatabase.instance;
 
-    return await db.delete('transactions', where: 'id = ?', whereArgs: [id]);
+    return db.delete('transactions', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> deleteAllTransactions() async {
-    final db = await instance.database;
+    final db = await AppDatabase.instance;
 
-    return await db.delete('transactions');
+    return db.delete('transactions');
   }
 
   // --- Mapping helpers: database row <-> domain entity ---

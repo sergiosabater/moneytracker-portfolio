@@ -87,7 +87,7 @@ The project is being built as a deliberate, professional-grade learning exercise
 
 ## 🗺️ Project Structure
 
-Money Tracker follows a **Feature-First + Clean Architecture (lightweight)** approach: code is organized by feature first, and each feature is internally split into `domain` (entities, repository contracts), `data` (repository implementations, data sources) and `presentation` (screens, widgets, Riverpod providers) layers.
+Money Tracker follows a **Feature-First + Clean Architecture** approach: code is organized by feature first, and each feature is internally split into `domain` (entities, repository contracts), `data` (repository implementations, data sources) and `presentation` (screens, widgets, Riverpod providers) layers.
 
 ```plaintext
 📦 lib/
@@ -108,22 +108,22 @@ Money Tracker follows a **Feature-First + Clean Architecture (lightweight)** app
  ┃ ┃ ┃   ┗ 📦 transactions_repository_impl.dart
  ┃ ┃ ┣ 📂 domain/
  ┃ ┃ ┃ ┣ 📂 entities/
- ┃ ┃ ┃ ┃ ┗ 💰 transaction.dart
+ ┃ ┃ ┃ ┃ ┗ 📄 transaction.dart
  ┃ ┃ ┃ ┗ 📂 repositories/
  ┃ ┃ ┃   ┗ 📄 transactions_repository.dart
  ┃ ┃ ┗ 📂 presentation/
  ┃ ┃   ┣ 📂 providers/
- ┃ ┃   ┃ ┗ ⚡ transactions_notifier.dart
+ ┃ ┃   ┃ ┗ 📄 transactions_notifier.dart
  ┃ ┃   ┣ 📂 screens/
  ┃ ┃   ┃ ┗ 🏠 home_screen.dart
  ┃ ┃   ┗ 📂 widgets/
- ┃ ┃     ┣ ➕ add_transaction_dialog.dart
- ┃ ┃     ┣ 🗨️ custom_dialog.dart
- ┃ ┃     ┣ 🏠 home_header.dart
- ┃ ┃     ┣ ❓ no_description_dialog.dart
- ┃ ┃     ┣ 🗑️ transaction_delete_dialog.dart
- ┃ ┃     ┣ ⚙️ transaction_options_dialog.dart
- ┃ ┃     ┗ 📋 transactions_list.dart
+ ┃ ┃     ┣ 📄 add_transaction_dialog.dart
+ ┃ ┃     ┣ 📄 custom_dialog.dart
+ ┃ ┃     ┣ 📄 home_header.dart
+ ┃ ┃     ┣ 📄 no_description_dialog.dart
+ ┃ ┃     ┣ 📄 transaction_delete_dialog.dart
+ ┃ ┃     ┣ 📄 transaction_options_dialog.dart
+ ┃ ┃     ┗ 📄 transactions_list.dart
  ┃ ┗ 📂 settings/
  ┃   ┗ 📂 presentation/
  ┃     ┣ 📂 screens/

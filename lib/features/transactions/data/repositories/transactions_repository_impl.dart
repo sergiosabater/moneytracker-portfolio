@@ -2,15 +2,12 @@ import 'package:moneytracker/features/transactions/data/datasources/transactions
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/domain/repositories/transactions_repository.dart';
 
-/// Concrete implementation of TransactionsRepository backed by SQLite.
-/// Delegates all actual database work to TransactionsLocalDatasource.
 class TransactionsRepositoryImpl implements TransactionsRepository {
   final TransactionsLocalDatasource _localDatasource;
 
   TransactionsRepositoryImpl({
     TransactionsLocalDatasource? localDatasource,
-  }) : _localDatasource =
-            localDatasource ?? TransactionsLocalDatasource.instance;
+  }) : _localDatasource = localDatasource ?? TransactionsLocalDatasource();
 
   @override
   Future<List<Transaction>> getAllTransactions() {
