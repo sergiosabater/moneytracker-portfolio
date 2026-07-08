@@ -334,9 +334,39 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
         ? '-\$ ${widget.amount.abs().toStringAsFixed(2)}'
         : '\$ ${widget.amount.toStringAsFixed(2)}';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = Theme.of(context).colorScheme.surface;
     final titleColor = Theme.of(context).textTheme.bodyMedium?.color ??
         Colors.grey.shade600;
+
+    final cardShadows = <BoxShadow>[
+      BoxShadow(
+        color: widget.color.withValues(alpha: 0.3),
+        blurRadius: 15,
+        offset: const Offset(0, 5),
+        spreadRadius: -2,
+      ),
+      if (!isDark)
+        BoxShadow(
+          color: Colors.white.withValues(alpha: 0.8),
+          blurRadius: 10,
+          offset: const Offset(-3, -3),
+        ),
+    ];
+
+    final iconShadows = <BoxShadow>[
+      BoxShadow(
+        color: widget.color.withValues(alpha: 0.2),
+        blurRadius: 10,
+        offset: const Offset(2, 2),
+      ),
+      if (!isDark)
+        BoxShadow(
+          color: Colors.white.withValues(alpha: 0.7),
+          blurRadius: 10,
+          offset: const Offset(-2, -2),
+        ),
+    ];
 
     return AnimatedBuilder(
       animation: widget.animationController,
@@ -351,19 +381,7 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                 decoration: BoxDecoration(
                   color: surfaceColor.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: widget.color.withValues(alpha: 0.3),
-                      blurRadius: 15,
-                      offset: const Offset(0, 5),
-                      spreadRadius: -2,
-                    ),
-                    BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      blurRadius: 10,
-                      offset: const Offset(-3, -3),
-                    ),
-                  ],
+                  boxShadow: cardShadows,
                   border: Border.all(
                     color: widget.color.withValues(alpha: 0.1),
                     width: 1.5,
@@ -385,18 +403,7 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                               widget.color.withValues(alpha: 0.05),
                             ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: widget.color.withValues(alpha: 0.2),
-                              blurRadius: 10,
-                              offset: const Offset(2, 2),
-                            ),
-                            BoxShadow(
-                              color: Colors.white.withValues(alpha: 0.7),
-                              blurRadius: 10,
-                              offset: const Offset(-2, -2),
-                            ),
-                          ],
+                          boxShadow: iconShadows,
                         ),
                         child: Icon(widget.icon, color: widget.color, size: 24),
                       ),
@@ -414,12 +421,8 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                       ),
                       const SizedBox(height: 0),
 
-                      // Monto - ALINEADO A LA DERECHA con tamaño mayor y desplazado hacia abajo
                       Transform.translate(
-                        offset: const Offset(
-                          0,
-                          4,
-                        ), // Mueve el texto 8 píxeles hacia abajo
+                        offset: const Offset(0, 4),
                         child: Container(
                           width: double.infinity,
                           alignment: Alignment.centerRight,
@@ -437,10 +440,7 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                         ),
                       ),
 
-                      // Barra de progreso decorativa - Reducimos el espacio superior
-                      const SizedBox(
-                        height: 4,
-                      ), // Reducido aún más para compensar el desplazamiento
+                      const SizedBox(height: 4),
                       Container(
                         height: 4,
                         decoration: BoxDecoration(
