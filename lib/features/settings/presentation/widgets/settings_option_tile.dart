@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/core/theme/app_colors.dart';
 
 class SettingsOptionTile extends StatelessWidget {
   final IconData icon;
@@ -19,6 +18,10 @@ class SettingsOptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final titleColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    final secondaryColor = theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -38,20 +41,20 @@ class SettingsOptionTile extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextPrimary,
+                  color: titleColor,
                 ),
               ),
             ),
             if (value != null) ...[
               Text(
                 value!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.lightTextSecondary,
+                  color: secondaryColor,
                 ),
               ),
               const SizedBox(width: 4),
@@ -59,7 +62,7 @@ class SettingsOptionTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               size: 20,
-              color: AppColors.lightTextSecondary,
+              color: secondaryColor,
             ),
           ],
         ),

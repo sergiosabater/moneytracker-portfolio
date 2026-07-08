@@ -1,11 +1,13 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
+import 'package:moneytracker/core/theme/theme_mode_option.dart';
+import 'package:moneytracker/core/theme/theme_notifier.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_expandable_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
-import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -20,8 +22,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  // Local UI state only — not wired to real functionality yet.
-  String _selectedTheme = 'system';
   String _selectedLanguage = 'system';
   String _selectedCurrency = 'usd';
 
@@ -56,16 +56,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.primary,
-              AppColors.primaryMedium,
-              AppColors.primaryLight,
-            ],
+            colors: AppColors.headerGradient(Theme.of(context).brightness),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: [0.0, 0.5, 1.0],
+            stops: const [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(
@@ -111,10 +107,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   }
 
   Widget _buildContent() {
+    final currentThemeMode = ref.watch(themeNotifierProvider);
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.lightBackground,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -124,29 +122,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             SettingsSection(
               title: 'Appearance',
               children: [
-                SettingsExpandableTile(
+                SettingsExpandableTile<ThemeModeOption>(
                   icon: Icons.palette_outlined,
                   iconColor: AppColors.warning,
                   title: 'Theme',
-                  selectedValue: _selectedTheme,
-                  onSelected: (value) {
-                    setState(() => _selectedTheme = value);
+                  selectedValue: currentThemeMode,
+                  onSelected: (option) {
+                    ref
+                        .read(themeNotifierProvider.notifier)
+                        .setThemeMode(option);
                   },
                   options: const [
                     SettingsSelectableOption(
-                      value: 'light',
+                      value: ThemeModeOption.light,
                       label: 'Light',
                       icon: Icons.light_mode,
                       iconColor: AppColors.warning,
                     ),
                     SettingsSelectableOption(
-                      value: 'dark',
+                      value: ThemeModeOption.dark,
                       label: 'Dark',
                       icon: Icons.dark_mode,
                       iconColor: AppColors.security,
                     ),
                     SettingsSelectableOption(
-                      value: 'system',
+                      value: ThemeModeOption.system,
                       label: 'System',
                       icon: Icons.brightness_auto,
                       iconColor: Colors.grey,
@@ -159,7 +159,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             SettingsSection(
               title: 'Language',
               children: [
-                SettingsExpandableTile(
+                SettingsExpandableTile<String>(
                   icon: Icons.language,
                   iconColor: AppColors.info,
                   title: 'App language',
@@ -232,10 +232,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             SettingsSection(
               title: 'Currency',
               children: [
-                SettingsExpandableTile(
+                SettingsExpandableTile<String>(
                   icon: Icons.attach_money,
                   iconColor: AppColors.income,
-                  title: 'Base currency',
+                  title: 'Currency',
                   selectedValue: _selectedCurrency,
                   onSelected: (value) {
                     setState(() => _selectedCurrency = value);
@@ -243,7 +243,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   options: [
                     SettingsSelectableOption(
                       value: 'usd',
-                      label: 'US Dollar (\$)',
+                      label: 'Dollar (\$)',
                       leadingWidget: CountryFlag.fromCountryCode(
                         'US',
                         height: 18,
@@ -266,7 +266,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     SettingsSelectableOption(
                       value: 'gbp',
-                      label: 'British Pound (£)',
+                      label: 'Pound (£)',
                       leadingWidget: CountryFlag.fromCountryCode(
                         'GB',
                         height: 18,
@@ -276,7 +276,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     SettingsSelectableOption(
                       value: 'pln',
-                      label: 'Polish Złoty (zł)',
+                      label: 'Zloty (zł)',
                       leadingWidget: CountryFlag.fromCountryCode(
                         'PL',
                         height: 18,

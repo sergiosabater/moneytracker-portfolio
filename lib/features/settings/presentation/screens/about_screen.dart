@@ -13,16 +13,12 @@ class AboutScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.primary,
-              AppColors.primaryMedium,
-              AppColors.primaryLight,
-            ],
+            colors: AppColors.headerGradient(theme.brightness),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: [0.0, 0.5, 1.0],
+            stops: const [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(
@@ -67,16 +63,15 @@ class AboutScreen extends StatelessWidget {
     final borderColor = theme.dividerColor;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.lightBackground,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ---- Sección: Perfil ----
             SettingsSection(
               title: 'Profile',
               children: [
@@ -101,8 +96,6 @@ class AboutScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-
-            // ---- Sección: Habilidades ----
             SettingsSection(
               title: 'Skills',
               children: [
@@ -122,8 +115,6 @@ class AboutScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-
-            // ---- Sección: Contacto ----
             SettingsSection(
               title: 'Get in touch',
               children: [
@@ -139,8 +130,6 @@ class AboutScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-
-            // ---- Versión ----
             Center(
               child: Text(
                 'Money Tracker · v1.0.0',

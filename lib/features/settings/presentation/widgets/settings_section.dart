@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/core/theme/app_colors.dart';
 
 class SettingsSection extends StatelessWidget {
   final String title;
@@ -13,6 +12,11 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final surfaceColor = theme.colorScheme.surface;
+    final borderColor = theme.dividerColor;
+    final titleColor = theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,23 +27,23 @@ class SettingsSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextSecondary,
+              color: titleColor,
               letterSpacing: 1.2,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.lightSurface,
+            color: surfaceColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: AppColors.lightBorder,
+                color: borderColor,
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
-            border: Border.all(color: AppColors.lightBorder, width: 1),
+            border: Border.all(color: borderColor, width: 1),
           ),
           child: Column(
             children: List.generate(children.length, (index) {
@@ -52,7 +56,7 @@ class SettingsSection extends StatelessWidget {
                       height: 1,
                       indent: 16,
                       endIndent: 16,
-                      color: AppColors.lightBorder,
+                      color: borderColor,
                     ),
                 ],
               );

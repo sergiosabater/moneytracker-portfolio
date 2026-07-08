@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 
-class SettingsSelectableOption {
-  final String value;
+class SettingsSelectableOption<T> {
+  final T value;
   final String label;
   final IconData? icon;
-  final Color iconColor;
+  final Color? iconColor;
   final Widget? leadingWidget;
 
   const SettingsSelectableOption({
     required this.value,
     required this.label,
     this.icon,
-    this.iconColor = Colors.grey,
+    this.iconColor,
     this.leadingWidget,
   });
 }
 
-/// An accordion-style settings row: tapping the header expands a list
-/// of selectable options directly below it, instead of opening a
-/// bottom sheet or dialog.
-class SettingsExpandableTile extends StatefulWidget {
+class SettingsExpandableTile<T> extends StatefulWidget {
   final IconData icon;
   final Color iconColor;
   final String title;
-  final List<SettingsSelectableOption> options;
-  final String selectedValue;
-  final ValueChanged<String> onSelected;
+  final List<SettingsSelectableOption<T>> options;
+  final T selectedValue;
+  final ValueChanged<T> onSelected;
 
   const SettingsExpandableTile({
     super.key,
@@ -39,18 +36,23 @@ class SettingsExpandableTile extends StatefulWidget {
   });
 
   @override
-  State<SettingsExpandableTile> createState() =>
-      _SettingsExpandableTileState();
+  State<SettingsExpandableTile<T>> createState() =>
+      _SettingsExpandableTileState<T>();
 }
 
-class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
+class _SettingsExpandableTileState<T> extends State<SettingsExpandableTile<T>> {
   bool _isExpanded = false;
 
-  SettingsSelectableOption get _selectedOption =>
+  SettingsSelectableOption<T> get _selectedOption =>
       widget.options.firstWhere((o) => o.value == widget.selectedValue);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final titleColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    final secondaryColor =
+        theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
     return Column(
       children: [
         InkWell(
@@ -72,19 +74,19 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                 Expanded(
                   child: Text(
                     widget.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextPrimary,
+                      color: titleColor,
                     ),
                   ),
                 ),
                 Text(
                   _selectedOption.label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.lightTextSecondary,
+                    color: secondaryColor,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -94,7 +96,7 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                   child: Icon(
                     Icons.keyboard_arrow_down,
                     size: 22,
-                    color: AppColors.lightTextSecondary,
+                    color: secondaryColor,
                   ),
                 ),
               ],
@@ -104,19 +106,25 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
         AnimatedSize(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
-          child: _isExpanded ? _buildOptionsList() : const SizedBox.shrink(),
+          child: _isExpanded
+              ? _buildOptionsList(titleColor, secondaryColor)
+              : const SizedBox.shrink(),
         ),
       ],
     );
   }
 
-  Widget _buildOptionsList() {
+  Widget _buildOptionsList(Color titleColor, Color secondaryColor) {
+    final backgroundColor = Theme.of(context).colorScheme.surface;
+
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
-      decoration: const BoxDecoration(color: AppColors.lightBackground),
+      decoration: BoxDecoration(color: backgroundColor),
       child: Column(
         children: widget.options.map((option) {
           final isSelected = option.value == widget.selectedValue;
+          final optionColor = option.iconColor ?? AppColors.accent;
+
           return InkWell(
             onTap: () {
               widget.onSelected(option.value);
@@ -132,7 +140,7 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                   const SizedBox(width: 36),
                   const SizedBox(width: 14),
                   option.leadingWidget ??
-                      Icon(option.icon, color: option.iconColor, size: 18),
+                      Icon(option.icon, color: optionColor, size: 18),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -142,9 +150,7 @@ class _SettingsExpandableTileState extends State<SettingsExpandableTile> {
                         fontWeight: isSelected
                             ? FontWeight.w700
                             : FontWeight.w500,
-                        color: isSelected
-                            ? AppColors.lightTextPrimary
-                            : AppColors.lightTextSecondary,
+                        color: isSelected ? titleColor : secondaryColor,
                       ),
                     ),
                   ),
