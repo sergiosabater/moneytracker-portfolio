@@ -7,11 +7,16 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._(); // Prevents instantiation — this class only holds constants.
 
-  // --- Brand colors (shared between light and dark) ---
-  static const Color primary = Color(0xFF00695C); // teal.shade800
-  static const Color primaryMedium = Color(0xFF00897B); // teal.shade600
-  static const Color primaryLight = Color(0xFF26A69A); // teal.shade400
-  static const Color accent = Color(0xFF009688); // Colors.teal (shade 500)
+  // --- Brand colors (light gradient) ---
+  static const Color primary = Color(0xFF00695C);
+  static const Color primaryMedium = Color(0xFF00897B);
+  static const Color primaryLight = Color(0xFF26A69A);
+  static const Color accent = Color(0xFF009688);
+
+  // --- Brand colors (dark gradient) — slate, "tech" ---
+  static const Color darkPrimary = Color(0xFF0F172A); // slate-900
+  static const Color darkPrimaryMedium = Color(0xFF1E293B); // slate-800
+  static const Color darkPrimaryLight = Color(0xFF334155); // slate-700
 
   // --- Semantic colors (same across light and dark themes) ---
   static const Color income = Color(0xFF66BB6A); // green.shade400
@@ -34,4 +39,10 @@ class AppColors {
   static const Color darkTextPrimary = Color(0xFFFFFFFF);
   static const Color darkTextSecondary = Color(0xFFB0B0B0);
   static const Color darkBorder = Color(0xFF2C2C2C);
+
+  static List<Color> headerGradient(Brightness brightness) {
+    return brightness == Brightness.dark
+        ? const [darkPrimary, darkPrimaryMedium, darkPrimaryLight]
+        : const [primary, primaryMedium, primaryLight];
+  }
 }
