@@ -78,4 +78,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transactionAdded => 'Transaction added';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get appLanguage => 'App language';
+
+  @override
+  String get systemDefault => 'System default';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get currencyDollar => 'Dollar (\$)';
+
+  @override
+  String get currencyEuro => 'Euro (€)';
+
+  @override
+  String get currencyPound => 'Pound (£)';
+
+  @override
+  String get currencyZloty => 'Zloty (zł)';
+
+  @override
+  String get security => 'Security';
+
+  @override
+  String get pinCode => 'PIN code';
+
+  @override
+  String get biometricAuth => 'Biometric authentication';
+
+  @override
+  String get information => 'Information';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get developerRole => 'Mobile App Developer';
+
+  @override
+  String get developerBio =>
+      'Over 5 years of experience building native Android applications, now focused on cross-platform development with Flutter. I care deeply about clean architecture, maintainable code and crafting apps that feel fast, polished and genuinely useful to the people who use them.';
+
+  @override
+  String get skills => 'Skills';
+
+  @override
+  String get getInTouch => 'Get in touch';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get appVersion => 'Money Tracker · v1.0.0';
+
+  @override
+  String get noTransactionsHint => 'Tap + to add your first transaction';
+
+  @override
+  String get editFeatureComingSoon => 'Edit feature coming soon';
+
+  @override
+  String get dismiss => 'Dismiss';
 }
