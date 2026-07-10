@@ -78,4 +78,107 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get transactionAdded => 'Transacción agregada';
+
+  @override
+  String get settingsTitle => 'Ajustes';
+
+  @override
+  String get appearance => 'Apariencia';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Oscuro';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get appLanguage => 'Idioma de la app';
+
+  @override
+  String get systemDefault => 'Predeterminado del sistema';
+
+  @override
+  String get currency => 'Moneda';
+
+  @override
+  String get currencyDollar => 'Dólar (\$)';
+
+  @override
+  String get currencyEuro => 'Euro (€)';
+
+  @override
+  String get currencyPound => 'Libra (£)';
+
+  @override
+  String get currencyZloty => 'Zloty (zł)';
+
+  @override
+  String get security => 'Seguridad';
+
+  @override
+  String get pinCode => 'Código PIN';
+
+  @override
+  String get biometricAuth => 'Autenticación biométrica';
+
+  @override
+  String get information => 'Información';
+
+  @override
+  String get about => 'Acerca de';
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get developerRole => 'Desarrollador de aplicaciones móviles';
+
+  @override
+  String get developerBio =>
+      'Más de 5 años de experiencia construyendo aplicaciones nativas para Android, ahora centrado en el desarrollo multiplataforma con Flutter. Me preocupo profundamente por la arquitectura limpia, el código mantenible y crear aplicaciones que se sientan rápidas, pulidas y realmente útiles para las personas que las usan.';
+
+  @override
+  String get skills => 'Habilidades';
+
+  @override
+  String get getInTouch => 'Contacto';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get appVersion => 'Money Tracker · v1.0.0';
+
+  @override
+  String get noTransactionsHint => 'Toca + para añadir tu primera transacción';
+
+  @override
+  String get editFeatureComingSoon => 'Función de edición próximamente';
+
+  @override
+  String get dismiss => 'Cerrar';
+
+  @override
+  String get languageNameEs => 'Español';
+
+  @override
+  String get languageNameEn => 'Inglés';
+
+  @override
+  String get languageNameFr => 'Francés';
+
+  @override
+  String get languageNameDe => 'Alemán';
+
+  @override
+  String get languageNamePl => 'Polaco';
 }

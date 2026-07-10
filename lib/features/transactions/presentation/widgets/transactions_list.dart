@@ -31,16 +31,16 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Dismiss',
+      barrierLabel: AppLocalizations.of(context)!.dismiss,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return TransactionOptionsDialog(
           onEdit: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Edit feature coming soon'),
-                duration: Duration(seconds: 2),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.editFeatureComingSoon),
+                duration: const Duration(seconds: 2),
               ),
             );
           },
@@ -62,7 +62,7 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Dismiss',
+      barrierLabel: AppLocalizations.of(context)!.dismiss,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -142,6 +142,7 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final secondaryColor =
         Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Column(
@@ -154,7 +155,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.noTransactionsYet,
+            l10n.noTransactionsYet,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -163,7 +164,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap + to add your first transaction',
+            l10n.noTransactionsHint,
             style: TextStyle(
               fontSize: 14,
               color: secondaryColor.withValues(alpha: 0.7),
@@ -358,7 +359,6 @@ class _TransactionCardState extends State<_TransactionCard>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Título
                           Text(
                             widget.transaction.description,
                             style: TextStyle(
@@ -371,7 +371,6 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 6),
 
-                          // Tipo de transacción
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -396,7 +395,6 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 8),
 
-                          // Monto, debajo del tipo y alineado a la derecha
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(

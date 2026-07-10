@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/router/app_router.dart';
 import 'package:moneytracker/core/services/preferences_provider.dart';
 import 'package:moneytracker/core/services/preferences_service.dart';
@@ -28,16 +29,24 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeNotifierProvider);
+    final localeOption = ref.watch(localeNotifierProvider);
 
     return MaterialApp.router(
       routerConfig: appRouter,
+      locale: localeOption.toLocale(),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('es')],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('es'),
+        Locale('fr'),
+        Locale('de'),
+        Locale('pl'),
+      ],
       title: 'Money Tracker',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

@@ -135,7 +135,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Dismiss',
+      barrierLabel: AppLocalizations.of(context)!.dismiss,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {

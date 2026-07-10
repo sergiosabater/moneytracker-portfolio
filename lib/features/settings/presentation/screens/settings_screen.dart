@@ -2,12 +2,15 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneytracker/core/locale/locale_notifier.dart';
+import 'package:moneytracker/core/locale/locale_option.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/core/theme/theme_mode_option.dart';
 import 'package:moneytracker/core/theme/theme_notifier.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_expandable_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
+import 'package:moneytracker/l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -22,7 +25,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  String _selectedLanguage = 'system';
+  // Currency persistence is out of scope for this stage — UI only for now.
   String _selectedCurrency = 'usd';
 
   @override
@@ -92,9 +95,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          const Text(
-            'Settings',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.settingsTitle,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.white,
@@ -107,7 +110,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   }
 
   Widget _buildContent() {
+    final l10n = AppLocalizations.of(context)!;
     final currentThemeMode = ref.watch(themeNotifierProvider);
+    final currentLocaleOption = ref.watch(localeNotifierProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -120,34 +125,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SettingsSection(
-              title: 'Appearance',
+              title: l10n.appearance,
               children: [
                 SettingsExpandableTile<ThemeModeOption>(
                   icon: Icons.palette_outlined,
                   iconColor: AppColors.warning,
-                  title: 'Theme',
+                  title: l10n.theme,
                   selectedValue: currentThemeMode,
                   onSelected: (option) {
                     ref
                         .read(themeNotifierProvider.notifier)
                         .setThemeMode(option);
                   },
-                  options: const [
+                  options: [
                     SettingsSelectableOption(
                       value: ThemeModeOption.light,
-                      label: 'Light',
+                      label: l10n.themeLight,
                       icon: Icons.light_mode,
                       iconColor: AppColors.warning,
                     ),
                     SettingsSelectableOption(
                       value: ThemeModeOption.dark,
-                      label: 'Dark',
+                      label: l10n.themeDark,
                       icon: Icons.dark_mode,
                       iconColor: AppColors.security,
                     ),
                     SettingsSelectableOption(
                       value: ThemeModeOption.system,
-                      label: 'System',
+                      label: l10n.themeSystem,
                       icon: Icons.brightness_auto,
                       iconColor: Colors.grey,
                     ),
@@ -157,26 +162,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Language',
+              title: l10n.language,
               children: [
-                SettingsExpandableTile<String>(
+                SettingsExpandableTile<LocaleOption>(
                   icon: Icons.language,
                   iconColor: AppColors.info,
-                  title: 'App language',
-                  selectedValue: _selectedLanguage,
-                  onSelected: (value) {
-                    setState(() => _selectedLanguage = value);
+                  title: l10n.appLanguage,
+                  selectedValue: currentLocaleOption,
+                  onSelected: (option) {
+                    ref.read(localeNotifierProvider.notifier).setLocale(option);
                   },
                   options: [
-                    const SettingsSelectableOption(
-                      value: 'system',
-                      label: 'System default',
+                    SettingsSelectableOption(
+                      value: LocaleOption.system,
+                      label: l10n.systemDefault,
                       icon: Icons.smartphone,
                       iconColor: Colors.grey,
                     ),
                     SettingsSelectableOption(
-                      value: 'es',
-                      label: 'Español',
+                      value: LocaleOption.es,
+                      label: l10n.languageNameEs,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'ES',
                         height: 18,
@@ -185,8 +190,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'en',
-                      label: 'English',
+                      value: LocaleOption.en,
+                      label: l10n.languageNameEn,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'GB',
                         height: 18,
@@ -195,8 +200,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'fr',
-                      label: 'Français',
+                      value: LocaleOption.fr,
+                      label: l10n.languageNameFr,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'FR',
                         height: 18,
@@ -205,8 +210,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'de',
-                      label: 'Deutsch',
+                      value: LocaleOption.de,
+                      label: l10n.languageNameDe,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'DE',
                         height: 18,
@@ -215,8 +220,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'pl',
-                      label: 'Polski',
+                      value: LocaleOption.pl,
+                      label: l10n.languageNamePl,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'PL',
                         height: 18,
@@ -230,12 +235,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Currency',
+              title: l10n.currency,
               children: [
                 SettingsExpandableTile<String>(
                   icon: Icons.attach_money,
                   iconColor: AppColors.income,
-                  title: 'Currency',
+                  title: l10n.currency,
                   selectedValue: _selectedCurrency,
                   onSelected: (value) {
                     setState(() => _selectedCurrency = value);
@@ -243,7 +248,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   options: [
                     SettingsSelectableOption(
                       value: 'usd',
-                      label: 'Dollar (\$)',
+                      label: l10n.currencyDollar,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'US',
                         height: 18,
@@ -253,7 +258,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     SettingsSelectableOption(
                       value: 'eur',
-                      label: 'Euro (€)',
+                      label: l10n.currencyEuro,
                       leadingWidget: ClipRRect(
                         borderRadius: BorderRadius.circular(3),
                         child: Image.asset(
@@ -266,7 +271,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     SettingsSelectableOption(
                       value: 'gbp',
-                      label: 'Pound (£)',
+                      label: l10n.currencyPound,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'GB',
                         height: 18,
@@ -276,7 +281,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                     SettingsSelectableOption(
                       value: 'pln',
-                      label: 'Zloty (zł)',
+                      label: l10n.currencyZloty,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'PL',
                         height: 18,
@@ -290,30 +295,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Security',
+              title: l10n.security,
               children: [
                 SettingsOptionTile(
                   icon: Icons.pin_outlined,
                   iconColor: AppColors.security,
-                  title: 'PIN code',
+                  title: l10n.pinCode,
                   onTap: () {},
                 ),
                 SettingsOptionTile(
                   icon: Icons.fingerprint,
                   iconColor: AppColors.security,
-                  title: 'Biometric authentication',
+                  title: l10n.biometricAuth,
                   onTap: () {},
                 ),
               ],
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Information',
+              title: l10n.information,
               children: [
                 SettingsOptionTile(
                   icon: Icons.info_outline,
                   iconColor: AppColors.accent,
-                  title: 'About',
+                  title: l10n.about,
                   onTap: () => context.push('/settings/about'),
                 ),
               ],

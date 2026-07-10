@@ -5,8 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_pl.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,8 +97,11 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
     Locale('es'),
+    Locale('fr'),
+    Locale('pl'),
   ];
 
   /// No description provided for @appTitle.
@@ -235,6 +241,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transaction added'**
   String get transactionAdded;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @appLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'App language'**
+  String get appLanguage;
+
+  /// No description provided for @systemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get systemDefault;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
+  /// No description provided for @currencyDollar.
+  ///
+  /// In en, this message translates to:
+  /// **'Dollar (\$)'**
+  String get currencyDollar;
+
+  /// No description provided for @currencyEuro.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro (€)'**
+  String get currencyEuro;
+
+  /// No description provided for @currencyPound.
+  ///
+  /// In en, this message translates to:
+  /// **'Pound (£)'**
+  String get currencyPound;
+
+  /// No description provided for @currencyZloty.
+  ///
+  /// In en, this message translates to:
+  /// **'Zloty (zł)'**
+  String get currencyZloty;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
+  /// No description provided for @pinCode.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN code'**
+  String get pinCode;
+
+  /// No description provided for @biometricAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication'**
+  String get biometricAuth;
+
+  /// No description provided for @information.
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get information;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @developerRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile App Developer'**
+  String get developerRole;
+
+  /// No description provided for @developerBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 5 years of experience building native Android applications, now focused on cross-platform development with Flutter. I care deeply about clean architecture, maintainable code and crafting apps that feel fast, polished and genuinely useful to the people who use them.'**
+  String get developerBio;
+
+  /// No description provided for @skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get skills;
+
+  /// No description provided for @getInTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Get in touch'**
+  String get getInTouch;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Money Tracker · v1.0.0'**
+  String get appVersion;
+
+  /// No description provided for @noTransactionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add your first transaction'**
+  String get noTransactionsHint;
+
+  /// No description provided for @editFeatureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit feature coming soon'**
+  String get editFeatureComingSoon;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @languageNameEs.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageNameEs;
+
+  /// No description provided for @languageNameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageNameEn;
+
+  /// No description provided for @languageNameFr.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get languageNameFr;
+
+  /// No description provided for @languageNameDe.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get languageNameDe;
+
+  /// No description provided for @languageNamePl.
+  ///
+  /// In en, this message translates to:
+  /// **'Polish'**
+  String get languageNamePl;
 }
 
 class _AppLocalizationsDelegate
@@ -248,7 +458,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'es'].contains(locale.languageCode);
+      <String>['de', 'en', 'es', 'fr', 'pl'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -257,10 +467,16 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'pl':
+      return AppLocalizationsPl();
   }
 
   throw FlutterError(
