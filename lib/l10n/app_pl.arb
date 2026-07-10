@@ -51,5 +51,10 @@
   "appVersion": "Money Tracker · v1.0.0",
   "noTransactionsHint": "Dotknij +, aby dodać pierwszą transakcję",
   "editFeatureComingSoon": "Funkcja edycji wkrótce dostępna",
-  "dismiss": "Zamknij"
+  "dismiss": "Zamknij",
+  "languageNameEs": "Hiszpański",
+  "languageNameEn": "Angielski",
+  "languageNameFr": "Francuski",
+  "languageNameDe": "Niemiecki",
+  "languageNamePl": "Polski"
 }

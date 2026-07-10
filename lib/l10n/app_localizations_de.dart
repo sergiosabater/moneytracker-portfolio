@@ -167,4 +167,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get dismiss => 'Schließen';
+
+  @override
+  String get languageNameEs => 'Spanisch';
+
+  @override
+  String get languageNameEn => 'Englisch';
+
+  @override
+  String get languageNameFr => 'Französisch';
+
+  @override
+  String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNamePl => 'Polnisch';
 }

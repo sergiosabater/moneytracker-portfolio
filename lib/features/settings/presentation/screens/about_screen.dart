@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
+import 'package:moneytracker/l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -43,9 +44,9 @@ class AboutScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          const Text(
-            'About',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.about,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.white,
@@ -61,6 +62,7 @@ class AboutScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final surfaceColor = theme.colorScheme.surface;
     final borderColor = theme.dividerColor;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -73,7 +75,7 @@ class AboutScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SettingsSection(
-              title: 'Profile',
+              title: l10n.profile,
               children: [
                 _ProfileCard(
                   avatar: const CircleAvatar(
@@ -81,14 +83,8 @@ class AboutScreen extends StatelessWidget {
                     radius: 50,
                   ),
                   name: 'Sergio Sabater',
-                  title: 'Mobile App Developer',
-                  bio:
-                      'Over 5 years of experience building '
-                      'native Android applications, now focused on cross-platform '
-                      'development with Flutter. I care deeply about clean '
-                      'architecture, maintainable code and crafting apps that feel '
-                      'fast, polished and genuinely useful to the people who use '
-                      'them.',
+                  title: l10n.developerRole,
+                  bio: l10n.developerBio,
                   textColor: textColor,
                   secondaryColor: secondaryColor,
                   surfaceColor: surfaceColor,
@@ -97,7 +93,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Skills',
+              title: l10n.skills,
               children: [
                 _SkillsList(
                   skills: const [
@@ -116,12 +112,13 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: 'Get in touch',
+              title: l10n.getInTouch,
               children: [
                 _SocialRow(
                   onLinkedIn: () {},
                   onGitHub: () {},
                   onEmail: () {},
+                  emailLabel: l10n.email,
                   accentColor: AppColors.accent,
                   textColor: textColor,
                   surfaceColor: surfaceColor,
@@ -132,7 +129,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Center(
               child: Text(
-                'Money Tracker · v1.0.0',
+                l10n.appVersion,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -299,6 +296,7 @@ class _SocialRow extends StatelessWidget {
   final VoidCallback onLinkedIn;
   final VoidCallback onGitHub;
   final VoidCallback onEmail;
+  final String emailLabel;
   final Color accentColor;
   final Color textColor;
   final Color surfaceColor;
@@ -308,6 +306,7 @@ class _SocialRow extends StatelessWidget {
     required this.onLinkedIn,
     required this.onGitHub,
     required this.onEmail,
+    required this.emailLabel,
     required this.accentColor,
     required this.textColor,
     required this.surfaceColor,
@@ -345,7 +344,7 @@ class _SocialRow extends StatelessWidget {
         Expanded(
           child: _SocialButton(
             icon: Icons.email_outlined,
-            label: 'Email',
+            label: emailLabel,
             onTap: onEmail,
             accentColor: accentColor,
             textColor: textColor,

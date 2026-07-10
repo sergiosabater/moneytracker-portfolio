@@ -168,4 +168,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dismiss => 'Fermer';
+
+  @override
+  String get languageNameEs => 'Espagnol';
+
+  @override
+  String get languageNameEn => 'Anglais';
+
+  @override
+  String get languageNameFr => 'Français';
+
+  @override
+  String get languageNameDe => 'Allemand';
+
+  @override
+  String get languageNamePl => 'Polonais';
 }
