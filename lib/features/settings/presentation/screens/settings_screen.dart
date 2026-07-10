@@ -10,6 +10,7 @@ import 'package:moneytracker/core/theme/theme_notifier.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_expandable_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
+import 'package:moneytracker/features/settings/presentation/widgets/settings_toggle_tile.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -139,6 +140,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   },
                   options: [
                     SettingsSelectableOption(
+                      value: ThemeModeOption.system,
+                      label: l10n.themeSystem,
+                      icon: Icons.smartphone,
+                      iconColor: Colors.grey,
+                    ),
+                    SettingsSelectableOption(
                       value: ThemeModeOption.light,
                       label: l10n.themeLight,
                       icon: Icons.light_mode,
@@ -150,24 +157,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       icon: Icons.dark_mode,
                       iconColor: AppColors.security,
                     ),
-                    SettingsSelectableOption(
-                      value: ThemeModeOption.system,
-                      label: l10n.themeSystem,
-                      icon: Icons.brightness_auto,
-                      iconColor: Colors.grey,
-                    ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 24),
             SettingsSection(
-              title: l10n.language,
+              title: l10n.preferences,
               children: [
                 SettingsExpandableTile<LocaleOption>(
                   icon: Icons.language,
                   iconColor: AppColors.info,
-                  title: l10n.appLanguage,
+                  title: l10n.language,
                   selectedValue: currentLocaleOption,
                   onSelected: (option) {
                     ref.read(localeNotifierProvider.notifier).setLocale(option);
@@ -175,7 +176,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   options: [
                     SettingsSelectableOption(
                       value: LocaleOption.system,
-                      label: l10n.systemDefault,
+                      label: l10n.themeSystem,
                       icon: Icons.smartphone,
                       iconColor: Colors.grey,
                     ),
@@ -231,12 +232,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            SettingsSection(
-              title: l10n.currency,
-              children: [
                 SettingsExpandableTile<String>(
                   icon: Icons.attach_money,
                   iconColor: AppColors.income,
@@ -291,23 +286,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                   ],
                 ),
+                SettingsOptionTile(
+                  icon: Icons.delete_outline,
+                  iconColor: AppColors.error,
+                  title: l10n.clearData,
+                  onTap: () {},
+                ),
               ],
             ),
             const SizedBox(height: 24),
             SettingsSection(
               title: l10n.security,
               children: [
-                SettingsOptionTile(
+                SettingsToggleTile(
                   icon: Icons.pin_outlined,
                   iconColor: AppColors.security,
                   title: l10n.pinCode,
-                  onTap: () {},
+                  value: false,
+                  onChanged: null,
                 ),
-                SettingsOptionTile(
+                SettingsToggleTile(
                   icon: Icons.fingerprint,
                   iconColor: AppColors.security,
                   title: l10n.biometricAuth,
-                  onTap: () {},
+                  value: false,
+                  onChanged: null,
                 ),
               ],
             ),
