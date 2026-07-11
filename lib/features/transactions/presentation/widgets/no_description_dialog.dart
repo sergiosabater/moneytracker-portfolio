@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/features/transactions/presentation/widgets/custom_dialog.dart';
+import 'package:moneytracker/shared/presentation/widgets/confirmation_dialog.dart';
 
 class NoDescriptionDialog extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -10,28 +10,18 @@ class NoDescriptionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomDialog(
+    final l10n = AppLocalizations.of(context)!;
+
+    return ConfirmationDialog(
       icon: Icons.warning_rounded,
       iconColor: AppColors.warning,
-      title: AppLocalizations.of(context)!.noDescriptionTitle,
-      message: AppLocalizations.of(context)!.noDescriptionMessage,
-      actions: [
-        DialogAction(
-          label: AppLocalizations.of(context)!.cancel,
-          color: AppColors.error,
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        DialogAction(
-          label: AppLocalizations.of(context)!.add,
-          color: AppColors.info,
-          onTap: () {
-            Navigator.pop(context);
-            onConfirm();
-          },
-        ),
-      ],
+      title: l10n.noDescriptionTitle,
+      message: l10n.noDescriptionMessage,
+      cancelLabel: l10n.cancel,
+      cancelColor: AppColors.error,
+      confirmLabel: l10n.add,
+      confirmColor: AppColors.info,
+      onConfirm: onConfirm,
     );
   }
 }

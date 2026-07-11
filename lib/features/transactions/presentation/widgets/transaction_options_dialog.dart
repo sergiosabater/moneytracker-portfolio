@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
-import 'package:moneytracker/features/transactions/presentation/widgets/custom_dialog.dart';
+import 'package:moneytracker/shared/presentation/widgets/custom_dialog.dart';
 
 class TransactionOptionsDialog extends StatelessWidget {
   final VoidCallback onEdit;
