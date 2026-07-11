@@ -9,7 +9,7 @@
   "expense": "Gasto",
   "amount": "CANTIDAD",
   "description": "DESCRIPCIÓN",
-  "enterDescription": "Ingrese descripción",
+  "enterDescription": "Ingresa descripción",
   "noDescription": "Sin descripción",
   "add": "Agregar",
   "noTransactionsYet": "Aún no hay transacciones",
@@ -20,7 +20,7 @@
   "confirmDeleteMessage": "¿Estás seguro de que quieres eliminar esta transacción?",
   "cancel": "Cancelar",
   "noDescriptionTitle": "Sin Descripción",
-  "noDescriptionMessage": "¿Seguro que quiere agregar una transacción sin descripción?",
+  "noDescriptionMessage": "¿Seguro que quieres agregar una transacción sin descripción?",
   "transactionDeleted": "Transacción eliminada",
   "transactionAdded": "Transacción agregada",
   "settingsTitle": "Ajustes",
@@ -56,5 +56,8 @@
   "languageNameDe": "Alemán",
   "languageNamePl": "Polaco",
   "preferences": "Preferencias",
-  "clearData": "Borrar datos"
+  "clearData": "Borrar datos",
+  "confirmClearData": "Atención",
+  "confirmClearDataMessage": "¿Estás seguro de que quieres borrar todos los datos?",
+  "dataCleared": "Datos borrados"
 }

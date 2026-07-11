@@ -181,4 +181,14 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get clearData => 'Wyczyść dane';
+
+  @override
+  String get confirmClearData => 'Uwaga';
+
+  @override
+  String get confirmClearDataMessage =>
+      'Czy na pewno chcesz usunąć wszystkie dane?';
+
+  @override
+  String get dataCleared => 'Dane usunięte';
 }

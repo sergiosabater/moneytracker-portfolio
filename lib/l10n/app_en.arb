@@ -56,5 +56,8 @@
   "languageNameDe": "German",
   "languageNamePl": "Polish",
   "preferences": "Preferences",
-  "clearData": "Clear data"
+  "clearData": "Clear data",
+  "confirmClearData": "Attention",
+  "confirmClearDataMessage": "Are you sure you want to delete all data?",
+  "dataCleared": "Data cleared"
 }

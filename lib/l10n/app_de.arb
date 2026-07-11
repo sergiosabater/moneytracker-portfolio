@@ -56,5 +56,8 @@
   "languageNameDe": "Deutsch",
   "languageNamePl": "Polnisch",
   "preferences": "Präferenzen",
-  "clearData": "Daten löschen"
+  "clearData": "Daten löschen",
+  "confirmClearData": "Achtung",
+  "confirmClearDataMessage": "Möchten Sie wirklich alle Daten löschen?",
+  "dataCleared": "Daten gelöscht"
 }

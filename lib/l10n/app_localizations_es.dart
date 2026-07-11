@@ -36,7 +36,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get description => 'DESCRIPCIÓN';
 
   @override
-  String get enterDescription => 'Ingrese descripción';
+  String get enterDescription => 'Ingresa descripción';
 
   @override
   String get noDescription => 'Sin descripción';
@@ -71,7 +71,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noDescriptionMessage =>
-      '¿Seguro que quiere agregar una transacción sin descripción?';
+      '¿Seguro que quieres agregar una transacción sin descripción?';
 
   @override
   String get transactionDeleted => 'Transacción eliminada';
@@ -181,4 +181,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get clearData => 'Borrar datos';
+
+  @override
+  String get confirmClearData => 'Atención';
+
+  @override
+  String get confirmClearDataMessage =>
+      '¿Estás seguro de que quieres borrar todos los datos?';
+
+  @override
+  String get dataCleared => 'Datos borrados';
 }
