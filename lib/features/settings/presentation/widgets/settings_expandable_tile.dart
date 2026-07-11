@@ -25,6 +25,8 @@ class SettingsExpandableTile<T> extends StatefulWidget {
   final T selectedValue;
   final ValueChanged<T> onSelected;
 
+  final Color? selectionColor;
+
   const SettingsExpandableTile({
     super.key,
     required this.icon,
@@ -33,6 +35,7 @@ class SettingsExpandableTile<T> extends StatefulWidget {
     required this.options,
     required this.selectedValue,
     required this.onSelected,
+    this.selectionColor,
   });
 
   @override
@@ -116,6 +119,7 @@ class _SettingsExpandableTileState<T> extends State<SettingsExpandableTile<T>> {
 
   Widget _buildOptionsList(Color titleColor, Color secondaryColor) {
     final backgroundColor = Theme.of(context).colorScheme.surface;
+    final selectionColor = widget.selectionColor ?? widget.iconColor;
 
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
@@ -155,7 +159,7 @@ class _SettingsExpandableTileState<T> extends State<SettingsExpandableTile<T>> {
                     ),
                   ),
                   if (isSelected)
-                    Icon(Icons.check_circle, color: widget.iconColor, size: 18),
+                    Icon(Icons.check_circle, color: selectionColor, size: 18),
                 ],
               ),
             ),

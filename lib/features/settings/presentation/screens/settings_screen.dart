@@ -2,6 +2,8 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneytracker/core/currency/currency_notifier.dart';
+import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/locale/locale_option.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
@@ -25,9 +27,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-
-  // Currency persistence is out of scope for this stage — UI only for now.
-  String _selectedCurrency = 'usd';
 
   @override
   void initState() {
@@ -114,6 +113,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final l10n = AppLocalizations.of(context)!;
     final currentThemeMode = ref.watch(themeNotifierProvider);
     final currentLocaleOption = ref.watch(localeNotifierProvider);
+    final currentCurrency = ref.watch(currencyNotifierProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -131,6 +131,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 SettingsExpandableTile<ThemeModeOption>(
                   icon: Icons.palette_outlined,
                   iconColor: AppColors.warning,
+                  selectionColor: AppColors.info,
                   title: l10n.theme,
                   selectedValue: currentThemeMode,
                   onSelected: (option) {
@@ -168,18 +169,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 SettingsExpandableTile<LocaleOption>(
                   icon: Icons.language,
                   iconColor: AppColors.info,
+                  selectionColor: AppColors.info,
                   title: l10n.language,
                   selectedValue: currentLocaleOption,
                   onSelected: (option) {
                     ref.read(localeNotifierProvider.notifier).setLocale(option);
+                    ref
+                        .read(currencyNotifierProvider.notifier)
+                        .setCurrency(CurrencyOption.forLocale(option));
                   },
                   options: [
-                    SettingsSelectableOption(
-                      value: LocaleOption.system,
-                      label: l10n.themeSystem,
-                      icon: Icons.smartphone,
-                      iconColor: Colors.grey,
-                    ),
                     SettingsSelectableOption(
                       value: LocaleOption.es,
                       label: l10n.languageNameEs,
@@ -232,17 +231,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     ),
                   ],
                 ),
-                SettingsExpandableTile<String>(
+                SettingsExpandableTile<CurrencyOption>(
                   icon: Icons.attach_money,
                   iconColor: AppColors.income,
+                  selectionColor: AppColors.info,
                   title: l10n.currency,
-                  selectedValue: _selectedCurrency,
+                  selectedValue: currentCurrency,
                   onSelected: (value) {
-                    setState(() => _selectedCurrency = value);
+                    ref.read(currencyNotifierProvider.notifier).setCurrency(value);
                   },
                   options: [
                     SettingsSelectableOption(
-                      value: 'usd',
+                      value: CurrencyOption.usd,
                       label: l10n.currencyDollar,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'US',
@@ -252,7 +252,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'eur',
+                      value: CurrencyOption.eur,
                       label: l10n.currencyEuro,
                       leadingWidget: ClipRRect(
                         borderRadius: BorderRadius.circular(3),
@@ -265,7 +265,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'gbp',
+                      value: CurrencyOption.gbp,
                       label: l10n.currencyPound,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'GB',
@@ -275,7 +275,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                       ),
                     ),
                     SettingsSelectableOption(
-                      value: 'pln',
+                      value: CurrencyOption.pln,
                       label: l10n.currencyZloty,
                       leadingWidget: CountryFlag.fromCountryCode(
                         'PL',

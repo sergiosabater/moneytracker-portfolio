@@ -1,17 +1,14 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
 enum LocaleOption {
-  system,
   en,
   es,
   fr,
   de,
   pl;
 
-  Locale? toLocale() {
+  Locale toLocale() {
     switch (this) {
-      case LocaleOption.system:
-        return null;
       case LocaleOption.en:
         return const Locale('en');
       case LocaleOption.es:
@@ -25,10 +22,19 @@ enum LocaleOption {
     }
   }
 
+  static LocaleOption resolveDeviceDefault() {
+    final deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
+    return LocaleOption.values.firstWhere(
+      (option) => option.name == deviceLanguageCode,
+      orElse: () => LocaleOption.en,
+    );
+  }
+
   static LocaleOption fromStorageValue(String? value) {
+    if (value == null) return resolveDeviceDefault();
     return LocaleOption.values.firstWhere(
       (option) => option.name == value,
-      orElse: () => LocaleOption.system,
+      orElse: () => resolveDeviceDefault(),
     );
   }
 
