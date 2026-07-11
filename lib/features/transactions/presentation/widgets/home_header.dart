@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneytracker/core/currency/currency_formatter.dart';
+import 'package:moneytracker/core/currency/currency_notifier.dart';
+import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
@@ -67,6 +70,7 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
     final balance = ref.watch(balanceProvider);
     final incomes = ref.watch(totalIncomesProvider);
     final expenses = ref.watch(totalExpensesProvider);
+    final currency = ref.watch(currencyNotifierProvider);
 
     return SlideTransition(
       position: _slideAnimation,
@@ -124,7 +128,7 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
                   ),
                 ),
                 const SizedBox(height: 8),
-                AnimatedBalanceText(balance: balance),
+                AnimatedBalanceText(balance: balance, currency: currency),
                 const SizedBox(height: 30),
 
                 // Cards de ingresos y gastos
@@ -134,6 +138,7 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
                       child: _ModernStatsCard(
                         title: AppLocalizations.of(context)!.incomes,
                         amount: incomes,
+                        currency: currency,
                         icon: Icons.trending_up,
                         color: AppColors.income,
                         delay: const Duration(milliseconds: 200),
@@ -145,6 +150,7 @@ class _HomeHeaderState extends ConsumerState<HomeHeader>
                       child: _ModernStatsCard(
                         title: AppLocalizations.of(context)!.expenses,
                         amount: expenses,
+                        currency: currency,
                         icon: Icons.trending_down,
                         color: AppColors.expense,
                         delay: const Duration(milliseconds: 400),
@@ -198,8 +204,13 @@ class _SettingsButton extends StatelessWidget {
 
 class AnimatedBalanceText extends StatefulWidget {
   final double balance;
+  final CurrencyOption currency;
 
-  const AnimatedBalanceText({super.key, required this.balance});
+  const AnimatedBalanceText({
+    super.key,
+    required this.balance,
+    required this.currency,
+  });
 
   @override
   State<AnimatedBalanceText> createState() => _AnimatedBalanceTextState();
@@ -254,20 +265,27 @@ class _AnimatedBalanceTextState extends State<AnimatedBalanceText>
       builder: (context, child) {
         return ScaleTransition(
           scale: _scaleAnim,
-          child: Text(
-            '\$ ${widget.balance.toStringAsFixed(2)}',
-            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-              fontWeight: FontWeight.w900,
-              fontSize: 42,
-              color: _colorAnim.value,
-              letterSpacing: 1.2,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
+          child: SizedBox(
+            width: double.infinity,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
+              child: Text(
+                CurrencyFormatter.format(widget.currency, widget.balance),
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 42,
+                  color: _colorAnim.value,
+                  letterSpacing: 1.2,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -279,6 +297,7 @@ class _AnimatedBalanceTextState extends State<AnimatedBalanceText>
 class _ModernStatsCard extends StatefulWidget {
   final String title;
   final double amount;
+  final CurrencyOption currency;
   final IconData icon;
   final Color color;
   final Duration delay;
@@ -287,6 +306,7 @@ class _ModernStatsCard extends StatefulWidget {
   const _ModernStatsCard({
     required this.title,
     required this.amount,
+    required this.currency,
     required this.icon,
     required this.color,
     required this.delay,
@@ -330,15 +350,14 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
 
   @override
   Widget build(BuildContext context) {
-    final formattedAmount = widget.amount < 0
-        ? '-\$ ${widget.amount.abs().toStringAsFixed(2)}'
-        : '\$ ${widget.amount.toStringAsFixed(2)}';
+    final formattedAmount = CurrencyFormatter.format(widget.currency, widget.amount);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = Theme.of(context).colorScheme.surface;
     final titleColor = Theme.of(context).textTheme.bodyMedium?.color ??
         Colors.grey.shade600;
 
+    // El brillo neumórfico blanco omitido en modo dark
     final cardShadows = <BoxShadow>[
       BoxShadow(
         color: widget.color.withValues(alpha: 0.3),
@@ -421,25 +440,34 @@ class __ModernStatsCardState extends State<_ModernStatsCard> {
                       ),
                       const SizedBox(height: 0),
 
+                      // Monto - ALINEADO A LA DERECHA, con FittedBox para
+                      // evitar overflow cuando el importe formateado (según
+                      // la moneda activa) sea más ancho que el espacio
+                      // disponible en la tarjeta.
                       Transform.translate(
                         offset: const Offset(0, 4),
-                        child: Container(
+                        child: SizedBox(
                           width: double.infinity,
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            formattedAmount,
-                            textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.titleLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: widget.color,
-                                  fontSize: 26,
-                                  letterSpacing: -0.5,
-                                ),
+                          height: 32,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              formattedAmount,
+                              textAlign: TextAlign.right,
+                              style: Theme.of(context).textTheme.titleLarge!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: widget.color,
+                                    fontSize: 20,
+                                    letterSpacing: -0.5,
+                                  ),
+                            ),
                           ),
                         ),
                       ),
 
+                      // Barra de progreso decorativa
                       const SizedBox(height: 4),
                       Container(
                         height: 4,
