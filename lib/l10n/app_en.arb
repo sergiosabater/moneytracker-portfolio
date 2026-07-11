@@ -30,8 +30,6 @@
   "themeDark": "Dark",
   "themeSystem": "System",
   "language": "Language",
-  "appLanguage": "App language",
-  "systemDefault": "System default",
   "currency": "Currency",
   "currencyDollar": "Dollar ($)",
   "currencyEuro": "Euro (€)",
@@ -56,5 +54,7 @@
   "languageNameEn": "English",
   "languageNameFr": "French",
   "languageNameDe": "German",
-  "languageNamePl": "Polish"
+  "languageNamePl": "Polish",
+  "preferences": "Preferences",
+  "clearData": "Clear data"
 }

@@ -101,12 +101,6 @@ class AppLocalizationsPl extends AppLocalizations {
   String get language => 'Język';
 
   @override
-  String get appLanguage => 'Język aplikacji';
-
-  @override
-  String get systemDefault => 'Domyślny systemowy';
-
-  @override
   String get currency => 'Waluta';
 
   @override
@@ -181,4 +175,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get languageNamePl => 'Polski';
+
+  @override
+  String get preferences => 'Preferencje';
+
+  @override
+  String get clearData => 'Wyczyść dane';
 }

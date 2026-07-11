@@ -284,18 +284,6 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get language;
 
-  /// No description provided for @appLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'App language'**
-  String get appLanguage;
-
-  /// No description provided for @systemDefault.
-  ///
-  /// In en, this message translates to:
-  /// **'System default'**
-  String get systemDefault;
-
   /// No description provided for @currency.
   ///
   /// In en, this message translates to:
@@ -445,6 +433,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Polish'**
   String get languageNamePl;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @clearData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear data'**
+  String get clearData;
 }
 
 class _AppLocalizationsDelegate
