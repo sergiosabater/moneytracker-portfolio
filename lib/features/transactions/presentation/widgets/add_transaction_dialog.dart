@@ -1,6 +1,9 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/currency/currency_formatter.dart';
+import 'package:moneytracker/core/currency/currency_input_formatter.dart';
+import 'package:moneytracker/core/currency/currency_notifier.dart';
+import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
@@ -188,6 +191,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
     final dividerColor = Theme.of(context).dividerColor;
     final secondaryColor =
         textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+    final currency = ref.watch(currencyNotifierProvider);
 
     return AnimatedPadding(
       padding: EdgeInsets.only(bottom: keyboardHeight),
@@ -256,16 +260,9 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
                           controller: _amountController,
                           focusNode: _amountFocusNode,
                           type: type,
-                          onChanged: (value) {
-                            final valueWithoutDollarSign = value.replaceAll(
-                              '\$',
-                              '',
-                            );
-                            final valueWithoutCommas = valueWithoutDollarSign
-                                .replaceAll(',', '');
-                            setState(() {
-                              amount = double.tryParse(valueWithoutCommas) ?? 0.0;
-                            });
+                          currency: currency,
+                          onAmountChanged: (value) {
+                            setState(() => amount = value);
                           },
                         ),
                         const SizedBox(height: 24),
@@ -398,13 +395,15 @@ class _AmountField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final TransactionType type;
-  final ValueChanged<String> onChanged;
+  final CurrencyOption currency;
+  final ValueChanged<double> onAmountChanged;
 
   const _AmountField({
     required this.controller,
     required this.focusNode,
     required this.type,
-    required this.onChanged,
+    required this.currency,
+    required this.onAmountChanged,
   });
 
   @override
@@ -435,7 +434,10 @@ class _AmountField extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
             inputFormatters: [
-              CurrencyTextInputFormatter.currency(symbol: '\$'),
+              CurrencyInputFormatter(
+                currency: currency,
+                onValueChanged: onAmountChanged,
+              ),
             ],
             style: TextStyle(
               fontSize: 36,
@@ -443,12 +445,11 @@ class _AmountField extends StatelessWidget {
               color: color,
             ),
             decoration: InputDecoration.collapsed(
-              hintText: '\$0.00',
+              hintText: CurrencyFormatter.format(currency, 0),
               hintStyle: TextStyle(color: color.withValues(alpha: 0.3)),
             ),
             keyboardType: TextInputType.number,
             autofocus: false,
-            onChanged: onChanged,
           ),
         ],
       ),

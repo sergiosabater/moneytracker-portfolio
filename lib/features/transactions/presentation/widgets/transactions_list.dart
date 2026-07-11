@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/currency/currency_formatter.dart';
+import 'package:moneytracker/core/currency/currency_notifier.dart';
+import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
@@ -93,6 +96,7 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
   @override
   Widget build(BuildContext context) {
     final transactionsAsync = ref.watch(transactionsNotifierProvider);
+    final currency = ref.watch(currencyNotifierProvider);
 
     return Expanded(
       child: Container(
@@ -123,6 +127,7 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
                 ? const _EmptyState()
                 : _TransactionsList(
                     transactions: transactions,
+                    currency: currency,
                     formatDate: _formatDate,
                     formatTime: _formatTime,
                     onTransactionLongPress: _showTransactionOptions,
@@ -178,6 +183,7 @@ class _EmptyState extends StatelessWidget {
 
 class _TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
+  final CurrencyOption currency;
   final String Function(DateTime) formatDate;
   final String Function(DateTime) formatTime;
   final Function(BuildContext, Transaction) onTransactionLongPress;
@@ -185,6 +191,7 @@ class _TransactionsList extends StatelessWidget {
 
   const _TransactionsList({
     required this.transactions,
+    required this.currency,
     required this.formatDate,
     required this.formatTime,
     required this.onTransactionLongPress,
@@ -205,6 +212,7 @@ class _TransactionsList extends StatelessWidget {
         return _TransactionCard(
           key: ValueKey(transactions[index].id),
           transaction: transactions[index],
+          currency: currency,
           formatDate: formatDate,
           formatTime: formatTime,
           onLongPress: () =>
@@ -219,6 +227,7 @@ class _TransactionsList extends StatelessWidget {
 
 class _TransactionCard extends StatefulWidget {
   final Transaction transaction;
+  final CurrencyOption currency;
   final String Function(DateTime) formatDate;
   final String Function(DateTime) formatTime;
   final VoidCallback onLongPress;
@@ -228,6 +237,7 @@ class _TransactionCard extends StatefulWidget {
   const _TransactionCard({
     super.key,
     required this.transaction,
+    required this.currency,
     required this.formatDate,
     required this.formatTime,
     required this.onLongPress,
@@ -294,9 +304,7 @@ class _TransactionCardState extends State<_TransactionCard>
         ? AppLocalizations.of(context)!.income
         : AppLocalizations.of(context)!.expense;
 
-    final value = widget.transaction.type == TransactionType.expense
-        ? '-\$ ${widget.transaction.amount.abs().toStringAsFixed(2)}'
-        : '\$ ${widget.transaction.amount.toStringAsFixed(2)}';
+    final value = CurrencyFormatter.format(widget.currency, widget.transaction.amount);
 
     final surfaceColor = Theme.of(context).colorScheme.surface;
     final borderColor = Theme.of(context).dividerColor;
@@ -395,35 +403,43 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 8),
 
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    color.withValues(alpha: 0.1),
-                                    color.withValues(alpha: 0.05),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
+                          // Monto — FittedBox con scaleDown para que la
+                          // píldora completa (fondo, borde y texto) se
+                          // reduzca como conjunto si el importe formateado
+                          // no cabe, en vez de desbordar la tarjeta.
+                          SizedBox(
+                            width: double.infinity,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: color.withValues(alpha: 0.2),
-                                  width: 1,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      color.withValues(alpha: 0.1),
+                                      color.withValues(alpha: 0.05),
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: color.withValues(alpha: 0.2),
+                                    width: 1,
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: color,
-                                  letterSpacing: -0.5,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: color,
+                                    letterSpacing: -0.5,
+                                  ),
                                 ),
                               ),
                             ),
