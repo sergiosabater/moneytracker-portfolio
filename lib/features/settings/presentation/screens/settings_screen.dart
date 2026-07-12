@@ -6,6 +6,7 @@ import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/locale/locale_option.dart';
+import 'package:moneytracker/core/security/security_gate.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/core/theme/theme_mode_option.dart';
 import 'package:moneytracker/core/theme/theme_notifier.dart';
@@ -13,7 +14,10 @@ import 'package:moneytracker/features/settings/presentation/widgets/settings_exp
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_toggle_tile.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
+import 'package:moneytracker/shared/presentation/widgets/app_snackbar.dart';
+import 'package:moneytracker/shared/presentation/widgets/confirmation_dialog.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -53,6 +57,55 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _showClearDataConfirmation() {
+    final l10n = AppLocalizations.of(context)!;
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: l10n.dismiss,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ConfirmationDialog(
+          icon: Icons.warning_rounded,
+          iconColor: AppColors.warning,
+          title: l10n.confirmClearData,
+          message: l10n.confirmClearDataMessage,
+          cancelLabel: l10n.cancel,
+          cancelColor: AppColors.info,
+          confirmLabel: l10n.clearData,
+          confirmColor: AppColors.error,
+          onConfirm: _clearData,
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Future<void> _clearData() async {
+    // Gate the destructive action behind the user's security settings.
+    // Today this always resolves to true immediately, since PIN code and
+    // biometric authentication are still disabled placeholders — but the
+    // call site is already correct for when that verification becomes real.
+    final canProceed = await SecurityGate.verify(ref);
+    if (!canProceed) return;
+
+    await ref.read(transactionsNotifierProvider.notifier).clearTransactions();
+
+    if (!context.mounted) return;
+    AppSnackbar.show(
+      context,
+      message: AppLocalizations.of(context)!.dataCleared,
+      type: AppSnackbarType.error,
+    );
   }
 
   @override
@@ -290,7 +343,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.delete_outline,
                   iconColor: AppColors.error,
                   title: l10n.clearData,
-                  onTap: () {},
+                  onTap: _showClearDataConfirmation,
                 ),
               ],
             ),
