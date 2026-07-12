@@ -100,7 +100,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
     await ref.read(transactionsNotifierProvider.notifier).clearTransactions();
 
-    if (!context.mounted) return;
+    if (!mounted) return;
     AppSnackbar.show(
       context,
       message: AppLocalizations.of(context)!.dataCleared,
@@ -167,6 +167,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final currentThemeMode = ref.watch(themeNotifierProvider);
     final currentLocaleOption = ref.watch(localeNotifierProvider);
     final currentCurrency = ref.watch(currencyNotifierProvider);
+
+    // "Clear data" only makes sense when there's something to clear.
+    // Checking transactions.isEmpty alone is sufficient: the balance is
+    // always derived from the transaction list (balance = sum of all
+    // transactions), so an empty list mathematically guarantees a zero
+    // balance too. There's no case where the list is empty but the
+    // balance isn't (or vice versa), so no extra balance check is needed.
+    final hasTransactions =
+        (ref.watch(transactionsNotifierProvider).value ?? []).isNotEmpty;
 
     return Container(
       decoration: BoxDecoration(
@@ -343,6 +352,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.delete_outline,
                   iconColor: AppColors.error,
                   title: l10n.clearData,
+                  enabled: hasTransactions,
                   onTap: _showClearDataConfirmation,
                 ),
               ],

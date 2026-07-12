@@ -6,6 +6,7 @@ class SettingsOptionTile extends StatelessWidget {
   final String title;
   final String? value;
   final VoidCallback onTap;
+  final bool enabled;
 
   const SettingsOptionTile({
     super.key,
@@ -14,16 +15,28 @@ class SettingsOptionTile extends StatelessWidget {
     required this.title,
     this.value,
     required this.onTap,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final titleColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
-    final secondaryColor = theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+    final secondaryColor =
+        theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
+    // When disabled, everything falls back to a muted, low-emphasis
+    // version of the same palette — no separate "disabled" colors are
+    // hardcoded, they're derived from the same tokens used elsewhere.
+    final effectiveIconColor =
+        enabled ? iconColor : secondaryColor.withValues(alpha: 0.4);
+    final effectiveTitleColor =
+        enabled ? titleColor : secondaryColor.withValues(alpha: 0.5);
+    final effectiveChevronColor =
+        enabled ? secondaryColor : secondaryColor.withValues(alpha: 0.3);
 
     return InkWell(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
@@ -32,10 +45,10 @@ class SettingsOptionTile extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
+                color: effectiveIconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: iconColor, size: 20),
+              child: Icon(icon, color: effectiveIconColor, size: 20),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -44,7 +57,7 @@ class SettingsOptionTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: titleColor,
+                  color: effectiveTitleColor,
                 ),
               ),
             ),
@@ -62,7 +75,7 @@ class SettingsOptionTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               size: 20,
-              color: secondaryColor,
+              color: effectiveChevronColor,
             ),
           ],
         ),
