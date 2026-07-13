@@ -191,4 +191,33 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get dataCleared => 'Dane usunięte';
+
+  @override
+  String get pinCreateTitle => 'Utwórz PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Ten PIN posłuży do odblokowania aplikacji i potwierdzania ważnych czynności';
+
+  @override
+  String get pinConfirmTitle => 'Potwierdź swój PIN';
+
+  @override
+  String get pinConfirmSubtitle =>
+      'Wprowadź ponownie swój PIN, aby go potwierdzić';
+
+  @override
+  String get pinMismatch => 'Kody PIN się nie zgadzają. Spróbuj ponownie';
+
+  @override
+  String get pinVerifyTitle => 'Wprowadź swój PIN';
+
+  @override
+  String get pinIncorrect => 'Nieprawidłowy PIN. Spróbuj ponownie';
+
+  @override
+  String get pinEnabled => 'PIN włączony';
+
+  @override
+  String get pinDisabled => 'PIN wyłączony';
 }

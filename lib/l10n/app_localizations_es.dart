@@ -191,4 +191,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dataCleared => 'Datos borrados';
+
+  @override
+  String get pinCreateTitle => 'Crea un PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Usarás este PIN para desbloquear la app y confirmar acciones sensibles';
+
+  @override
+  String get pinConfirmTitle => 'Confirma tu PIN';
+
+  @override
+  String get pinConfirmSubtitle => 'Introduce de nuevo tu PIN para confirmarlo';
+
+  @override
+  String get pinMismatch => 'Los PIN no coinciden. Inténtalo de nuevo';
+
+  @override
+  String get pinVerifyTitle => 'Introduce tu PIN';
+
+  @override
+  String get pinIncorrect => 'PIN incorrecto. Inténtalo de nuevo';
+
+  @override
+  String get pinEnabled => 'PIN activado';
+
+  @override
+  String get pinDisabled => 'PIN desactivado';
 }

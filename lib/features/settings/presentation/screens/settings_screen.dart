@@ -6,6 +6,7 @@ import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/locale/locale_option.dart';
+import 'package:moneytracker/core/security/pin_provider.dart';
 import 'package:moneytracker/core/security/security_gate.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/core/theme/theme_mode_option.dart';
@@ -92,11 +93,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   Future<void> _clearData() async {
     // Gate the destructive action behind the user's security settings.
-    // Today this always resolves to true immediately, since PIN code and
-    // biometric authentication are still disabled placeholders — but the
-    // call site is already correct for when that verification becomes real.
-    final canProceed = await SecurityGate.verify(ref);
-    if (!canProceed) return;
+    // If a PIN is set, this pushes the verification screen and waits
+    // for the result; otherwise it resolves to true immediately.
+    final canProceed = await SecurityGate.verify(context, ref);
+    if (!canProceed || !mounted) return;
 
     await ref.read(transactionsNotifierProvider.notifier).clearTransactions();
 
@@ -105,6 +105,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
       context,
       message: AppLocalizations.of(context)!.dataCleared,
       type: AppSnackbarType.error,
+    );
+  }
+
+  Future<void> _handlePinToggle(bool enable) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (enable) {
+      final completed = await context.push<bool>('/settings/pin-setup');
+      if (completed != true || !mounted) return;
+
+      AppSnackbar.show(
+        context,
+        message: l10n.pinEnabled,
+        type: AppSnackbarType.success,
+      );
+      return;
+    }
+
+    final verified = await context.push<bool>('/settings/pin-verify');
+    if (verified != true || !mounted) return;
+
+    await ref.read(pinServiceProvider).clearPin();
+    await ref.read(pinStatusNotifierProvider.notifier).refresh();
+
+    if (!mounted) return;
+    AppSnackbar.show(
+      context,
+      message: l10n.pinDisabled,
+      type: AppSnackbarType.info,
     );
   }
 
@@ -167,6 +196,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final currentThemeMode = ref.watch(themeNotifierProvider);
     final currentLocaleOption = ref.watch(localeNotifierProvider);
     final currentCurrency = ref.watch(currencyNotifierProvider);
+    final pinStatusAsync = ref.watch(pinStatusNotifierProvider);
 
     // "Clear data" only makes sense when there's something to clear.
     // Checking transactions.isEmpty alone is sufficient: the balance is
@@ -365,8 +395,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.pin_outlined,
                   iconColor: AppColors.security,
                   title: l10n.pinCode,
-                  value: false,
-                  onChanged: null,
+                  value: pinStatusAsync.value ?? false,
+                  onChanged: _handlePinToggle,
                 ),
                 SettingsToggleTile(
                   icon: Icons.fingerprint,

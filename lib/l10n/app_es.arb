@@ -59,5 +59,14 @@
   "clearData": "Borrar datos",
   "confirmClearData": "Atención",
   "confirmClearDataMessage": "¿Estás seguro de que quieres borrar todos los datos?",
-  "dataCleared": "Datos borrados"
+  "dataCleared": "Datos borrados",
+  "pinCreateTitle": "Crea un PIN",
+  "pinCreateSubtitle": "Usarás este PIN para desbloquear la app y confirmar acciones sensibles",
+  "pinConfirmTitle": "Confirma tu PIN",
+  "pinConfirmSubtitle": "Introduce de nuevo tu PIN para confirmarlo",
+  "pinMismatch": "Los PIN no coinciden. Inténtalo de nuevo",
+  "pinVerifyTitle": "Introduce tu PIN",
+  "pinIncorrect": "PIN incorrecto. Inténtalo de nuevo",
+  "pinEnabled": "PIN activado",
+  "pinDisabled": "PIN desactivado"
 }

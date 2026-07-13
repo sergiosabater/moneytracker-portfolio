@@ -59,5 +59,14 @@
   "clearData": "Wyczyść dane",
   "confirmClearData": "Uwaga",
   "confirmClearDataMessage": "Czy na pewno chcesz usunąć wszystkie dane?",
-  "dataCleared": "Dane usunięte"
+  "dataCleared": "Dane usunięte",
+  "pinCreateTitle": "Utwórz PIN",
+  "pinCreateSubtitle": "Ten PIN posłuży do odblokowania aplikacji i potwierdzania ważnych czynności",
+  "pinConfirmTitle": "Potwierdź swój PIN",
+  "pinConfirmSubtitle": "Wprowadź ponownie swój PIN, aby go potwierdzić",
+  "pinMismatch": "Kody PIN się nie zgadzają. Spróbuj ponownie",
+  "pinVerifyTitle": "Wprowadź swój PIN",
+  "pinIncorrect": "Nieprawidłowy PIN. Spróbuj ponownie",
+  "pinEnabled": "PIN włączony",
+  "pinDisabled": "PIN wyłączony"
 }

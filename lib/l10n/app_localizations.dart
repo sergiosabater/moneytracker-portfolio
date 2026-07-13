@@ -463,6 +463,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Data cleared'**
   String get dataCleared;
+
+  /// No description provided for @pinCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a PIN'**
+  String get pinCreateTitle;
+
+  /// No description provided for @pinCreateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll use this PIN to unlock the app and confirm sensitive actions'**
+  String get pinCreateSubtitle;
+
+  /// No description provided for @pinConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your PIN'**
+  String get pinConfirmTitle;
+
+  /// No description provided for @pinConfirmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN again to confirm'**
+  String get pinConfirmSubtitle;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'PINs didn\'t match. Try again'**
+  String get pinMismatch;
+
+  /// No description provided for @pinVerifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN'**
+  String get pinVerifyTitle;
+
+  /// No description provided for @pinIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect PIN. Try again'**
+  String get pinIncorrect;
+
+  /// No description provided for @pinEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN enabled'**
+  String get pinEnabled;
+
+  /// No description provided for @pinDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN disabled'**
+  String get pinDisabled;
 }
 
 class _AppLocalizationsDelegate

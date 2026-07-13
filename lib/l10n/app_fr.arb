@@ -59,5 +59,14 @@
   "clearData": "Effacer les données",
   "confirmClearData": "Attention",
   "confirmClearDataMessage": "Êtes-vous sûr de vouloir supprimer toutes les données ?",
-  "dataCleared": "Données effacées"
+  "dataCleared": "Données effacées",
+  "pinCreateTitle": "Créez un code PIN",
+  "pinCreateSubtitle": "Vous utiliserez ce code PIN pour déverrouiller l'application et confirmer les actions sensibles",
+  "pinConfirmTitle": "Confirmez votre code PIN",
+  "pinConfirmSubtitle": "Saisissez à nouveau votre code PIN pour le confirmer",
+  "pinMismatch": "Les codes PIN ne correspondent pas. Réessayez",
+  "pinVerifyTitle": "Saisissez votre code PIN",
+  "pinIncorrect": "Code PIN incorrect. Réessayez",
+  "pinEnabled": "Code PIN activé",
+  "pinDisabled": "Code PIN désactivé"
 }

@@ -59,5 +59,14 @@
   "clearData": "Clear data",
   "confirmClearData": "Attention",
   "confirmClearDataMessage": "Are you sure you want to delete all data?",
-  "dataCleared": "Data cleared"
+  "dataCleared": "Data cleared",
+  "pinCreateTitle": "Create a PIN",
+  "pinCreateSubtitle": "You'll use this PIN to unlock the app and confirm sensitive actions",
+  "pinConfirmTitle": "Confirm your PIN",
+  "pinConfirmSubtitle": "Enter your PIN again to confirm",
+  "pinMismatch": "PINs didn't match. Try again",
+  "pinVerifyTitle": "Enter your PIN",
+  "pinIncorrect": "Incorrect PIN. Try again",
+  "pinEnabled": "PIN enabled",
+  "pinDisabled": "PIN disabled"
 }
