@@ -3,6 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/router/app_router.dart';
+import 'package:moneytracker/core/security/app_lock_notifier.dart';
+import 'package:moneytracker/core/security/pin_service.dart';
+import 'package:moneytracker/core/security/presentation/screens/pin_unlock_screen.dart';
 import 'package:moneytracker/core/services/preferences_provider.dart';
 import 'package:moneytracker/core/services/preferences_service.dart';
 import 'package:moneytracker/core/theme/app_theme.dart';
@@ -11,12 +14,20 @@ import 'package:moneytracker/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final preferencesService = await PreferencesService.create();
+
+  // Resolved before runApp so the app never briefly shows unlocked
+  // content while this async check would otherwise still be pending.
+  final isPinSet = await PinService().isPinSet();
+  final initialLockState =
+      isPinSet ? AppLockState.locked : AppLockState.unlocked;
 
   runApp(
     ProviderScope(
       overrides: [
         preferencesServiceProvider.overrideWithValue(preferencesService),
+        initialAppLockStateProvider.overrideWithValue(initialLockState),
       ],
       child: const MyApp(),
     ),
@@ -52,6 +63,20 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: themeMode.toThemeMode(),
       debugShowCheckedModeBanner: false,
+      // Wraps whatever GoRouter builds. While the app is locked, this
+      // replaces it entirely with the PIN screen — same MaterialApp
+      // instance underneath, so theme/locale/etc. still apply.
+      builder: (context, child) {
+        return Consumer(
+          builder: (context, ref, _) {
+            final lockState = ref.watch(appLockNotifierProvider);
+            if (lockState == AppLockState.locked) {
+              return const PinUnlockScreen();
+            }
+            return child!;
+          },
+        );
+      },
     );
   }
 }

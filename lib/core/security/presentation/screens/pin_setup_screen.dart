@@ -61,13 +61,16 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
     return PinEntryScreen(
       // Forces a fresh State (and cleared dots) whenever the step
       // changes, since it's a new logical screen even though it reuses
-      // the same widget type.
+      // the same widget type. This also means the entrance animation
+      // replays on every step transition, which reads as an intentional
+      // "next screen" beat rather than a glitch.
       key: ValueKey(_step),
       title: isConfirmStep ? l10n.pinConfirmTitle : l10n.pinCreateTitle,
       subtitle:
           isConfirmStep ? l10n.pinConfirmSubtitle : l10n.pinCreateSubtitle,
       errorMessage: _errorMessage,
       errorTrigger: _errorTrigger,
+      animateEntrance: true,
       onCompleted: _isSaving ? (_) {} : _handleCompleted,
       onBack: () => Navigator.of(context).pop(false),
     );

@@ -68,5 +68,7 @@
   "pinVerifyTitle": "PIN eingeben",
   "pinIncorrect": "Falscher PIN. Versuchen Sie es erneut",
   "pinEnabled": "PIN aktiviert",
-  "pinDisabled": "PIN deaktiviert"
+  "pinDisabled": "PIN deaktiviert",
+  "appLockTitle": "Willkommen zurück",
+  "appLockSubtitle": "Geben Sie Ihren PIN ein, um fortzufahren"
 }

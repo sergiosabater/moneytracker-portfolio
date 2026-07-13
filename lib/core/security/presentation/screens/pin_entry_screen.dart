@@ -8,6 +8,11 @@ import 'package:moneytracker/core/theme/app_colors.dart';
 /// context-agnostic — it doesn't know whether it's being used to create,
 /// confirm, verify, or unlock a PIN. The caller decides what happens
 /// when 4 digits are entered via [onCompleted].
+///
+/// Set [animateEntrance] to true for a staggered entrance: the header
+/// group (icon/title/subtitle/dots) slides down and fades in, while the
+/// keypad slides up from the bottom — used for the app-open lock screen,
+/// left off for setup/verify flows reached via normal navigation.
 class PinEntryScreen extends StatefulWidget {
   final String title;
   final String? subtitle;
@@ -15,6 +20,7 @@ class PinEntryScreen extends StatefulWidget {
   final int errorTrigger;
   final ValueChanged<String> onCompleted;
   final VoidCallback? onBack;
+  final bool animateEntrance;
 
   const PinEntryScreen({
     super.key,
@@ -24,14 +30,69 @@ class PinEntryScreen extends StatefulWidget {
     this.errorTrigger = 0,
     required this.onCompleted,
     this.onBack,
+    this.animateEntrance = false,
   });
 
   @override
   State<PinEntryScreen> createState() => _PinEntryScreenState();
 }
 
-class _PinEntryScreenState extends State<PinEntryScreen> {
+class _PinEntryScreenState extends State<PinEntryScreen>
+    with SingleTickerProviderStateMixin {
   final List<String> _digits = [];
+
+  AnimationController? _entranceController;
+  Animation<double>? _headerFade;
+  Animation<Offset>? _headerSlide;
+  Animation<double>? _keypadFade;
+  Animation<Offset>? _keypadSlide;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.animateEntrance) {
+      final controller = AnimationController(
+        duration: const Duration(milliseconds: 700),
+        vsync: this,
+      );
+      _entranceController = controller;
+
+      _headerFade = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+        ),
+      );
+      _headerSlide = Tween<Offset>(
+        begin: const Offset(0, -0.3),
+        end: Offset.zero,
+      ).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
+        ),
+      );
+
+      _keypadFade = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
+        ),
+      );
+      _keypadSlide = Tween<Offset>(
+        begin: const Offset(0, 0.5),
+        end: Offset.zero,
+      ).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: const Interval(0.3, 1.0, curve: Curves.easeOutCubic),
+        ),
+      );
+
+      controller.forward();
+    }
+  }
 
   @override
   void didUpdateWidget(covariant PinEntryScreen oldWidget) {
@@ -39,6 +100,12 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
     if (widget.errorTrigger != oldWidget.errorTrigger) {
       setState(() => _digits.clear());
     }
+  }
+
+  @override
+  void dispose() {
+    _entranceController?.dispose();
+    super.dispose();
   }
 
   void _onDigit(String digit) {
@@ -64,6 +131,77 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget header = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.lock_outline,
+          color: Colors.white.withValues(alpha: 0.9),
+          size: 40,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          widget.title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        if (widget.subtitle != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            widget.subtitle!,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: 14,
+            ),
+          ),
+        ],
+        const SizedBox(height: 32),
+        PinDots(
+          length: PinService.pinLength,
+          filledCount: _digits.length,
+          errorTrigger: widget.errorTrigger,
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 24,
+          child: widget.errorMessage != null
+              ? Text(
+                  widget.errorMessage!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                )
+              : null,
+        ),
+      ],
+    );
+
+    Widget keypad = Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: PinKeypad(
+        onDigitPressed: _onDigit,
+        onBackspacePressed: _onBackspace,
+      ),
+    );
+
+    if (widget.animateEntrance) {
+      header = FadeTransition(
+        opacity: _headerFade!,
+        child: SlideTransition(position: _headerSlide!, child: header),
+      );
+      keypad = FadeTransition(
+        opacity: _keypadFade!,
+        child: SlideTransition(position: _keypadSlide!, child: keypad),
+      );
+    }
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -96,66 +234,10 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.lock_outline,
-                        color: Colors.white.withValues(alpha: 0.9),
-                        size: 40,
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        widget.title,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      if (widget.subtitle != null) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          widget.subtitle!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 32),
-                      PinDots(
-                        length: PinService.pinLength,
-                        filledCount: _digits.length,
-                        errorTrigger: widget.errorTrigger,
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        height: 24,
-                        child: widget.errorMessage != null
-                            ? Text(
-                                widget.errorMessage!,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                              )
-                            : null,
-                      ),
-                    ],
-                  ),
+                  child: Center(child: header),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: PinKeypad(
-                  onDigitPressed: _onDigit,
-                  onBackspacePressed: _onBackspace,
-                ),
-              ),
+              keypad,
             ],
           ),
         ),

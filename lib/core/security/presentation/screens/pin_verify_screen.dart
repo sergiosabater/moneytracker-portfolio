@@ -52,6 +52,7 @@ class _PinVerifyScreenState extends ConsumerState<PinVerifyScreen> {
       title: l10n.pinVerifyTitle,
       errorMessage: _errorMessage,
       errorTrigger: _errorTrigger,
+      animateEntrance: true,
       onCompleted: _handleCompleted,
       onBack: () => Navigator.of(context).pop(false),
     );

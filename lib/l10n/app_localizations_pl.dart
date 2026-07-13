@@ -220,4 +220,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get pinDisabled => 'PIN wyłączony';
+
+  @override
+  String get appLockTitle => 'Witaj ponownie';
+
+  @override
+  String get appLockSubtitle => 'Wprowadź swój PIN, aby kontynuować';
 }

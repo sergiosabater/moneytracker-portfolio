@@ -222,4 +222,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pinDisabled => 'Code PIN désactivé';
+
+  @override
+  String get appLockTitle => 'Content de vous revoir';
+
+  @override
+  String get appLockSubtitle => 'Saisissez votre code PIN pour continuer';
 }

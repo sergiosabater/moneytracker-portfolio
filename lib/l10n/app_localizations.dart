@@ -517,6 +517,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PIN disabled'**
   String get pinDisabled;
+
+  /// No description provided for @appLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get appLockTitle;
+
+  /// No description provided for @appLockSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN to continue'**
+  String get appLockSubtitle;
 }
 
 class _AppLocalizationsDelegate
