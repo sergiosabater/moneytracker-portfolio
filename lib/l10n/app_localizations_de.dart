@@ -228,4 +228,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get appLockSubtitle => 'Geben Sie Ihren PIN ein, um fortzufahren';
+
+  @override
+  String get biometricEnabled => 'Biometrische Authentifizierung aktiviert';
+
+  @override
+  String get biometricDisabled => 'Biometrische Authentifizierung deaktiviert';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN und biometrische Authentifizierung aktiviert';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN und biometrische Authentifizierung deaktiviert';
 }

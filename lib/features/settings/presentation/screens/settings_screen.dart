@@ -6,6 +6,7 @@ import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/locale/locale_option.dart';
+import 'package:moneytracker/core/security/biometric_provider.dart';
 import 'package:moneytracker/core/security/pin_provider.dart';
 import 'package:moneytracker/core/security/security_gate.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
@@ -93,8 +94,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   Future<void> _clearData() async {
     // Gate the destructive action behind the user's security settings.
-    // If a PIN is set, this pushes the verification screen and waits
-    // for the result; otherwise it resolves to true immediately.
+    // If biometric/PIN are set, this pushes the appropriate verification
+    // screen and waits for the result; otherwise it resolves to true
+    // immediately.
     final canProceed = await SecurityGate.verify(context, ref);
     if (!canProceed || !mounted) return;
 
@@ -126,14 +128,67 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final verified = await context.push<bool>('/settings/pin-verify');
     if (verified != true || !mounted) return;
 
+    // Biometric authentication can never be left enabled without a PIN
+    // as its fallback — if it was on, disabling the PIN takes it down
+    // too, and the user is told about both in a single message.
+    final wasBiometricEnabled = ref.read(biometricNotifierProvider);
+
     await ref.read(pinServiceProvider).clearPin();
     await ref.read(pinStatusNotifierProvider.notifier).refresh();
+
+    if (wasBiometricEnabled) {
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(false);
+    }
 
     if (!mounted) return;
     AppSnackbar.show(
       context,
-      message: l10n.pinDisabled,
+      message: wasBiometricEnabled ? l10n.pinAndBiometricDisabled : l10n.pinDisabled,
       type: AppSnackbarType.info,
+    );
+  }
+
+  Future<void> _handleBiometricToggle(bool enable) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (!enable) {
+      // Disabling biometrics never requires verification, and the PIN
+      // (if any) is left untouched.
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(false);
+      if (!mounted) return;
+      AppSnackbar.show(
+        context,
+        message: l10n.biometricDisabled,
+        type: AppSnackbarType.info,
+      );
+      return;
+    }
+
+    final isPinSet = ref.read(pinStatusNotifierProvider).value ?? false;
+
+    if (!isPinSet) {
+      // Biometric authentication always needs a PIN as its fallback.
+      // Route through PIN setup first; on success, both protections
+      // turn on together.
+      final completed = await context.push<bool>('/settings/pin-setup');
+      if (completed != true || !mounted) return;
+
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(true);
+      if (!mounted) return;
+      AppSnackbar.show(
+        context,
+        message: l10n.pinAndBiometricEnabled,
+        type: AppSnackbarType.success,
+      );
+      return;
+    }
+
+    await ref.read(biometricNotifierProvider.notifier).setEnabled(true);
+    if (!mounted) return;
+    AppSnackbar.show(
+      context,
+      message: l10n.biometricEnabled,
+      type: AppSnackbarType.success,
     );
   }
 
@@ -197,6 +252,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final currentLocaleOption = ref.watch(localeNotifierProvider);
     final currentCurrency = ref.watch(currencyNotifierProvider);
     final pinStatusAsync = ref.watch(pinStatusNotifierProvider);
+    final biometricEnabled = ref.watch(biometricNotifierProvider);
+    final biometricAvailable =
+        ref.watch(biometricAvailabilityProvider).value ?? false;
 
     // "Clear data" only makes sense when there's something to clear.
     // Checking transactions.isEmpty alone is sufficient: the balance is
@@ -402,8 +460,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.fingerprint,
                   iconColor: AppColors.security,
                   title: l10n.biometricAuth,
-                  value: false,
-                  onChanged: null,
+                  value: biometricEnabled,
+                  onChanged: biometricAvailable ? _handleBiometricToggle : null,
                 ),
               ],
             ),

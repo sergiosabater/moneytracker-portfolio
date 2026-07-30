@@ -226,4 +226,18 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get appLockSubtitle => 'Wprowadź swój PIN, aby kontynuować';
+
+  @override
+  String get biometricEnabled => 'Uwierzytelnianie biometryczne włączone';
+
+  @override
+  String get biometricDisabled => 'Uwierzytelnianie biometryczne wyłączone';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN i uwierzytelnianie biometryczne włączone';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN i uwierzytelnianie biometryczne wyłączone';
 }

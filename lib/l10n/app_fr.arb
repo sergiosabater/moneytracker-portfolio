@@ -70,5 +70,9 @@
   "pinEnabled": "Code PIN activé",
   "pinDisabled": "Code PIN désactivé",
   "appLockTitle": "Content de vous revoir",
-  "appLockSubtitle": "Saisissez votre code PIN pour continuer"
+  "appLockSubtitle": "Saisissez votre code PIN pour continuer",
+  "biometricEnabled": "Authentification biométrique activée",
+  "biometricDisabled": "Authentification biométrique désactivée",
+  "pinAndBiometricEnabled": "Code PIN et authentification biométrique activés",
+  "pinAndBiometricDisabled": "Code PIN et authentification biométrique désactivés"
 }

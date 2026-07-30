@@ -225,4 +225,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockSubtitle => 'Enter your PIN to continue';
+
+  @override
+  String get biometricEnabled => 'Biometric authentication enabled';
+
+  @override
+  String get biometricDisabled => 'Biometric authentication disabled';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN and biometric authentication enabled';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN and biometric authentication disabled';
 }

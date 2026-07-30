@@ -70,5 +70,9 @@
   "pinEnabled": "PIN włączony",
   "pinDisabled": "PIN wyłączony",
   "appLockTitle": "Witaj ponownie",
-  "appLockSubtitle": "Wprowadź swój PIN, aby kontynuować"
+  "appLockSubtitle": "Wprowadź swój PIN, aby kontynuować",
+  "biometricEnabled": "Uwierzytelnianie biometryczne włączone",
+  "biometricDisabled": "Uwierzytelnianie biometryczne wyłączone",
+  "pinAndBiometricEnabled": "PIN i uwierzytelnianie biometryczne włączone",
+  "pinAndBiometricDisabled": "PIN i uwierzytelnianie biometryczne wyłączone"
 }

@@ -529,6 +529,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter your PIN to continue'**
   String get appLockSubtitle;
+
+  /// No description provided for @biometricEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication enabled'**
+  String get biometricEnabled;
+
+  /// No description provided for @biometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication disabled'**
+  String get biometricDisabled;
+
+  /// No description provided for @pinAndBiometricEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN and biometric authentication enabled'**
+  String get pinAndBiometricEnabled;
+
+  /// No description provided for @pinAndBiometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN and biometric authentication disabled'**
+  String get pinAndBiometricDisabled;
 }
 
 class _AppLocalizationsDelegate

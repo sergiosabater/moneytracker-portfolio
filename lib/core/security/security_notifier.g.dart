@@ -6,13 +6,11 @@ part of 'security_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$securityNotifierHash() => r'98de2f694c60e6c8a972ebb361ef259fb8eb6fb5';
+String _$securityNotifierHash() => r'6c97e91c78520d4b8f598bfd057f24edcf675801';
 
 /// Exposes the app's current [SecuritySettings], derived from the real
-/// PIN status. Biometric authentication is still a disabled placeholder
-/// (SettingsScreen's toggle is hardcoded to `value: false, onChanged:
-/// null`) — once implemented, following the same PreferencesService +
-/// Notifier pattern, this is the only place that needs to change.
+/// PIN and biometric state. This is what [SecurityGate] reads to decide
+/// whether — and how — to challenge a sensitive action.
 ///
 /// Copied from [SecurityNotifier].
 @ProviderFor(SecurityNotifier)

@@ -70,5 +70,9 @@
   "pinEnabled": "PIN enabled",
   "pinDisabled": "PIN disabled",
   "appLockTitle": "Welcome back",
-  "appLockSubtitle": "Enter your PIN to continue"
+  "appLockSubtitle": "Enter your PIN to continue",
+  "biometricEnabled": "Biometric authentication enabled",
+  "biometricDisabled": "Biometric authentication disabled",
+  "pinAndBiometricEnabled": "PIN and biometric authentication enabled",
+  "pinAndBiometricDisabled": "PIN and biometric authentication disabled"
 }
