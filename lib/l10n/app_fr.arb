@@ -78,5 +78,6 @@
   "biometricPromptSubtitle": "Utilisez votre empreinte ou votre visage pour déverrouiller",
   "biometricNotRecognized": "Empreinte non reconnue. Réessayez.",
   "tryAnotherWay": "Essayer autrement",
-  "tryAgain": "Réessayer"
+  "tryAgain": "Réessayer",
+  "biometricUnlockReason": "Déverrouiller Money Tracker"
 }

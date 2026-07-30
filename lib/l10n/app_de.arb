@@ -78,5 +78,6 @@
   "biometricPromptSubtitle": "Verwenden Sie Ihren Fingerabdruck oder Ihr Gesicht zum Entsperren",
   "biometricNotRecognized": "Fingerabdruck nicht erkannt. Versuchen Sie es erneut.",
   "tryAnotherWay": "Andere Methode versuchen",
-  "tryAgain": "Erneut versuchen"
+  "tryAgain": "Erneut versuchen",
+  "biometricUnlockReason": "Money Tracker entsperren"
 }

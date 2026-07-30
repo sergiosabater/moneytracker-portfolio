@@ -78,5 +78,6 @@
   "biometricPromptSubtitle": "Usa tu huella o tu rostro para desbloquear",
   "biometricNotRecognized": "Huella digital no reconocida. Prueba de nuevo.",
   "tryAnotherWay": "Probar de otra manera",
-  "tryAgain": "Intentar de nuevo"
+  "tryAgain": "Intentar de nuevo",
+  "biometricUnlockReason": "Desbloquear Money Tracker"
 }

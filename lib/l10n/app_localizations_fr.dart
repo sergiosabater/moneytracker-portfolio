@@ -255,4 +255,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tryAgain => 'Réessayer';
+
+  @override
+  String get biometricUnlockReason => 'Déverrouiller Money Tracker';
 }

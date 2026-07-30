@@ -13,16 +13,22 @@ enum _BiometricPromptState { waiting, success, error }
 /// only reports a final result, not live scan progress, this screen
 /// can't animate the scan itself, only what happens before and after it.
 ///
-/// Pops `true` on success, `false` if the user backs out or taps
-/// "Try another way" (when a PIN fallback is available).
+/// Reports its outcome via callbacks rather than `Navigator.pop`, so it
+/// can be used both as a pushed route (see [PinService]-driven flows)
+/// and as a plain widget swapped in by [AppLockScreen], which has no
+/// navigation stack of its own to pop.
 class BiometricPromptScreen extends ConsumerStatefulWidget {
   final String reason;
   final bool showPinFallback;
+  final VoidCallback onSuccess;
+  final VoidCallback onFallback;
 
   const BiometricPromptScreen({
     super.key,
     required this.reason,
     required this.showPinFallback,
+    required this.onSuccess,
+    required this.onFallback,
   });
 
   @override
@@ -54,18 +60,16 @@ class _BiometricPromptScreenState
 
     if (success) {
       setState(() => _state = _BiometricPromptState.success);
-      // Let the success check animate before popping.
+      // Let the success check animate before reporting back.
       await Future.delayed(const Duration(milliseconds: 500));
       if (!mounted) return;
-      Navigator.of(context).pop(true);
+      widget.onSuccess();
       return;
     }
 
     HapticFeedback.vibrate();
     setState(() => _state = _BiometricPromptState.error);
   }
-
-  void _tryPinInstead() => Navigator.of(context).pop(false);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +110,7 @@ class _BiometricPromptScreenState
                 const Spacer(flex: 3),
                 if (widget.showPinFallback)
                   TextButton(
-                    onPressed: _tryPinInstead,
+                    onPressed: widget.onFallback,
                     child: Text(
                       l10n.tryAnotherWay,
                       style: TextStyle(

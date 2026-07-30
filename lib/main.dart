@@ -5,7 +5,7 @@ import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/router/app_router.dart';
 import 'package:moneytracker/core/security/app_lock_notifier.dart';
 import 'package:moneytracker/core/security/pin_service.dart';
-import 'package:moneytracker/core/security/presentation/screens/pin_unlock_screen.dart';
+import 'package:moneytracker/core/security/presentation/screens/app_lock_screen.dart';
 import 'package:moneytracker/core/services/preferences_provider.dart';
 import 'package:moneytracker/core/services/preferences_service.dart';
 import 'package:moneytracker/core/theme/app_theme.dart';
@@ -20,8 +20,9 @@ void main() async {
   // Resolved before runApp so the app never briefly shows unlocked
   // content while this async check would otherwise still be pending.
   final isPinSet = await PinService().isPinSet();
-  final initialLockState =
-      isPinSet ? AppLockState.locked : AppLockState.unlocked;
+  final initialLockState = isPinSet
+      ? AppLockState.locked
+      : AppLockState.unlocked;
 
   runApp(
     ProviderScope(
@@ -71,7 +72,7 @@ class MyApp extends ConsumerWidget {
           builder: (context, ref, _) {
             final lockState = ref.watch(appLockNotifierProvider);
             if (lockState == AppLockState.locked) {
-              return const PinUnlockScreen();
+              return const AppLockScreen();
             }
             return child!;
           },

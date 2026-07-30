@@ -78,5 +78,6 @@
   "biometricPromptSubtitle": "Użyj odcisku palca lub twarzy, aby odblokować",
   "biometricNotRecognized": "Odcisk palca nierozpoznany. Spróbuj ponownie.",
   "tryAnotherWay": "Wypróbuj inny sposób",
-  "tryAgain": "Spróbuj ponownie"
+  "tryAgain": "Spróbuj ponownie",
+  "biometricUnlockReason": "Odblokuj Money Tracker"
 }

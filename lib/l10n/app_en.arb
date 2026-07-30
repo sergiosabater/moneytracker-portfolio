@@ -78,5 +78,6 @@
   "biometricPromptSubtitle": "Use your fingerprint or face to unlock",
   "biometricNotRecognized": "Fingerprint not recognized. Try again.",
   "tryAnotherWay": "Try another way",
-  "tryAgain": "Try again"
+  "tryAgain": "Try again",
+  "biometricUnlockReason": "Unlock Money Tracker"
 }
