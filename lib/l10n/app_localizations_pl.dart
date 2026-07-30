@@ -240,4 +240,18 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get pinAndBiometricDisabled =>
       'PIN i uwierzytelnianie biometryczne wyłączone';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Użyj odcisku palca lub twarzy, aby odblokować';
+
+  @override
+  String get biometricNotRecognized =>
+      'Odcisk palca nierozpoznany. Spróbuj ponownie.';
+
+  @override
+  String get tryAnotherWay => 'Wypróbuj inny sposób';
+
+  @override
+  String get tryAgain => 'Spróbuj ponownie';
 }

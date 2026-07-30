@@ -242,4 +242,18 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get pinAndBiometricDisabled =>
       'PIN und biometrische Authentifizierung deaktiviert';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Verwenden Sie Ihren Fingerabdruck oder Ihr Gesicht zum Entsperren';
+
+  @override
+  String get biometricNotRecognized =>
+      'Fingerabdruck nicht erkannt. Versuchen Sie es erneut.';
+
+  @override
+  String get tryAnotherWay => 'Andere Methode versuchen';
+
+  @override
+  String get tryAgain => 'Erneut versuchen';
 }

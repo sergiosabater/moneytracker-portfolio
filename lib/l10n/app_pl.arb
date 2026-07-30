@@ -74,5 +74,9 @@
   "biometricEnabled": "Uwierzytelnianie biometryczne włączone",
   "biometricDisabled": "Uwierzytelnianie biometryczne wyłączone",
   "pinAndBiometricEnabled": "PIN i uwierzytelnianie biometryczne włączone",
-  "pinAndBiometricDisabled": "PIN i uwierzytelnianie biometryczne wyłączone"
+  "pinAndBiometricDisabled": "PIN i uwierzytelnianie biometryczne wyłączone",
+  "biometricPromptSubtitle": "Użyj odcisku palca lub twarzy, aby odblokować",
+  "biometricNotRecognized": "Odcisk palca nierozpoznany. Spróbuj ponownie.",
+  "tryAnotherWay": "Wypróbuj inny sposób",
+  "tryAgain": "Spróbuj ponownie"
 }

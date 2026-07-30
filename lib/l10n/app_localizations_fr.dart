@@ -242,4 +242,17 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get pinAndBiometricDisabled =>
       'Code PIN et authentification biométrique désactivés';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Utilisez votre empreinte ou votre visage pour déverrouiller';
+
+  @override
+  String get biometricNotRecognized => 'Empreinte non reconnue. Réessayez.';
+
+  @override
+  String get tryAnotherWay => 'Essayer autrement';
+
+  @override
+  String get tryAgain => 'Réessayer';
 }

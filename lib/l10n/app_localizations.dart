@@ -553,6 +553,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PIN and biometric authentication disabled'**
   String get pinAndBiometricDisabled;
+
+  /// No description provided for @biometricPromptSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your fingerprint or face to unlock'**
+  String get biometricPromptSubtitle;
+
+  /// No description provided for @biometricNotRecognized.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint not recognized. Try again.'**
+  String get biometricNotRecognized;
+
+  /// No description provided for @tryAnotherWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another way'**
+  String get tryAnotherWay;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

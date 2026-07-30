@@ -74,5 +74,9 @@
   "biometricEnabled": "Biometric authentication enabled",
   "biometricDisabled": "Biometric authentication disabled",
   "pinAndBiometricEnabled": "PIN and biometric authentication enabled",
-  "pinAndBiometricDisabled": "PIN and biometric authentication disabled"
+  "pinAndBiometricDisabled": "PIN and biometric authentication disabled",
+  "biometricPromptSubtitle": "Use your fingerprint or face to unlock",
+  "biometricNotRecognized": "Fingerprint not recognized. Try again.",
+  "tryAnotherWay": "Try another way",
+  "tryAgain": "Try again"
 }

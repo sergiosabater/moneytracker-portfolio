@@ -74,5 +74,9 @@
   "biometricEnabled": "Authentification biométrique activée",
   "biometricDisabled": "Authentification biométrique désactivée",
   "pinAndBiometricEnabled": "Code PIN et authentification biométrique activés",
-  "pinAndBiometricDisabled": "Code PIN et authentification biométrique désactivés"
+  "pinAndBiometricDisabled": "Code PIN et authentification biométrique désactivés",
+  "biometricPromptSubtitle": "Utilisez votre empreinte ou votre visage pour déverrouiller",
+  "biometricNotRecognized": "Empreinte non reconnue. Réessayez.",
+  "tryAnotherWay": "Essayer autrement",
+  "tryAgain": "Réessayer"
 }

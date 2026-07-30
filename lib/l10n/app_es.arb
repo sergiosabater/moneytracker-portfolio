@@ -74,5 +74,9 @@
   "biometricEnabled": "Autenticación biométrica activada",
   "biometricDisabled": "Autenticación biométrica desactivada",
   "pinAndBiometricEnabled": "PIN y autenticación biométrica activados",
-  "pinAndBiometricDisabled": "PIN y autenticación biométrica desactivados"
+  "pinAndBiometricDisabled": "PIN y autenticación biométrica desactivados",
+  "biometricPromptSubtitle": "Usa tu huella o tu rostro para desbloquear",
+  "biometricNotRecognized": "Huella digital no reconocida. Prueba de nuevo.",
+  "tryAnotherWay": "Probar de otra manera",
+  "tryAgain": "Intentar de nuevo"
 }

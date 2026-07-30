@@ -239,4 +239,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pinAndBiometricDisabled =>
       'PIN and biometric authentication disabled';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Use your fingerprint or face to unlock';
+
+  @override
+  String get biometricNotRecognized => 'Fingerprint not recognized. Try again.';
+
+  @override
+  String get tryAnotherWay => 'Try another way';
+
+  @override
+  String get tryAgain => 'Try again';
 }

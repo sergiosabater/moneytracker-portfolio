@@ -239,4 +239,18 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get pinAndBiometricDisabled =>
       'PIN y autenticación biométrica desactivados';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Usa tu huella o tu rostro para desbloquear';
+
+  @override
+  String get biometricNotRecognized =>
+      'Huella digital no reconocida. Prueba de nuevo.';
+
+  @override
+  String get tryAnotherWay => 'Probar de otra manera';
+
+  @override
+  String get tryAgain => 'Intentar de nuevo';
 }
