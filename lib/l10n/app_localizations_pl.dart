@@ -181,4 +181,83 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get clearData => 'Wyczyść dane';
+
+  @override
+  String get confirmClearData => 'Uwaga';
+
+  @override
+  String get confirmClearDataMessage =>
+      'Czy na pewno chcesz usunąć wszystkie dane?';
+
+  @override
+  String get dataCleared => 'Dane usunięte';
+
+  @override
+  String get pinCreateTitle => 'Utwórz PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Ten PIN posłuży do odblokowania aplikacji i potwierdzania ważnych czynności';
+
+  @override
+  String get pinConfirmTitle => 'Potwierdź swój PIN';
+
+  @override
+  String get pinConfirmSubtitle =>
+      'Wprowadź ponownie swój PIN, aby go potwierdzić';
+
+  @override
+  String get pinMismatch => 'Kody PIN się nie zgadzają. Spróbuj ponownie';
+
+  @override
+  String get pinVerifyTitle => 'Wprowadź swój PIN';
+
+  @override
+  String get pinIncorrect => 'Nieprawidłowy PIN. Spróbuj ponownie';
+
+  @override
+  String get pinEnabled => 'PIN włączony';
+
+  @override
+  String get pinDisabled => 'PIN wyłączony';
+
+  @override
+  String get appLockTitle => 'Witaj ponownie';
+
+  @override
+  String get appLockSubtitle => 'Wprowadź swój PIN, aby kontynuować';
+
+  @override
+  String get biometricEnabled => 'Uwierzytelnianie biometryczne włączone';
+
+  @override
+  String get biometricDisabled => 'Uwierzytelnianie biometryczne wyłączone';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN i uwierzytelnianie biometryczne włączone';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN i uwierzytelnianie biometryczne wyłączone';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Użyj odcisku palca lub twarzy, aby odblokować';
+
+  @override
+  String get biometricNotRecognized =>
+      'Odcisk palca nierozpoznany. Spróbuj ponownie.';
+
+  @override
+  String get tryAnotherWay => 'Wypróbuj inny sposób';
+
+  @override
+  String get tryAgain => 'Spróbuj ponownie';
+
+  @override
+  String get biometricUnlockReason => 'Odblokuj Money Tracker';
+
+  @override
+  String get biometricVerifyReason => 'Potwierdź, że to Ty';
 }

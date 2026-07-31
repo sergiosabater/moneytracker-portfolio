@@ -9,6 +9,7 @@ import 'package:moneytracker/features/transactions/presentation/providers/transa
 import 'package:moneytracker/l10n/app_localizations.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/transaction_delete_dialog.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/transaction_options_dialog.dart';
+import 'package:moneytracker/shared/presentation/widgets/app_snackbar.dart';
 
 class TransactionsList extends ConsumerStatefulWidget {
   const TransactionsList({super.key});
@@ -74,12 +75,10 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
             ref
                 .read(transactionsNotifierProvider.notifier)
                 .deleteTransaction(transaction.id!);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.transactionDeleted),
-                duration: const Duration(seconds: 2),
-                backgroundColor: AppColors.error,
-              ),
+            AppSnackbar.show(
+              context,
+              message: AppLocalizations.of(context)!.transactionDeleted,
+              type: AppSnackbarType.error,
             );
           },
         );
@@ -403,10 +402,6 @@ class _TransactionCardState extends State<_TransactionCard>
                           ),
                           const SizedBox(height: 8),
 
-                          // Monto — FittedBox con scaleDown para que la
-                          // píldora completa (fondo, borde y texto) se
-                          // reduzca como conjunto si el importe formateado
-                          // no cabe, en vez de desbordar la tarjeta.
                           SizedBox(
                             width: double.infinity,
                             child: FittedBox(

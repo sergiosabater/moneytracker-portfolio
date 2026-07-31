@@ -445,6 +445,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear data'**
   String get clearData;
+
+  /// No description provided for @confirmClearData.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get confirmClearData;
+
+  /// No description provided for @confirmClearDataMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all data?'**
+  String get confirmClearDataMessage;
+
+  /// No description provided for @dataCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Data cleared'**
+  String get dataCleared;
+
+  /// No description provided for @pinCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a PIN'**
+  String get pinCreateTitle;
+
+  /// No description provided for @pinCreateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll use this PIN to unlock the app and confirm sensitive actions'**
+  String get pinCreateSubtitle;
+
+  /// No description provided for @pinConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your PIN'**
+  String get pinConfirmTitle;
+
+  /// No description provided for @pinConfirmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN again to confirm'**
+  String get pinConfirmSubtitle;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'PINs didn\'t match. Try again'**
+  String get pinMismatch;
+
+  /// No description provided for @pinVerifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN'**
+  String get pinVerifyTitle;
+
+  /// No description provided for @pinIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect PIN. Try again'**
+  String get pinIncorrect;
+
+  /// No description provided for @pinEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN enabled'**
+  String get pinEnabled;
+
+  /// No description provided for @pinDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN disabled'**
+  String get pinDisabled;
+
+  /// No description provided for @appLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get appLockTitle;
+
+  /// No description provided for @appLockSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN to continue'**
+  String get appLockSubtitle;
+
+  /// No description provided for @biometricEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication enabled'**
+  String get biometricEnabled;
+
+  /// No description provided for @biometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication disabled'**
+  String get biometricDisabled;
+
+  /// No description provided for @pinAndBiometricEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN and biometric authentication enabled'**
+  String get pinAndBiometricEnabled;
+
+  /// No description provided for @pinAndBiometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN and biometric authentication disabled'**
+  String get pinAndBiometricDisabled;
+
+  /// No description provided for @biometricPromptSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your fingerprint or face to unlock'**
+  String get biometricPromptSubtitle;
+
+  /// No description provided for @biometricNotRecognized.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint not recognized. Try again.'**
+  String get biometricNotRecognized;
+
+  /// No description provided for @tryAnotherWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another way'**
+  String get tryAnotherWay;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @biometricUnlockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Money Tracker'**
+  String get biometricUnlockReason;
+
+  /// No description provided for @biometricVerifyReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it\'s you'**
+  String get biometricVerifyReason;
 }
 
 class _AppLocalizationsDelegate

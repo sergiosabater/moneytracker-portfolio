@@ -183,4 +183,82 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get clearData => 'Effacer les données';
+
+  @override
+  String get confirmClearData => 'Attention';
+
+  @override
+  String get confirmClearDataMessage =>
+      'Êtes-vous sûr de vouloir supprimer toutes les données ?';
+
+  @override
+  String get dataCleared => 'Données effacées';
+
+  @override
+  String get pinCreateTitle => 'Créez un code PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Vous utiliserez ce code PIN pour déverrouiller l\'application et confirmer les actions sensibles';
+
+  @override
+  String get pinConfirmTitle => 'Confirmez votre code PIN';
+
+  @override
+  String get pinConfirmSubtitle =>
+      'Saisissez à nouveau votre code PIN pour le confirmer';
+
+  @override
+  String get pinMismatch => 'Les codes PIN ne correspondent pas. Réessayez';
+
+  @override
+  String get pinVerifyTitle => 'Saisissez votre code PIN';
+
+  @override
+  String get pinIncorrect => 'Code PIN incorrect. Réessayez';
+
+  @override
+  String get pinEnabled => 'Code PIN activé';
+
+  @override
+  String get pinDisabled => 'Code PIN désactivé';
+
+  @override
+  String get appLockTitle => 'Content de vous revoir';
+
+  @override
+  String get appLockSubtitle => 'Saisissez votre code PIN pour continuer';
+
+  @override
+  String get biometricEnabled => 'Authentification biométrique activée';
+
+  @override
+  String get biometricDisabled => 'Authentification biométrique désactivée';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'Code PIN et authentification biométrique activés';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'Code PIN et authentification biométrique désactivés';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Utilisez votre empreinte ou votre visage pour déverrouiller';
+
+  @override
+  String get biometricNotRecognized => 'Empreinte non reconnue. Réessayez.';
+
+  @override
+  String get tryAnotherWay => 'Essayer autrement';
+
+  @override
+  String get tryAgain => 'Réessayer';
+
+  @override
+  String get biometricUnlockReason => 'Déverrouiller Money Tracker';
+
+  @override
+  String get biometricVerifyReason => 'Confirmez que c\'est bien vous';
 }

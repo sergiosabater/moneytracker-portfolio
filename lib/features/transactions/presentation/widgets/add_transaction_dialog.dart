@@ -9,6 +9,7 @@ import 'package:moneytracker/features/transactions/domain/entities/transaction.d
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/no_description_dialog.dart';
+import 'package:moneytracker/shared/presentation/widgets/app_snackbar.dart';
 
 class AddTransactionDialog extends ConsumerStatefulWidget {
   const AddTransactionDialog({super.key});
@@ -158,30 +159,27 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
   }
 
   void _saveTransaction() {
-    final transaction = Transaction(
-      type: type,
-      amount: type == TransactionType.expense ? -amount : amount,
-      description: description.trim().isEmpty
-          ? AppLocalizations.of(context)!.noDescription
-          : description,
-      dateTime: DateTime.now(),
-    );
+  final transaction = Transaction(
+    type: type,
+    amount: type == TransactionType.expense ? -amount : amount,
+    description: description.trim().isEmpty
+        ? AppLocalizations.of(context)!.noDescription
+        : description,
+    dateTime: DateTime.now(),
+  );
 
-    ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
+  ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
 
-    final messenger = ScaffoldMessenger.of(context);
-    final localizations = AppLocalizations.of(context)!;
+  final localizations = AppLocalizations.of(context)!;
 
-    Navigator.pop(context);
+  Navigator.pop(context);
 
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(localizations.transactionAdded),
-        duration: const Duration(seconds: 2),
-        backgroundColor: AppColors.income,
-      ),
-    );
-  }
+  AppSnackbar.show(
+    context,
+    message: localizations.transactionAdded,
+    type: AppSnackbarType.success,
+  );
+}
 
   @override
   Widget build(BuildContext context) {

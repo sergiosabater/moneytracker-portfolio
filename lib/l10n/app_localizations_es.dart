@@ -36,7 +36,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get description => 'DESCRIPCIÓN';
 
   @override
-  String get enterDescription => 'Ingrese descripción';
+  String get enterDescription => 'Ingresa descripción';
 
   @override
   String get noDescription => 'Sin descripción';
@@ -71,7 +71,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noDescriptionMessage =>
-      '¿Seguro que quiere agregar una transacción sin descripción?';
+      '¿Seguro que quieres agregar una transacción sin descripción?';
 
   @override
   String get transactionDeleted => 'Transacción eliminada';
@@ -181,4 +181,82 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get clearData => 'Borrar datos';
+
+  @override
+  String get confirmClearData => 'Atención';
+
+  @override
+  String get confirmClearDataMessage =>
+      '¿Estás seguro de que quieres borrar todos los datos?';
+
+  @override
+  String get dataCleared => 'Datos borrados';
+
+  @override
+  String get pinCreateTitle => 'Crea un PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Usarás este PIN para desbloquear la app y confirmar acciones sensibles';
+
+  @override
+  String get pinConfirmTitle => 'Confirma tu PIN';
+
+  @override
+  String get pinConfirmSubtitle => 'Introduce de nuevo tu PIN para confirmarlo';
+
+  @override
+  String get pinMismatch => 'Los PIN no coinciden. Inténtalo de nuevo';
+
+  @override
+  String get pinVerifyTitle => 'Introduce tu PIN';
+
+  @override
+  String get pinIncorrect => 'PIN incorrecto. Inténtalo de nuevo';
+
+  @override
+  String get pinEnabled => 'PIN activado';
+
+  @override
+  String get pinDisabled => 'PIN desactivado';
+
+  @override
+  String get appLockTitle => 'Bienvenido de nuevo';
+
+  @override
+  String get appLockSubtitle => 'Introduce tu PIN para continuar';
+
+  @override
+  String get biometricEnabled => 'Autenticación biométrica activada';
+
+  @override
+  String get biometricDisabled => 'Autenticación biométrica desactivada';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN y autenticación biométrica activados';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN y autenticación biométrica desactivados';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Usa tu huella o tu rostro para desbloquear';
+
+  @override
+  String get biometricNotRecognized =>
+      'Huella digital no reconocida. Prueba de nuevo.';
+
+  @override
+  String get tryAnotherWay => 'Probar de otra manera';
+
+  @override
+  String get tryAgain => 'Intentar de nuevo';
+
+  @override
+  String get biometricUnlockReason => 'Desbloquear Money Tracker';
+
+  @override
+  String get biometricVerifyReason => 'Confirma que eres tú';
 }

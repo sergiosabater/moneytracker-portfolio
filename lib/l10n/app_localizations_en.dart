@@ -181,4 +181,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clearData => 'Clear data';
+
+  @override
+  String get confirmClearData => 'Attention';
+
+  @override
+  String get confirmClearDataMessage =>
+      'Are you sure you want to delete all data?';
+
+  @override
+  String get dataCleared => 'Data cleared';
+
+  @override
+  String get pinCreateTitle => 'Create a PIN';
+
+  @override
+  String get pinCreateSubtitle =>
+      'You\'ll use this PIN to unlock the app and confirm sensitive actions';
+
+  @override
+  String get pinConfirmTitle => 'Confirm your PIN';
+
+  @override
+  String get pinConfirmSubtitle => 'Enter your PIN again to confirm';
+
+  @override
+  String get pinMismatch => 'PINs didn\'t match. Try again';
+
+  @override
+  String get pinVerifyTitle => 'Enter your PIN';
+
+  @override
+  String get pinIncorrect => 'Incorrect PIN. Try again';
+
+  @override
+  String get pinEnabled => 'PIN enabled';
+
+  @override
+  String get pinDisabled => 'PIN disabled';
+
+  @override
+  String get appLockTitle => 'Welcome back';
+
+  @override
+  String get appLockSubtitle => 'Enter your PIN to continue';
+
+  @override
+  String get biometricEnabled => 'Biometric authentication enabled';
+
+  @override
+  String get biometricDisabled => 'Biometric authentication disabled';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN and biometric authentication enabled';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN and biometric authentication disabled';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Use your fingerprint or face to unlock';
+
+  @override
+  String get biometricNotRecognized => 'Fingerprint not recognized. Try again.';
+
+  @override
+  String get tryAnotherWay => 'Try another way';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get biometricUnlockReason => 'Unlock Money Tracker';
+
+  @override
+  String get biometricVerifyReason => 'Confirm it\'s you';
 }

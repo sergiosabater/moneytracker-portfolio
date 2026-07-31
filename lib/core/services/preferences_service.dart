@@ -1,12 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Centralized wrapper around [SharedPreferences], the standard key-value
-/// storage for simple user settings (theme, language, currency).
-
+/// storage for simple user settings (theme, language, currency,
+/// biometric on/off). The PIN itself is never stored here — see
+/// [PinService], which uses secure, hashed storage instead.
 class PreferencesService {
   static const _themeModeKey = 'theme_mode';
   static const _languageKey = 'language';
   static const _currencyKey = 'currency';
+  static const _biometricEnabledKey = 'biometric_enabled';
 
   final SharedPreferences _prefs;
 
@@ -39,4 +41,12 @@ class PreferencesService {
 
   Future<void> saveCurrency(String value) =>
       _prefs.setString(_currencyKey, value);
+
+  // --- Biometric authentication: on/off ---
+
+  bool getBiometricEnabled() =>
+      _prefs.getBool(_biometricEnabledKey) ?? false;
+
+  Future<void> saveBiometricEnabled(bool value) =>
+      _prefs.setBool(_biometricEnabledKey, value);
 }

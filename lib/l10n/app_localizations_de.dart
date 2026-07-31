@@ -182,4 +182,84 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get clearData => 'Daten löschen';
+
+  @override
+  String get confirmClearData => 'Achtung';
+
+  @override
+  String get confirmClearDataMessage =>
+      'Möchten Sie wirklich alle Daten löschen?';
+
+  @override
+  String get dataCleared => 'Daten gelöscht';
+
+  @override
+  String get pinCreateTitle => 'PIN erstellen';
+
+  @override
+  String get pinCreateSubtitle =>
+      'Mit diesem PIN entsperren Sie die App und bestätigen sensible Aktionen';
+
+  @override
+  String get pinConfirmTitle => 'PIN bestätigen';
+
+  @override
+  String get pinConfirmSubtitle =>
+      'Geben Sie Ihren PIN erneut ein, um ihn zu bestätigen';
+
+  @override
+  String get pinMismatch =>
+      'Die PINs stimmen nicht überein. Versuchen Sie es erneut';
+
+  @override
+  String get pinVerifyTitle => 'PIN eingeben';
+
+  @override
+  String get pinIncorrect => 'Falscher PIN. Versuchen Sie es erneut';
+
+  @override
+  String get pinEnabled => 'PIN aktiviert';
+
+  @override
+  String get pinDisabled => 'PIN deaktiviert';
+
+  @override
+  String get appLockTitle => 'Willkommen zurück';
+
+  @override
+  String get appLockSubtitle => 'Geben Sie Ihren PIN ein, um fortzufahren';
+
+  @override
+  String get biometricEnabled => 'Biometrische Authentifizierung aktiviert';
+
+  @override
+  String get biometricDisabled => 'Biometrische Authentifizierung deaktiviert';
+
+  @override
+  String get pinAndBiometricEnabled =>
+      'PIN und biometrische Authentifizierung aktiviert';
+
+  @override
+  String get pinAndBiometricDisabled =>
+      'PIN und biometrische Authentifizierung deaktiviert';
+
+  @override
+  String get biometricPromptSubtitle =>
+      'Verwenden Sie Ihren Fingerabdruck oder Ihr Gesicht zum Entsperren';
+
+  @override
+  String get biometricNotRecognized =>
+      'Fingerabdruck nicht erkannt. Versuchen Sie es erneut.';
+
+  @override
+  String get tryAnotherWay => 'Andere Methode versuchen';
+
+  @override
+  String get tryAgain => 'Erneut versuchen';
+
+  @override
+  String get biometricUnlockReason => 'Money Tracker entsperren';
+
+  @override
+  String get biometricVerifyReason => 'Bestätigen Sie, dass Sie es sind';
 }

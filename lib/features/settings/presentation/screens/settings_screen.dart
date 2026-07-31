@@ -6,6 +6,9 @@ import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/locale/locale_option.dart';
+import 'package:moneytracker/core/security/biometric_provider.dart';
+import 'package:moneytracker/core/security/pin_provider.dart';
+import 'package:moneytracker/core/security/security_gate.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/core/theme/theme_mode_option.dart';
 import 'package:moneytracker/core/theme/theme_notifier.dart';
@@ -13,7 +16,10 @@ import 'package:moneytracker/features/settings/presentation/widgets/settings_exp
 import 'package:moneytracker/features/settings/presentation/widgets/settings_option_tile.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_toggle_tile.dart';
+import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
+import 'package:moneytracker/shared/presentation/widgets/app_snackbar.dart';
+import 'package:moneytracker/shared/presentation/widgets/confirmation_dialog.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -53,6 +59,137 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _showClearDataConfirmation() {
+    final l10n = AppLocalizations.of(context)!;
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: l10n.dismiss,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ConfirmationDialog(
+          icon: Icons.warning_rounded,
+          iconColor: AppColors.warning,
+          title: l10n.confirmClearData,
+          message: l10n.confirmClearDataMessage,
+          cancelLabel: l10n.cancel,
+          cancelColor: AppColors.info,
+          confirmLabel: l10n.clearData,
+          confirmColor: AppColors.error,
+          onConfirm: _clearData,
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Future<void> _clearData() async {
+    // Gate the destructive action behind the user's security settings.
+    // If biometric/PIN are set, this pushes the appropriate verification
+    // screen and waits for the result; otherwise it resolves to true
+    // immediately.
+    final canProceed = await SecurityGate.verify(context, ref);
+    if (!canProceed || !mounted) return;
+
+    await ref.read(transactionsNotifierProvider.notifier).clearTransactions();
+
+    if (!mounted) return;
+    AppSnackbar.show(
+      context,
+      message: AppLocalizations.of(context)!.dataCleared,
+      type: AppSnackbarType.error,
+    );
+  }
+
+  Future<void> _handlePinToggle(bool enable) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (enable) {
+      final completed = await context.push<bool>('/settings/pin-setup');
+      if (completed != true || !mounted) return;
+
+      AppSnackbar.show(
+        context,
+        message: l10n.pinEnabled,
+        type: AppSnackbarType.success,
+      );
+      return;
+    }
+
+    final verified = await context.push<bool>('/settings/pin-verify');
+    if (verified != true || !mounted) return;
+
+    // Biometric authentication can never be left enabled without a PIN
+    // as its fallback — if it was on, disabling the PIN takes it down
+    // too, and the user is told about both in a single message.
+    final wasBiometricEnabled = ref.read(biometricNotifierProvider);
+
+    await ref.read(pinServiceProvider).clearPin();
+    await ref.read(pinStatusNotifierProvider.notifier).refresh();
+
+    if (wasBiometricEnabled) {
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(false);
+    }
+
+    if (!mounted) return;
+    AppSnackbar.show(
+      context,
+      message: wasBiometricEnabled ? l10n.pinAndBiometricDisabled : l10n.pinDisabled,
+      type: AppSnackbarType.info,
+    );
+  }
+
+  Future<void> _handleBiometricToggle(bool enable) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (!enable) {
+      // Disabling biometrics never requires verification, and the PIN
+      // (if any) is left untouched.
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(false);
+      if (!mounted) return;
+      AppSnackbar.show(
+        context,
+        message: l10n.biometricDisabled,
+        type: AppSnackbarType.info,
+      );
+      return;
+    }
+
+    final isPinSet = ref.read(pinStatusNotifierProvider).value ?? false;
+
+    if (!isPinSet) {
+      // Biometric authentication always needs a PIN as its fallback.
+      // Route through PIN setup first; on success, both protections
+      // turn on together.
+      final completed = await context.push<bool>('/settings/pin-setup');
+      if (completed != true || !mounted) return;
+
+      await ref.read(biometricNotifierProvider.notifier).setEnabled(true);
+      if (!mounted) return;
+      AppSnackbar.show(
+        context,
+        message: l10n.pinAndBiometricEnabled,
+        type: AppSnackbarType.success,
+      );
+      return;
+    }
+
+    await ref.read(biometricNotifierProvider.notifier).setEnabled(true);
+    if (!mounted) return;
+    AppSnackbar.show(
+      context,
+      message: l10n.biometricEnabled,
+      type: AppSnackbarType.success,
+    );
   }
 
   @override
@@ -114,6 +251,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final currentThemeMode = ref.watch(themeNotifierProvider);
     final currentLocaleOption = ref.watch(localeNotifierProvider);
     final currentCurrency = ref.watch(currencyNotifierProvider);
+    final pinStatusAsync = ref.watch(pinStatusNotifierProvider);
+    final biometricEnabled = ref.watch(biometricNotifierProvider);
+    final biometricAvailable =
+        ref.watch(biometricAvailabilityProvider).value ?? false;
+
+    // "Clear data" only makes sense when there's something to clear.
+    // Checking transactions.isEmpty alone is sufficient: the balance is
+    // always derived from the transaction list (balance = sum of all
+    // transactions), so an empty list mathematically guarantees a zero
+    // balance too. There's no case where the list is empty but the
+    // balance isn't (or vice versa), so no extra balance check is needed.
+    final hasTransactions =
+        (ref.watch(transactionsNotifierProvider).value ?? []).isNotEmpty;
 
     return Container(
       decoration: BoxDecoration(
@@ -290,7 +440,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.delete_outline,
                   iconColor: AppColors.error,
                   title: l10n.clearData,
-                  onTap: () {},
+                  enabled: hasTransactions,
+                  onTap: _showClearDataConfirmation,
                 ),
               ],
             ),
@@ -302,15 +453,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   icon: Icons.pin_outlined,
                   iconColor: AppColors.security,
                   title: l10n.pinCode,
-                  value: false,
-                  onChanged: null,
+                  value: pinStatusAsync.value ?? false,
+                  onChanged: _handlePinToggle,
                 ),
                 SettingsToggleTile(
                   icon: Icons.fingerprint,
                   iconColor: AppColors.security,
                   title: l10n.biometricAuth,
-                  value: false,
-                  onChanged: null,
+                  value: biometricEnabled,
+                  onChanged: biometricAvailable ? _handleBiometricToggle : null,
                 ),
               ],
             ),
