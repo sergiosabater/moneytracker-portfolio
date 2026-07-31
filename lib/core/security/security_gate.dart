@@ -7,9 +7,10 @@ import 'package:moneytracker/core/security/security_notifier.dart';
 /// user's security settings. Call [verify] right before performing the
 /// action; it resolves to `true` when it's safe to proceed.
 ///
-/// If no security option is enabled, resolves to `true` immediately. If
-/// a PIN is set, pushes the PIN verification screen and waits for the
-/// result.
+/// If no security option is enabled, resolves to `true` immediately.
+/// If biometric authentication is enabled, it's tried first (with its
+/// own built-in PIN fallback); otherwise, if only a PIN is set, the PIN
+/// verification screen is used directly.
 class SecurityGate {
   SecurityGate._();
 
@@ -20,7 +21,11 @@ class SecurityGate {
       return true;
     }
 
-    final verified = await context.push<bool>('/settings/pin-verify');
+    final route = settings.biometricEnabled
+        ? '/settings/biometric-verify'
+        : '/settings/pin-verify';
+
+    final verified = await context.push<bool>(route);
     return verified ?? false;
   }
 }

@@ -583,6 +583,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unlock Money Tracker'**
   String get biometricUnlockReason;
+
+  /// No description provided for @biometricVerifyReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it\'s you'**
+  String get biometricVerifyReason;
 }
 
 class _AppLocalizationsDelegate

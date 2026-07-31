@@ -79,5 +79,6 @@
   "biometricNotRecognized": "Empreinte non reconnue. Réessayez.",
   "tryAnotherWay": "Essayer autrement",
   "tryAgain": "Réessayer",
-  "biometricUnlockReason": "Déverrouiller Money Tracker"
+  "biometricUnlockReason": "Déverrouiller Money Tracker",
+  "biometricVerifyReason": "Confirmez que c'est bien vous"
 }

@@ -79,5 +79,6 @@
   "biometricNotRecognized": "Fingerprint not recognized. Try again.",
   "tryAnotherWay": "Try another way",
   "tryAgain": "Try again",
-  "biometricUnlockReason": "Unlock Money Tracker"
+  "biometricUnlockReason": "Unlock Money Tracker",
+  "biometricVerifyReason": "Confirm it's you"
 }

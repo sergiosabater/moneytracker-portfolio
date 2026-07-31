@@ -79,5 +79,6 @@
   "biometricNotRecognized": "Odcisk palca nierozpoznany. Spróbuj ponownie.",
   "tryAnotherWay": "Wypróbuj inny sposób",
   "tryAgain": "Spróbuj ponownie",
-  "biometricUnlockReason": "Odblokuj Money Tracker"
+  "biometricUnlockReason": "Odblokuj Money Tracker",
+  "biometricVerifyReason": "Potwierdź, że to Ty"
 }

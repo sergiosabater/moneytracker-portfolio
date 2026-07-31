@@ -255,4 +255,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get biometricUnlockReason => 'Unlock Money Tracker';
+
+  @override
+  String get biometricVerifyReason => 'Confirm it\'s you';
 }

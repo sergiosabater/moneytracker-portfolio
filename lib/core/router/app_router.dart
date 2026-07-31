@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:moneytracker/core/security/presentation/screens/biometric_verify_screen.dart';
 import 'package:moneytracker/core/security/presentation/screens/pin_setup_screen.dart';
 import 'package:moneytracker/core/security/presentation/screens/pin_verify_screen.dart';
 import 'package:moneytracker/features/settings/presentation/screens/about_screen.dart';
@@ -27,6 +28,10 @@ final appRouter = GoRouter(
             GoRoute(
               path: 'pin-verify',
               builder: (context, state) => const PinVerifyScreen(),
+            ),
+            GoRoute(
+              path: 'biometric-verify',
+              builder: (context, state) => const BiometricVerifyScreen(),
             ),
           ],
         ),

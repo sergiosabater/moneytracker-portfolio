@@ -259,4 +259,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get biometricUnlockReason => 'Money Tracker entsperren';
+
+  @override
+  String get biometricVerifyReason => 'Bestätigen Sie, dass Sie es sind';
 }

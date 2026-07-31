@@ -79,5 +79,6 @@
   "biometricNotRecognized": "Fingerabdruck nicht erkannt. Versuchen Sie es erneut.",
   "tryAnotherWay": "Andere Methode versuchen",
   "tryAgain": "Erneut versuchen",
-  "biometricUnlockReason": "Money Tracker entsperren"
+  "biometricUnlockReason": "Money Tracker entsperren",
+  "biometricVerifyReason": "Bestätigen Sie, dass Sie es sind"
 }
