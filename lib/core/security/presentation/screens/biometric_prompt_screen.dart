@@ -71,6 +71,21 @@ class _BiometricPromptScreenState
     setState(() => _state = _BiometricPromptState.error);
   }
 
+  Future<void> _handleFallback() async {
+    // On Android, this actively dismisses the native BiometricPrompt
+    // dialog. On iOS, stopAuthentication() only cancels the pending
+    // Dart Future — Face ID's own system animation is owned by the OS
+    // and can't be force-dismissed by the app, so it briefly finishes
+    // playing out on its own (well under a second) regardless. The
+    // short delay below just gives it room to do that before our PIN
+    // screen takes over, so the handoff reads as intentional rather
+    // than as an overlap glitch.
+    await ref.read(biometricServiceProvider).cancelAuthentication();
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+    widget.onFallback();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -103,14 +118,11 @@ class _BiometricPromptScreenState
                 const Spacer(flex: 2),
                 _BiometricIcon(state: _state),
                 const SizedBox(height: 24),
-                SizedBox(
-                  height: 44,
-                  child: Center(child: _buildStatusText(l10n)),
-                ),
+                _buildStatusArea(l10n),
                 const Spacer(flex: 3),
                 if (widget.showPinFallback)
                   TextButton(
-                    onPressed: widget.onFallback,
+                    onPressed: _handleFallback,
                     child: Text(
                       l10n.tryAnotherWay,
                       style: TextStyle(
@@ -129,19 +141,24 @@ class _BiometricPromptScreenState
     );
   }
 
-  Widget? _buildStatusText(AppLocalizations l10n) {
+  Widget _buildStatusArea(AppLocalizations l10n) {
     switch (_state) {
       case _BiometricPromptState.waiting:
-        return Text(
-          l10n.biometricPromptSubtitle,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.85),
-            fontSize: 15,
+        return SizedBox(
+          height: 24,
+          child: Center(
+            child: Text(
+              l10n.biometricPromptSubtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.85),
+                fontSize: 15,
+              ),
+            ),
           ),
         );
       case _BiometricPromptState.success:
-        return null;
+        return const SizedBox(height: 24);
       case _BiometricPromptState.error:
         return Column(
           mainAxisSize: MainAxisSize.min,

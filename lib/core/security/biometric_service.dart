@@ -42,4 +42,12 @@ class BiometricService {
       return false;
     }
   }
+
+  /// Cancels any in-flight authentication and dismisses the native
+  /// biometric UI (Face ID's system sheet on iOS, the BiometricPrompt
+  /// dialog on Android). Must be called before navigating away while an
+  /// [authenticate] call is still pending — otherwise, on iOS
+  /// specifically, the Face ID sheet can linger on screen after the app
+  /// has already moved to a different screen underneath it.
+  Future<void> cancelAuthentication() => _auth.stopAuthentication();
 }
