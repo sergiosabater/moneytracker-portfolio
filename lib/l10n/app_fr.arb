@@ -80,5 +80,9 @@
   "tryAnotherWay": "Essayer autrement",
   "tryAgain": "Réessayer",
   "biometricUnlockReason": "Déverrouiller Money Tracker",
-  "biometricVerifyReason": "Confirmez que c'est bien vous"
+  "biometricVerifyReason": "Confirmez que c'est bien vous",
+  "linkOpenError": "Impossible d'ouvrir le lien. Réessayez plus tard.",
+  "thisApp": "Cette application",
+  "appDescription": "Money Tracker est une application de finances personnelles qui vous aide à suivre vos revenus et dépenses, voir votre solde en un coup d'œil et garder le contrôle de votre argent — développée avec Flutter pour une expérience rapide et native sur iOS et Android.",
+  "developer": "Développeur"
 }

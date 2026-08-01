@@ -46,6 +46,7 @@ flutter:
   assets:
     - assets/flags/eu.webp
     - assets/images/profile.png
+    - assets/icons/app_icon.png
 
 flutter_launcher_icons:
   android: true

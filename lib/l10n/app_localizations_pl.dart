@@ -260,4 +260,18 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get biometricVerifyReason => 'Potwierdź, że to Ty';
+
+  @override
+  String get linkOpenError =>
+      'Nie udało się otworzyć linku. Spróbuj ponownie później.';
+
+  @override
+  String get thisApp => 'Ta aplikacja';
+
+  @override
+  String get appDescription =>
+      'Money Tracker to aplikacja finansów osobistych, która pomaga śledzić przychody i wydatki, sprawdzać saldo na pierwszy rzut oka i kontrolować swoje pieniądze — stworzona z użyciem Fluttera dla szybkiego, natywnego działania na iOS i Androidzie.';
+
+  @override
+  String get developer => 'Deweloper';
 }

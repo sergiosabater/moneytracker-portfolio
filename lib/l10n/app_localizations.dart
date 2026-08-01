@@ -589,6 +589,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm it\'s you'**
   String get biometricVerifyReason;
+
+  /// No description provided for @linkOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link. Please try again later.'**
+  String get linkOpenError;
+
+  /// No description provided for @thisApp.
+  ///
+  /// In en, this message translates to:
+  /// **'This App'**
+  String get thisApp;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Money Tracker is a personal finance app that helps you track income and expenses, see your balance at a glance, and stay on top of your spending — built with Flutter for a fast, native experience on both iOS and Android.'**
+  String get appDescription;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
 }
 
 class _AppLocalizationsDelegate
