@@ -84,5 +84,7 @@
   "linkOpenError": "Nie udało się otworzyć linku. Spróbuj ponownie później.",
   "thisApp": "Ta aplikacja",
   "appDescription": "Money Tracker to aplikacja finansów osobistych, która pomaga śledzić przychody i wydatki, sprawdzać saldo na pierwszy rzut oka i kontrolować swoje pieniądze — stworzona z użyciem Fluttera dla szybkiego, natywnego działania na iOS i Androidzie.",
-  "developer": "Deweloper"
+  "developer": "Deweloper",
+  "today": "Dzisiaj",
+  "yesterday": "Wczoraj"
 }

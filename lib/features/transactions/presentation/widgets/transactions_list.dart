@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/core/currency/currency_formatter.dart';
 import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
+import 'package:moneytracker/core/formatting/relative_date_formatter.dart';
+import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 import 'package:moneytracker/features/transactions/presentation/providers/transactions_notifier.dart';
+import 'package:moneytracker/features/transactions/presentation/utils/transaction_grouper.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/transaction_delete_dialog.dart';
 import 'package:moneytracker/features/transactions/presentation/widgets/transaction_options_dialog.dart';
@@ -20,16 +23,6 @@ class TransactionsList extends ConsumerStatefulWidget {
 
 class _TransactionsListState extends ConsumerState<TransactionsList> {
   bool _hasAnimatedInitially = false;
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-  }
-
-  String _formatTime(DateTime date) {
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
 
   void _showTransactionOptions(BuildContext context, Transaction transaction) {
     showGeneralDialog(
@@ -92,10 +85,21 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
     );
   }
 
+  String _labelFor(DateTime date, AppLocalizations l10n, String locale) {
+    return RelativeDateFormatter.format(
+      date,
+      todayLabel: l10n.today,
+      yesterdayLabel: l10n.yesterday,
+      locale: locale,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final transactionsAsync = ref.watch(transactionsNotifierProvider);
     final currency = ref.watch(currencyNotifierProvider);
+    final locale = ref.watch(localeNotifierProvider).toLocale().languageCode;
+    final l10n = AppLocalizations.of(context)!;
 
     return Expanded(
       child: Container(
@@ -108,10 +112,9 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
             child: CircularProgressIndicator(color: AppColors.primary),
           ),
           error: (error, stackTrace) => Center(
-            child: Text('${AppLocalizations.of(context)!.noTransactionsYet}\n$error'),
+            child: Text('${l10n.noTransactionsYet}\n$error'),
           ),
           data: (transactions) {
-            // Marcar como animado después de la primera carga
             if (!_hasAnimatedInitially && transactions.isNotEmpty) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
@@ -122,16 +125,21 @@ class _TransactionsListState extends ConsumerState<TransactionsList> {
               });
             }
 
-            return transactions.isEmpty
-                ? const _EmptyState()
-                : _TransactionsList(
-                    transactions: transactions,
-                    currency: currency,
-                    formatDate: _formatDate,
-                    formatTime: _formatTime,
-                    onTransactionLongPress: _showTransactionOptions,
-                    hasAnimatedInitially: _hasAnimatedInitially,
-                  );
+            if (transactions.isEmpty) {
+              return const _EmptyState();
+            }
+
+            final sections = TransactionGrouper.groupByDate(
+              transactions,
+              labelFor: (date) => _labelFor(date, l10n, locale),
+            );
+
+            return _GroupedTransactionsList(
+              sections: sections,
+              currency: currency,
+              onTransactionLongPress: _showTransactionOptions,
+              hasAnimatedInitially: _hasAnimatedInitially,
+            );
           },
         ),
       ),
@@ -180,46 +188,84 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _TransactionsList extends StatelessWidget {
-  final List<Transaction> transactions;
+/// Renders a list of date sections (header + cards), preserving the
+/// original cascading entry animation across the flattened card order
+/// — only the very first card is re-animated on subsequent rebuilds
+/// (e.g. after adding a new transaction), while historical ones stay
+/// static.
+class _GroupedTransactionsList extends StatelessWidget {
+  final List<TransactionSection> sections;
   final CurrencyOption currency;
-  final String Function(DateTime) formatDate;
-  final String Function(DateTime) formatTime;
   final Function(BuildContext, Transaction) onTransactionLongPress;
   final bool hasAnimatedInitially;
 
-  const _TransactionsList({
-    required this.transactions,
+  const _GroupedTransactionsList({
+    required this.sections,
     required this.currency,
-    required this.formatDate,
-    required this.formatTime,
     required this.onTransactionLongPress,
     required this.hasAnimatedInitially,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: transactions.length,
-      itemBuilder: (context, index) {
-        // Animar en cascada solo la primera vez
-        final shouldAnimateCascade = !hasAnimatedInitially;
-        // Animar individualmente solo el primer item si ya se animó inicialmente
-        final shouldAnimateNew = hasAnimatedInitially && index == 0;
+    var cardIndex = 0;
 
-        return _TransactionCard(
-          key: ValueKey(transactions[index].id),
-          transaction: transactions[index],
-          currency: currency,
-          formatDate: formatDate,
-          formatTime: formatTime,
-          onLongPress: () =>
-              onTransactionLongPress(context, transactions[index]),
-          animateEntry: shouldAnimateCascade || shouldAnimateNew,
-          cascadeIndex: shouldAnimateCascade ? index : 0,
-        );
-      },
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      children: [
+        for (final section in sections) ...[
+          _SectionHeader(label: section.label),
+          const SizedBox(height: 8),
+          for (final transaction in section.transactions) ...[
+            Builder(
+              builder: (context) {
+                final shouldAnimateCascade = !hasAnimatedInitially;
+                final shouldAnimateNew =
+                    hasAnimatedInitially && cardIndex == 0;
+                final thisCardIndex = cardIndex;
+                cardIndex++;
+
+                return _TransactionCard(
+                  key: ValueKey(transaction.id),
+                  transaction: transaction,
+                  currency: currency,
+                  onLongPress: () =>
+                      onTransactionLongPress(context, transaction),
+                  animateEntry: shouldAnimateCascade || shouldAnimateNew,
+                  cascadeIndex: shouldAnimateCascade ? thisCardIndex : 0,
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+          ],
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String label;
+
+  const _SectionHeader({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final secondaryColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey.shade600;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: secondaryColor,
+          letterSpacing: 1.0,
+        ),
+      ),
     );
   }
 }
@@ -227,8 +273,6 @@ class _TransactionsList extends StatelessWidget {
 class _TransactionCard extends StatefulWidget {
   final Transaction transaction;
   final CurrencyOption currency;
-  final String Function(DateTime) formatDate;
-  final String Function(DateTime) formatTime;
   final VoidCallback onLongPress;
   final bool animateEntry;
   final int cascadeIndex;
@@ -237,8 +281,6 @@ class _TransactionCard extends StatefulWidget {
     super.key,
     required this.transaction,
     required this.currency,
-    required this.formatDate,
-    required this.formatTime,
     required this.onLongPress,
     required this.animateEntry,
     required this.cascadeIndex,
@@ -258,11 +300,10 @@ class _TransactionCardState extends State<_TransactionCard>
   void initState() {
     super.initState();
 
-    // Delay en cascada solo para animación inicial
-    final delay = widget.cascadeIndex * 100;
+    final delay = widget.cascadeIndex * 80;
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
 
@@ -272,16 +313,13 @@ class _TransactionCardState extends State<_TransactionCard>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _slideAnimation = Tween<Offset>(
-      begin: widget.animateEntry ? const Offset(0, 0.3) : Offset.zero,
+      begin: widget.animateEntry ? const Offset(0, 0.2) : Offset.zero,
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // Aplicar delay solo si es animación en cascada
     if (widget.animateEntry && widget.cascadeIndex > 0) {
       Future.delayed(Duration(milliseconds: delay), () {
-        if (mounted) {
-          _controller.forward();
-        }
+        if (mounted) _controller.forward();
       });
     } else {
       _controller.forward();
@@ -303,182 +341,105 @@ class _TransactionCardState extends State<_TransactionCard>
         ? AppLocalizations.of(context)!.income
         : AppLocalizations.of(context)!.expense;
 
-    final value = CurrencyFormatter.format(widget.currency, widget.transaction.amount);
+    final value = CurrencyFormatter.format(
+      widget.currency,
+      widget.transaction.amount,
+    );
 
     final surfaceColor = Theme.of(context).colorScheme.surface;
     final borderColor = Theme.of(context).dividerColor;
     final titleColor =
         Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black87;
-    final secondaryTextColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey.shade700;
 
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: InkWell(
-            onLongPress: widget.onLongPress,
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              decoration: BoxDecoration(
-                color: surfaceColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: borderColor,
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+        child: InkWell(
+          onLongPress: widget.onLongPress,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: borderColor,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+              border: Border.all(color: borderColor, width: 1),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          color.withValues(alpha: 0.15),
+                          color.withValues(alpha: 0.05),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: color.withValues(alpha: 0.2),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Center(child: Icon(icon, color: color, size: 22)),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.transaction.description,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: titleColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          typeLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 110),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: color,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
-                border: Border.all(color: borderColor, width: 1),
-              ),
-
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            color.withValues(alpha: 0.15),
-                            color.withValues(alpha: 0.05),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: color.withValues(alpha: 0.2),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Center(child: Icon(icon, color: color, size: 24)),
-                    ),
-                    const SizedBox(width: 16),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.transaction.description,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: titleColor,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 6),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: color.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: color.withValues(alpha: 0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              typeLabel,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: color,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      color.withValues(alpha: 0.1),
-                                      color.withValues(alpha: 0.05),
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: color.withValues(alpha: 0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: color,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_month,
-                                size: 14,
-                                color: secondaryTextColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                widget.formatDate(widget.transaction.dateTime),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                Icons.access_time,
-                                size: 14,
-                                color: secondaryTextColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                widget.formatTime(widget.transaction.dateTime),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
