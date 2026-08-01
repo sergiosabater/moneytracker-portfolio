@@ -1,13 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moneytracker/core/services/external_link_launcher_provider.dart';
 import 'package:moneytracker/core/theme/app_colors.dart';
 import 'package:moneytracker/features/settings/presentation/widgets/settings_section.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
+import 'package:moneytracker/shared/presentation/widgets/app_snackbar.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
 
+  static const _linkedInUrl = 'https://www.linkedin.com/in/sergio-sm/';
+  static const _gitHubUrl = 'https://github.com/sergiosabater';
+  static const _contactEmail = 'sergiosabater@gmail.com';
+
+  Future<void> _openUrl(
+    BuildContext context,
+    WidgetRef ref,
+    String url,
+  ) async {
+    final success =
+        await ref.read(externalLinkLauncherProvider).openUrl(url);
+    if (!context.mounted || success) return;
+
+    AppSnackbar.show(
+      context,
+      message: AppLocalizations.of(context)!.linkOpenError,
+      type: AppSnackbarType.error,
+    );
+  }
+
+  Future<void> _openEmail(BuildContext context, WidgetRef ref) async {
+    final success = await ref
+        .read(externalLinkLauncherProvider)
+        .openEmail(_contactEmail);
+    if (!context.mounted || success) return;
+
+    AppSnackbar.show(
+      context,
+      message: AppLocalizations.of(context)!.linkOpenError,
+      type: AppSnackbarType.error,
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
     final secondaryColor = theme.textTheme.bodyMedium?.color ?? Colors.grey.shade600;
@@ -27,7 +63,9 @@ class AboutScreen extends StatelessWidget {
           child: Column(
             children: [
               _buildHeader(context),
-              Expanded(child: _buildContent(context, textColor, secondaryColor)),
+              Expanded(
+                child: _buildContent(context, ref, textColor, secondaryColor),
+              ),
             ],
           ),
         ),
@@ -58,7 +96,12 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, Color textColor, Color secondaryColor) {
+  Widget _buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    Color textColor,
+    Color secondaryColor,
+  ) {
     final theme = Theme.of(context);
     final surfaceColor = theme.colorScheme.surface;
     final borderColor = theme.dividerColor;
@@ -75,7 +118,25 @@ class AboutScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SettingsSection(
-              title: l10n.profile,
+              title: l10n.thisApp,
+              children: [
+                _ProfileCard(
+                  avatar: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/icons/app_icon.png'),
+                    radius: 50,
+                  ),
+                  name: l10n.appTitle,
+                  title: null,
+                  bio: l10n.appDescription,
+                  textColor: textColor,
+                  secondaryColor: secondaryColor,
+                  surfaceColor: surfaceColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            SettingsSection(
+              title: l10n.developer,
               children: [
                 _ProfileCard(
                   avatar: const CircleAvatar(
@@ -115,9 +176,9 @@ class AboutScreen extends StatelessWidget {
               title: l10n.getInTouch,
               children: [
                 _SocialRow(
-                  onLinkedIn: () {},
-                  onGitHub: () {},
-                  onEmail: () {},
+                  onLinkedIn: () => _openUrl(context, ref, _linkedInUrl),
+                  onGitHub: () => _openUrl(context, ref, _gitHubUrl),
+                  onEmail: () => _openEmail(context, ref),
                   emailLabel: l10n.email,
                   accentColor: AppColors.accent,
                   textColor: textColor,
@@ -149,7 +210,7 @@ class AboutScreen extends StatelessWidget {
 class _ProfileCard extends StatelessWidget {
   final Widget avatar;
   final String name;
-  final String title;
+  final String? title;
   final String bio;
   final Color textColor;
   final Color secondaryColor;
@@ -193,16 +254,18 @@ class _ProfileCard extends StatelessWidget {
               letterSpacing: 0.3,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.accent,
-              letterSpacing: 0.3,
+          if (title != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              title!,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.accent,
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
+          ],
           const SizedBox(height: 16),
           Text(
             bio,

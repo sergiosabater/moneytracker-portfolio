@@ -68,5 +68,10 @@
 	</array>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Money Tracker uses Face ID to unlock the app quickly and securely.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+    	<string>mailto</string>
+    	<string>https</string>
+	</array>
 </dict>
 </plist>
