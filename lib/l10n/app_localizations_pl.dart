@@ -274,4 +274,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get developer => 'Deweloper';
+
+  @override
+  String get today => 'Dzisiaj';
+
+  @override
+  String get yesterday => 'Wczoraj';
 }

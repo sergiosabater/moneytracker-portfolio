@@ -272,4 +272,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get developer => 'Developer';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
 }
