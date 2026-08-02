@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:moneytracker/core/currency/currency_formatter.dart';
 import 'package:moneytracker/core/currency/currency_input_formatter.dart';
 import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
@@ -159,27 +158,27 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
   }
 
   void _saveTransaction() {
-  final transaction = Transaction(
-    type: type,
-    amount: type == TransactionType.expense ? -amount : amount,
-    description: description.trim().isEmpty
-        ? AppLocalizations.of(context)!.noDescription
-        : description,
-    dateTime: DateTime.now(),
-  );
+    final transaction = Transaction(
+      type: type,
+      amount: type == TransactionType.expense ? -amount : amount,
+      description: description.trim().isEmpty
+          ? AppLocalizations.of(context)!.noDescription
+          : description,
+      dateTime: DateTime.now(),
+    );
 
-  ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
+    ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
 
-  final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
-  Navigator.pop(context);
+    Navigator.pop(context);
 
-  AppSnackbar.show(
-    context,
-    message: localizations.transactionAdded,
-    type: AppSnackbarType.success,
-  );
-}
+    AppSnackbar.show(
+      context,
+      message: localizations.transactionAdded,
+      type: AppSnackbarType.success,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -404,6 +403,23 @@ class _AmountField extends StatelessWidget {
     required this.onAmountChanged,
   });
 
+  /// Fixed "0.00"-style placeholder for the empty amount field —
+  /// intentionally independent of [CurrencyFormatter]'s whole-amount
+  /// trimming (5.00 -> "5"), so the hint always shows the full decimal
+  /// shape the user is expected to type into.
+  String _placeholderFor(CurrencyOption currency) {
+    switch (currency) {
+      case CurrencyOption.usd:
+        return '\$0.00';
+      case CurrencyOption.gbp:
+        return '£0.00';
+      case CurrencyOption.eur:
+        return '0,00 €';
+      case CurrencyOption.pln:
+        return '0,00 zł';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color =
@@ -443,7 +459,7 @@ class _AmountField extends StatelessWidget {
               color: color,
             ),
             decoration: InputDecoration.collapsed(
-              hintText: CurrencyFormatter.format(currency, 0),
+              hintText: _placeholderFor(currency),
               hintStyle: TextStyle(color: color.withValues(alpha: 0.3)),
             ),
             keyboardType: TextInputType.number,
