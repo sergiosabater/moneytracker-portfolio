@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
@@ -20,9 +21,20 @@ void main() async {
   // Resolved before runApp so the app never briefly shows unlocked
   // content while this async check would otherwise still be pending.
   final isPinSet = await PinService().isPinSet();
-  final initialLockState = isPinSet
-      ? AppLockState.locked
-      : AppLockState.unlocked;
+  final initialLockState =
+      isPinSet ? AppLockState.locked : AppLockState.unlocked;
+
+  // Draw the app edge-to-edge and keep the status bar transparent.
+  // Force status bar icons/text to be white on both Android and iOS.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light, // Android: white icons
+      statusBarBrightness: Brightness.dark, // iOS: white icons
+    ),
+  );
 
   runApp(
     ProviderScope(

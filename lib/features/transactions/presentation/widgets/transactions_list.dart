@@ -344,6 +344,7 @@ class _TransactionCardState extends State<_TransactionCard>
     final value = CurrencyFormatter.format(
       widget.currency,
       widget.transaction.amount,
+      showSign: true,
     );
 
     final surfaceColor = Theme.of(context).colorScheme.surface;
