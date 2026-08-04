@@ -24,16 +24,14 @@ void main() async {
   final initialLockState =
       isPinSet ? AppLockState.locked : AppLockState.unlocked;
 
-  // Draw the app edge-to-edge and keep the status bar transparent.
-  // Force status bar icons/text to be white on both Android and iOS.
+  // Draw the app edge-to-edge, with a transparent status bar. Without
+  // this, some Android skins (MIUI on Xiaomi devices in particular)
+  // paint their own opaque background behind the status bar instead of
+  // honoring AnnotatedRegion's icon-color-only styling below, showing
+  // as a stray grey strip at the top of the screen.
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light, // Android: white icons
-      statusBarBrightness: Brightness.dark, // iOS: white icons
-    ),
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
   runApp(
@@ -80,14 +78,29 @@ class MyApp extends ConsumerWidget {
       // replaces it entirely with the PIN screen — same MaterialApp
       // instance underneath, so theme/locale/etc. still apply.
       builder: (context, child) {
-        return Consumer(
-          builder: (context, ref, _) {
-            final lockState = ref.watch(appLockNotifierProvider);
-            if (lockState == AppLockState.locked) {
-              return const AppLockScreen();
-            }
-            return child!;
-          },
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          // Every screen in this app opens with the same dark gradient
+          // header (Home, Settings, About, PIN screens), regardless of
+          // light/dark theme — so the status bar icons (clock, battery,
+          // wifi) should always be light-colored to stay readable
+          // against it, rather than following the theme's brightness
+          // like Flutter would do by default. statusBarBrightness
+          // covers iOS, statusBarIconBrightness covers Android — both
+          // needed since each platform reads a different property.
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+          child: Consumer(
+            builder: (context, ref, _) {
+              final lockState = ref.watch(appLockNotifierProvider);
+              if (lockState == AppLockState.locked) {
+                return const AppLockScreen();
+              }
+              return child!;
+            },
+          ),
         );
       },
     );

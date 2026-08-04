@@ -200,90 +200,101 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
           color: surfaceColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: Column(
-          children: [
-            // Handle bar
-            Container(
-              height: 5,
-              width: 40,
-              margin: const EdgeInsets.only(top: 12),
-              decoration: BoxDecoration(
-                color: dividerColor,
-                borderRadius: BorderRadius.circular(3),
+        // Explicitly consumes the device's bottom system inset (the
+        // navigation bar area) — needed because edge-to-edge drawing
+        // (see main.dart) extends this sheet's content behind it
+        // instead of Android reserving space automatically. SafeArea
+        // is used instead of manually reading MediaQuery.padding.bottom,
+        // which proved unreliable specifically on MIUI's (Xiaomi)
+        // edge-to-edge implementation with 3-button navigation.
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                height: 5,
+                width: 40,
+                margin: const EdgeInsets.only(top: 12),
+                decoration: BoxDecoration(
+                  color: dividerColor,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            // Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close, color: secondaryColor),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.newTransaction,
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+              // Header
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close, color: secondaryColor),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                  const SizedBox(width: 48),
-                ],
+                    Text(
+                      AppLocalizations.of(context)!.newTransaction,
+                      style: textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _TypeSelector(
-                          selectedType: type,
-                          onTypeChanged: (newType) {
-                            setState(() => type = newType);
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                        _AmountField(
-                          controller: _amountController,
-                          focusNode: _amountFocusNode,
-                          type: type,
-                          currency: currency,
-                          onAmountChanged: (value) {
-                            setState(() => amount = value);
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        _DescriptionField(
-                          controller: _descriptionController,
-                          focusNode: _descriptionFocusNode,
-                          onChanged: (value) {
-                            setState(() => description = value);
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                        _SaveButton(
-                          key: _buttonKey,
-                          isEnabled: _isValid,
-                          onPressed: _handleSave,
-                        ),
-                        SizedBox(height: keyboardHeight > 0 ? 40 : 0),
-                      ],
+              Expanded(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 24,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _TypeSelector(
+                            selectedType: type,
+                            onTypeChanged: (newType) {
+                              setState(() => type = newType);
+                            },
+                          ),
+                          const SizedBox(height: 32),
+                          _AmountField(
+                            controller: _amountController,
+                            focusNode: _amountFocusNode,
+                            type: type,
+                            currency: currency,
+                            onAmountChanged: (value) {
+                              setState(() => amount = value);
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          _DescriptionField(
+                            controller: _descriptionController,
+                            focusNode: _descriptionFocusNode,
+                            onChanged: (value) {
+                              setState(() => description = value);
+                            },
+                          ),
+                          const SizedBox(height: 32),
+                          _SaveButton(
+                            key: _buttonKey,
+                            isEnabled: _isValid,
+                            onPressed: _handleSave,
+                          ),
+                          SizedBox(height: keyboardHeight > 0 ? 40 : 16),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
