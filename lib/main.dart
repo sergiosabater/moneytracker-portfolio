@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moneytracker/core/locale/locale_notifier.dart';
 import 'package:moneytracker/core/router/app_router.dart';
@@ -14,7 +15,14 @@ import 'package:moneytracker/core/theme/theme_notifier.dart';
 import 'package:moneytracker/l10n/app_localizations.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Keeps the native splash screen visible past its default dismissal
+  // point, until FlutterNativeSplash.remove() is called below — covering
+  // both async steps that must resolve before the app can safely render
+  // (preferences, and the PIN lock state), instead of just the engine
+  // startup time.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   final preferencesService = await PreferencesService.create();
 
@@ -33,6 +41,8 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
+
+  FlutterNativeSplash.remove();
 
   runApp(
     ProviderScope(
