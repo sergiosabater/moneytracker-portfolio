@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:moneytracker/core/currency/currency_formatter.dart';
 import 'package:moneytracker/core/currency/currency_input_formatter.dart';
 import 'package:moneytracker/core/currency/currency_notifier.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
@@ -159,27 +158,27 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
   }
 
   void _saveTransaction() {
-  final transaction = Transaction(
-    type: type,
-    amount: type == TransactionType.expense ? -amount : amount,
-    description: description.trim().isEmpty
-        ? AppLocalizations.of(context)!.noDescription
-        : description,
-    dateTime: DateTime.now(),
-  );
+    final transaction = Transaction(
+      type: type,
+      amount: type == TransactionType.expense ? -amount : amount,
+      description: description.trim().isEmpty
+          ? AppLocalizations.of(context)!.noDescription
+          : description,
+      dateTime: DateTime.now(),
+    );
 
-  ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
+    ref.read(transactionsNotifierProvider.notifier).addTransaction(transaction);
 
-  final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
-  Navigator.pop(context);
+    Navigator.pop(context);
 
-  AppSnackbar.show(
-    context,
-    message: localizations.transactionAdded,
-    type: AppSnackbarType.success,
-  );
-}
+    AppSnackbar.show(
+      context,
+      message: localizations.transactionAdded,
+      type: AppSnackbarType.success,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,90 +200,101 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog>
           color: surfaceColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: Column(
-          children: [
-            // Handle bar
-            Container(
-              height: 5,
-              width: 40,
-              margin: const EdgeInsets.only(top: 12),
-              decoration: BoxDecoration(
-                color: dividerColor,
-                borderRadius: BorderRadius.circular(3),
+        // Explicitly consumes the device's bottom system inset (the
+        // navigation bar area) — needed because edge-to-edge drawing
+        // (see main.dart) extends this sheet's content behind it
+        // instead of Android reserving space automatically. SafeArea
+        // is used instead of manually reading MediaQuery.padding.bottom,
+        // which proved unreliable specifically on MIUI's (Xiaomi)
+        // edge-to-edge implementation with 3-button navigation.
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                height: 5,
+                width: 40,
+                margin: const EdgeInsets.only(top: 12),
+                decoration: BoxDecoration(
+                  color: dividerColor,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            // Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close, color: secondaryColor),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.newTransaction,
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+              // Header
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close, color: secondaryColor),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                  const SizedBox(width: 48),
-                ],
+                    Text(
+                      AppLocalizations.of(context)!.newTransaction,
+                      style: textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _TypeSelector(
-                          selectedType: type,
-                          onTypeChanged: (newType) {
-                            setState(() => type = newType);
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                        _AmountField(
-                          controller: _amountController,
-                          focusNode: _amountFocusNode,
-                          type: type,
-                          currency: currency,
-                          onAmountChanged: (value) {
-                            setState(() => amount = value);
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        _DescriptionField(
-                          controller: _descriptionController,
-                          focusNode: _descriptionFocusNode,
-                          onChanged: (value) {
-                            setState(() => description = value);
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                        _SaveButton(
-                          key: _buttonKey,
-                          isEnabled: _isValid,
-                          onPressed: _handleSave,
-                        ),
-                        SizedBox(height: keyboardHeight > 0 ? 40 : 0),
-                      ],
+              Expanded(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 24,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _TypeSelector(
+                            selectedType: type,
+                            onTypeChanged: (newType) {
+                              setState(() => type = newType);
+                            },
+                          ),
+                          const SizedBox(height: 32),
+                          _AmountField(
+                            controller: _amountController,
+                            focusNode: _amountFocusNode,
+                            type: type,
+                            currency: currency,
+                            onAmountChanged: (value) {
+                              setState(() => amount = value);
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          _DescriptionField(
+                            controller: _descriptionController,
+                            focusNode: _descriptionFocusNode,
+                            onChanged: (value) {
+                              setState(() => description = value);
+                            },
+                          ),
+                          const SizedBox(height: 32),
+                          _SaveButton(
+                            key: _buttonKey,
+                            isEnabled: _isValid,
+                            onPressed: _handleSave,
+                          ),
+                          SizedBox(height: keyboardHeight > 0 ? 40 : 16),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -404,6 +414,23 @@ class _AmountField extends StatelessWidget {
     required this.onAmountChanged,
   });
 
+  /// Fixed "0.00"-style placeholder for the empty amount field —
+  /// intentionally independent of [CurrencyFormatter]'s whole-amount
+  /// trimming (5.00 -> "5"), so the hint always shows the full decimal
+  /// shape the user is expected to type into.
+  String _placeholderFor(CurrencyOption currency) {
+    switch (currency) {
+      case CurrencyOption.usd:
+        return '\$0.00';
+      case CurrencyOption.gbp:
+        return '£0.00';
+      case CurrencyOption.eur:
+        return '0,00 €';
+      case CurrencyOption.pln:
+        return '0,00 zł';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color =
@@ -443,7 +470,7 @@ class _AmountField extends StatelessWidget {
               color: color,
             ),
             decoration: InputDecoration.collapsed(
-              hintText: CurrencyFormatter.format(currency, 0),
+              hintText: _placeholderFor(currency),
               hintStyle: TextStyle(color: color.withValues(alpha: 0.3)),
             ),
             keyboardType: TextInputType.number,

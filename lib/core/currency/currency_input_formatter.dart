@@ -3,11 +3,14 @@ import 'package:moneytracker/core/currency/currency_formatter.dart';
 import 'package:moneytracker/core/currency/currency_option.dart';
 
 /// A [TextInputFormatter] that turns raw digit typing into a live,
-/// currency-correct amount, reusing [CurrencyFormatter] as the single
-/// source of truth for how an amount is displayed — the same formatting
-/// logic used everywhere else in the app (Home, transaction list), so the
-/// input field can never drift out of sync with how amounts are shown
-/// elsewhere.
+/// currency-correct amount, using [CurrencyFormatter.formatForInput] —
+/// a display variant that always shows 2 decimal digits, even for
+/// whole amounts. This is deliberate: [CurrencyFormatter.format] (used
+/// everywhere else in the app) trims trailing ".00" for a cleaner
+/// look, but that trimming is lossy, and this formatter reconstructs
+/// how many digits have been typed by reading them back out of the
+/// currently displayed text — so live editing needs a fully
+/// reversible, always-2-decimals format instead.
 ///
 /// Digits are interpreted right-to-left, like a typical point-of-sale
 /// amount field: typing "1", "2", "3" produces 0.01 -> 0.12 -> 1.23.
@@ -67,7 +70,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     final rawCents = int.parse(digitsOnly);
     final decimalValue = rawCents / 100;
-    final formatted = CurrencyFormatter.format(currency, decimalValue);
+    final formatted = CurrencyFormatter.formatForInput(currency, decimalValue);
 
     onValueChanged(decimalValue);
 
