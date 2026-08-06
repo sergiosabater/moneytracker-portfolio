@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/Framework-Flutter-02569B?style=for-the-badge&logo=flutter" alt="Framework">
   <img src="https://img.shields.io/badge/State-Riverpod-purple?style=for-the-badge" alt="State Management">
   <img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-brightgreen?style=for-the-badge" alt="Architecture">
+  <img src="https://img.shields.io/badge/Security-PIN%20%26%20Biometrics-critical?style=for-the-badge" alt="Security">
   <img src="https://img.shields.io/badge/Mode-Dark%20%26%20Light-yellow?style=for-the-badge&logo=flutter" alt="Theme Mode">
 </div>
 
@@ -28,11 +29,13 @@ The project is being built as a deliberate, professional-grade learning exercise
 ### ✨ What Makes Money Tracker Special?
 
 - 💳 **Complete Transaction Management** – Add and delete income and expense entries, with real-time balance updates
+- 📅 **Smart Date Grouping** – Transactions are grouped into "Today", "Yesterday", and short weekday/date sections, just like leading finance apps
 - 📊 **At-a-Glance Overview** – Animated balance, income and expense summary cards on the home screen
-- 🌓 **Adaptive Theming Foundation** – Centralized light/dark color system, automatically following the OS-level appearance setting
-- 🌍 **Multi-Language & Multi-Currency Selectors** – Settings screen ready for Spanish, English, French, German and Polish, and for USD, EUR, GBP and PLN
-- 🔐 **Security Section (UI ready)** – PIN code and biometric authentication entries prepared in Settings, pending real implementation
-- 📱 **Cross-Platform** – A single Dart codebase producing a native experience on both iOS and Android
+- 🌓 **Real Adaptive Theming** – Light/Dark/System mode, persisted and applied instantly across the whole app
+- 🌍 **Real Multi-Language & Multi-Currency** – Spanish, English, French, German and Polish; USD, EUR, GBP and PLN, with live currency-correct input and formatting throughout
+- 🔐 **PIN & Biometric Security** – App-open lock screen, PIN code (salted-hash, securely stored) and biometric authentication (Face ID / Touch ID / fingerprint), with biometric-first verification and PIN fallback for sensitive actions
+- 🔗 **Connected About Screen** – Real links to the developer's LinkedIn, GitHub and email
+- 📱 **Cross-Platform** – A single Dart codebase producing a native experience on both iOS and Android, with a native splash screen
 
 ---
 ## 📸 Screenshots
@@ -51,6 +54,8 @@ The project is being built as a deliberate, professional-grade learning exercise
 
 </div>
 
+> ℹ️ Screenshots above still reflect an earlier iteration of the UI (pre-theming, pre-grouping). Updated screenshots covering Settings, About, and the PIN/biometric flows are pending.
+
 ---
 
 ## 🛠️ Tech Stack
@@ -65,80 +70,68 @@ The project is being built as a deliberate, professional-grade learning exercise
 
 ### 🧬 **Domain Modeling**
 - **Freezed** – Immutable domain entities (e.g. `Transaction`) with generated `copyWith`, value equality and more
+- **Dart enhanced enums** – Type-safe options (`ThemeModeOption`, `LocaleOption`, `CurrencyOption`) with built-in conversion logic, replacing raw strings
 - **build_runner** – Code generation engine powering Riverpod and Freezed
 
-### 💾 **Data Persistence**
-- **SQLite** (via `sqflite`) – Local relational database
-- **Repository Pattern** – `TransactionsRepository` abstracts persistence behind an interface, so the data source (currently SQLite) can be swapped in the future without touching business logic or UI
+### 💾 **Data & Preferences Persistence**
+- **SQLite** (via `sqflite`) – Centralized local relational database (`AppDatabase`), shared across features
+- **Repository Pattern** – `TransactionsRepository` abstracts persistence behind an interface, so the data source can be swapped without touching business logic or UI
+- **shared_preferences** – Simple key-value storage for non-sensitive user settings (theme, language, currency, biometric toggle)
+
+### 🔐 **Security**
+- **`flutter_secure_storage`** – PIN storage backed by iOS Keychain / Android Keystore
+- **`crypto`** – PIN is never stored in plain text; only a salted SHA-256 hash is persisted
+- **`local_auth`** – Biometric authentication (Face ID, Touch ID, fingerprint), device capability–aware
+- Custom **PIN entry / biometric prompt screens** with animated feedback (shake, haptics, success states), reused across setup, verification, and app-unlock flows
 
 ### 🧭 **Navigation**
-- **GoRouter** – Declarative, nested routing (`/`, `/settings`, `/settings/about`), replacing manual `Navigator` calls for full-screen navigation
+- **GoRouter** – Declarative, nested routing, replacing manual `Navigator` calls for full-screen navigation
+- App-lock overlay integrated at the `MaterialApp` level, gating the entire app behind PIN/biometric verification on cold start
 
 ### 🎨 **User Interface & Theming**
 - **Material Design 3** – Clean, modern design language
-- **Centralized Design System** (`AppColors` / `AppTheme`) – A single source of truth for brand and semantic colors, generating both light and dark `ThemeData`, with the app automatically following the device's system appearance
+- **Centralized Design System** (`AppColors` / `AppTheme`) – A single source of truth for brand and semantic colors, generating both light and dark `ThemeData`, with real-time switching driven by user preference
 - **country_flags** – Vector flag icons for the language and currency selectors
-- **Custom animations** – Entrance transitions, cascading list animations and micro-interactions throughout the UI
+- **Custom animations** – Entrance transitions, cascading list animations, and micro-interactions throughout the UI
+- **`flutter_native_splash`** – Native splash screen on both platforms
+
+### 💱 **Formatting**
+- **`CurrencyFormatter`** – Locale-aware currency formatting; whole amounts omit trailing decimals (`5.00 → 5`) for a cleaner look, with a dedicated, always-2-decimal variant for live text input
+- **`RelativeDateFormatter`** – Pure, unit-testable date-to-label logic ("Today", "Yesterday", "Mon, Mar 8", "Mon, Mar 8, 2025")
+
+### 🔗 **External Integrations**
+- **`url_launcher`** – Opens the developer's LinkedIn, GitHub, and email from the About screen, with graceful error handling
 
 ### 🌍 **Internationalization**
-- **Flutter Intl (`.arb` files)** – Spanish and English currently supported at the app-content level; the Settings screen already offers French, German and Polish as selectable options ahead of full translation support
+- **Flutter Intl (`.arb` files)** – Full translations for Spanish, English, French, German and Polish across the entire app UI
 
 ---
 
 ## 🗺️ Project Structure
 
-Money Tracker follows a **Feature-First + Clean Architecture** approach: code is organized by feature first, and each feature is internally split into `domain` (entities, repository contracts), `data` (repository implementations, data sources) and `presentation` (screens, widgets, Riverpod providers) layers.
+Money Tracker follows a **Feature-First + Clean Architecture** approach: code is organized by feature first, and each feature is internally split into `domain` (entities, repository contracts), `data` (repository implementations, data sources) and `presentation` (screens, widgets, Riverpod providers) layers. Cross-cutting concerns (theming, persistence, security, formatting) live in `core/`, and UI shared by more than one feature lives in `shared/`.
 
 ```plaintext
 📦 lib/
  ┣ 📂 core/
- ┃ ┣ 📂 constants/
- ┃ ┣ 📂 database/
- ┃ ┣ 📂 router/
- ┃ ┃ ┗ 🧭 app_router.dart
- ┃ ┗ 📂 theme/
- ┃   ┣ 🎨 app_colors.dart
- ┃   ┗ 🎨 app_theme.dart
+ ┃ ┣ 📂 currency/          # CurrencyOption, CurrencyFormatter, CurrencyNotifier, input formatter
+ ┃ ┣ 📂 database/          # Centralized AppDatabase (SQLite)
+ ┃ ┣ 📂 formatting/        # RelativeDateFormatter
+ ┃ ┣ 📂 locale/            # LocaleOption, LocaleNotifier
+ ┃ ┣ 📂 router/            # app_router.dart (GoRouter)
+ ┃ ┣ 📂 security/          # PIN + biometric services, notifiers, SecurityGate, lock screens
+ ┃ ┣ 📂 services/          # PreferencesService, ExternalLinkLauncher
+ ┃ ┗ 📂 theme/             # AppColors, AppTheme, ThemeModeOption, ThemeNotifier
  ┣ 📂 features/
  ┃ ┣ 📂 transactions/
- ┃ ┃ ┣ 📂 data/
- ┃ ┃ ┃ ┣ 📂 datasources/
- ┃ ┃ ┃ ┃ ┗ 💾 transactions_local_datasource.dart
- ┃ ┃ ┃ ┗ 📂 repositories/
- ┃ ┃ ┃   ┗ 📦 transactions_repository_impl.dart
- ┃ ┃ ┣ 📂 domain/
- ┃ ┃ ┃ ┣ 📂 entities/
- ┃ ┃ ┃ ┃ ┗ 📄 transaction.dart
- ┃ ┃ ┃ ┗ 📂 repositories/
- ┃ ┃ ┃   ┗ 📄 transactions_repository.dart
- ┃ ┃ ┗ 📂 presentation/
- ┃ ┃   ┣ 📂 providers/
- ┃ ┃   ┃ ┗ 📄 transactions_notifier.dart
- ┃ ┃   ┣ 📂 screens/
- ┃ ┃   ┃ ┗ 🏠 home_screen.dart
- ┃ ┃   ┗ 📂 widgets/
- ┃ ┃     ┣ 📄 add_transaction_dialog.dart
- ┃ ┃     ┣ 📄 custom_dialog.dart
- ┃ ┃     ┣ 📄 home_header.dart
- ┃ ┃     ┣ 📄 no_description_dialog.dart
- ┃ ┃     ┣ 📄 transaction_delete_dialog.dart
- ┃ ┃     ┣ 📄 transaction_options_dialog.dart
- ┃ ┃     ┗ 📄 transactions_list.dart
+ ┃ ┃ ┣ 📂 data/            # Datasources & repository implementation
+ ┃ ┃ ┣ 📂 domain/          # Transaction entity & repository contract
+ ┃ ┃ ┗ 📂 presentation/    # Screens, widgets, providers, date-grouping utils
  ┃ ┗ 📂 settings/
- ┃   ┗ 📂 presentation/
- ┃     ┣ 📂 screens/
- ┃     ┃ ┣ ⚙️ settings_screen.dart
- ┃     ┃ ┗ 👤 about_screen.dart
- ┃     ┗ 📂 widgets/
- ┃       ┣ 🗂️ settings_section.dart
- ┃       ┣ 📄 settings_option_tile.dart
- ┃       ┗ 🔽 settings_expandable_tile.dart
- ┣ 📂 l10n/
- ┃ ┣ 🌐 app_en.arb
- ┃ ┣ 🌐 app_es.arb
- ┃ ┣ 🌍 app_localizations_en.dart
- ┃ ┣ 🌍 app_localizations_es.dart
- ┃ ┗ 🌍 app_localizations.dart
+ ┃   ┗ 📂 presentation/    # Settings & About screens and widgets
+ ┣ 📂 shared/
+ ┃ ┗ 📂 presentation/widgets/  # CustomDialog, ConfirmationDialog, AppSnackbar
+ ┣ 📂 l10n/                # .arb files (en, es, fr, de, pl) + generated localizations
  ┗ 🚀 main.dart
 ```
 
@@ -151,7 +144,7 @@ Money Tracker follows a **Feature-First + Clean Architecture** approach: code is
 - Flutter SDK (3.9 or higher)
 - Dart SDK (3.9 or higher)
 - Android Studio / VS Code
-- iOS Simulator / Android Emulator
+- iOS Simulator / Android Emulator (physical device recommended for testing biometric authentication)
 
 ### Installation
 
@@ -182,14 +175,20 @@ flutter run
 2. **📊 Check Your Overview**  
    The animated header shows your current balance, total income and total expenses at a glance
 
-3. **🗑️ Manage Transactions**  
+3. **📅 Browse Grouped History**  
+   Transactions are grouped by date — "Today", "Yesterday", and short date labels for older entries
+
+4. **🗑️ Manage Transactions**  
    Long-press any transaction to edit (coming soon) or delete it
 
-4. **⚙️ Explore Settings**  
-   Tap the settings icon on the home screen to open the Settings screen, where you can preview the theme (Light/Dark/System), language, currency and security options
+5. **⚙️ Personalize the App**  
+   Tap the settings icon to switch theme (Light/Dark/System), language, and currency — all applied instantly and remembered next time you open the app
 
-5. **👤 Learn More**  
-   From Settings, tap **About** to see a short profile of the developer behind the app
+6. **🔐 Secure Your Data**  
+   Enable a PIN code (and, once a PIN is set, biometric authentication) to lock the app on open and protect destructive actions like clearing all data
+
+7. **👤 Learn More**  
+   From Settings, tap **About** to see what the app does and a short profile of the developer, with working links to LinkedIn, GitHub, and email
 
 ---
 
@@ -197,16 +196,16 @@ flutter run
 
 ### 🎯 Upcoming Features
 
-- 🎨 **Real theme switching** – Wire up the existing Light/Dark/System selector to actually change the app's appearance
-- 🌍 **Full internationalization** – Connect the language selector to real app-wide translations (French, German, Polish already selectable in the UI)
-- 💱 **Real currency formatting** – Apply the selected currency symbol across balances and transactions
-- 🔐 **PIN & biometric authentication** – Implement the security options already designed in Settings
+- 🏷️ **Transaction Categories** – Categorize income and expenses, reflected directly on each transaction card
+- 🔍 **Date Filters** – Filter transaction history by custom date ranges, building on the existing date-grouping logic
 - 📊 **Visual Analytics** – Charts and graphs to understand spending patterns over time
 - 🎯 **Budget Control** – Monthly budgets with real-time tracking
+- ✏️ **Edit Transactions** – Currently add/delete only; editing is scaffolded in the UI but not yet implemented
 - 📸 **Receipt Scanner** – Capture and store receipts with OCR technology
 - 🌐 **Cloud Sync** – Access your data across multiple devices
 - 📅 **Financial Goals** – Set and track long-term savings objectives
 - 🔔 **Smart Notifications** – Bill reminders and budget alerts
+- 🧪 **Unit Test Coverage** – Expanding automated tests across formatters, notifiers, and repositories
 
 ---
 
