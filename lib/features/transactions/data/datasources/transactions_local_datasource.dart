@@ -1,39 +1,35 @@
+import 'package:sqflite/sqflite.dart' hide Transaction;
 import 'package:moneytracker/core/database/app_database.dart';
 import 'package:moneytracker/features/transactions/domain/entities/transaction.dart';
 
-/// Handles direct communication with the local SQLite database.
-/// Responsible for mapping raw database rows to/from domain entities.
 class TransactionsLocalDatasource {
-  Future<int> insertTransaction(Transaction transaction) async {
-    final db = await AppDatabase.instance;
+  final Database? _testDatabase;
 
+  TransactionsLocalDatasource({Database? testDatabase})
+      : _testDatabase = testDatabase;
+
+  Future<Database> get _db async => _testDatabase ?? await AppDatabase.instance;
+
+  Future<int> insertTransaction(Transaction transaction) async {
+    final db = await _db;
     return db.insert('transactions', _toMap(transaction));
   }
 
   Future<List<Transaction>> getAllTransactions() async {
-    final db = await AppDatabase.instance;
-
-    final result = await db.query(
-      'transactions',
-      orderBy: 'dateTime DESC',
-    );
-
+    final db = await _db;
+    final result = await db.query('transactions', orderBy: 'dateTime DESC');
     return result.map(_fromMap).toList();
   }
 
   Future<int> deleteTransaction(int id) async {
-    final db = await AppDatabase.instance;
-
+    final db = await _db;
     return db.delete('transactions', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> deleteAllTransactions() async {
-    final db = await AppDatabase.instance;
-
+    final db = await _db;
     return db.delete('transactions');
   }
-
-  // --- Mapping helpers: database row <-> domain entity ---
 
   Map<String, dynamic> _toMap(Transaction transaction) {
     return {
