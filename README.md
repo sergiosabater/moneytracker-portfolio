@@ -42,10 +42,9 @@ The project is being built as a deliberate, professional-grade learning exercise
 
 <div align="center">
 
-| <img src="https://github.com/user-attachments/assets/34558867-0768-4e5e-8c39-d78ae72491bb" width="250" alt="Main Dashboard"> | <img src="https://github.com/user-attachments/assets/44e2b34b-9b82-4e93-9af9-aa48e4722c4a" width="250" alt="New Income"> | <img src="https://github.com/user-attachments/assets/8aecec89-f4c8-4d6c-b971-38db4fba84f5" width="250" alt="New Expense"> |
+| <img src="https://github.com/user-attachments/assets/34558867-0768-4e5e-8c39-d78ae72491bb" width="250" alt="Main Dashboard"> | <img src="https://github.com/user-attachments/assets/44e2b34b-9b82-4e93-9af9-aa48e4722c4a" width="250" alt="New Income"> | <img src="https://github.com/user-attachments/assets/b6ef9ae3-46e4-42e4-baac-b54122126955" width="250" alt="Settings"> |
 |:---:|:---:|:---:|
 | **Main Dashboard** | **New Income** | **New Expense** |
-
 
 
 <br>
