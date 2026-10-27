@@ -12,8 +12,8 @@
 
 <div align="center">
 
-### Take Control of Your Financial Future!
-*The smart way to track every penny, visualize your spending, and achieve your financial goals.*
+### Start mastering your finances today
+*The smart way to track every penny, visualize your spending and achieve your financial goals.*
 
 </div>
 
@@ -235,12 +235,7 @@ For questions, suggestions, or collaboration opportunities:
 
 <div align="center">
 
-###  Start mastering your finances today!
-*Built with Flutter and passion*
-
-<img src="https://media.giphy.com/media/3oKIPa2TdahY8LAAxy/giphy.gif" width="200" alt="Money Animation">
-
-<br><br>
+###  Start mastering your finances today
 
 **⭐ If this project helps you manage your money better, give it a star! ⭐**
 
