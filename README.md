@@ -49,9 +49,9 @@ The project is being built as a deliberate, professional-grade learning exercise
 
 <br>
 
-| <img src="https://github.com/user-attachments/assets/ab5590aa-76a4-435f-bb37-0005b126b411" width="250" alt="PIN Security"> | <img src="https://github.com/user-attachments/assets/62d1a894-7ecf-4009-b3d7-4484dd0cc3de" width="250" alt="Delete Transaction Alert"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Main Dashboard"> |
+| <img src="https://github.com/user-attachments/assets/ab5590aa-76a4-435f-bb37-0005b126b411" width="250" alt="PIN Security"> | <img src="https://github.com/user-attachments/assets/df04d931-9736-4ff6-b7c2-1299b8976091" width="250" alt="Fingerprint protection"> | <img src="https://github.com/user-attachments/assets/09b869ef-aaeb-47c9-abe8-4d7b763a6ea2" width="250" alt="Main Dashboard"> |
 |:---:|:---:|:---:|
-| **PIN Security** | **Delete Transaction Alert** | **Main Dashboard** |
+| **PIN Security** | **Fingerprint protection** | **Main Dashboard** |
 
 
 
