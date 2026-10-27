@@ -153,10 +153,10 @@ Money Tracker follows a **Feature-First + Clean Architecture** approach: code is
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/money-tracker.git
+git clone https://github.com/sergiosabater/moneytracker-portfolio.git
 
 # Navigate to project directory
-cd money-tracker
+cd moneytracker-portfolio
 
 # Install dependencies
 flutter pub get
